@@ -1,0 +1,319 @@
+# Config for  xUSL/CCX/Common
+# Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+#
+
+# CCX common variables:
+comment ""
+comment "IP CCX Common - Controls that are common to all versions of the IP: CCX"
+
+# ------------------------------ APIC Mode --------------------------
+choice CHOICE_APIC_MODE
+    prompt  "APIC - operational mode for this plaltform"
+    default CHOICE_APIC_AUTO
+    help
+        Ref: typedef enum{} APIC_MODE;
+
+config  CHOICE_COMPATIBILITYMODE
+    bool "Compatibility Mode"
+    help
+     The system will use regular (xAPIC) ACPI structures when
+     system contains 255 or fewer threads and will use X2 APIC ACPI
+     structures when the system contains more than 255 threads.
+
+config  CHOICE_XAPIC_MODE
+    bool "xAPIC Mode"
+    help
+      Force system to legacy APIC mode and use DownCore feature as
+      needed to reduce #threads to be less than 255.
+
+config  CHOICE_X2APIC_MODE
+    bool "X2APIC Mode"
+    help
+      Force the system to use X2 APIC mode regardless of # threads present.
+
+config  CHOICE_APIC_AUTO
+    bool "Auto selection mode"
+    help
+      Let the system set APIC mode based on #threads present.
+      Same as 'compatibility mode'.
+
+endchoice
+
+##  define the system variable that is used in the code
+config CCX_APIC_MODE
+    hex
+    default  0x00      if CHOICE_COMPATIBILITYMODE
+    default  0x01      if CHOICE_XAPIC_MODE
+    default  0x02      if CHOICE_X2APIC_MODE
+    default  0xFF      if CHOICE_APIC_AUTO
+
+
+# ------------------------------ Downcore Mode --------------------------
+choice CCX_CHOICE_DOWNCORE_MODE
+    prompt  "Downcore - operational mode for this platform"
+    default CHOICE_DOWNCORE_AUTO
+    help
+        Selection type for down core.
+        This is used to describe SOCs where there are 2 CCX in the CCD.
+        So each number is used to described the number of cores enabled on each CCX
+        example: 7 + 0 indicates 7 cores enabled on CCX0 and 0 cores on CCX1.
+        This is applied symetrically across all CCDs in the system.
+        See also CCD Mode
+        Ref: typedef enum{} CCX_DOWN_CORE_MODE;
+
+config  CHOICE_DOWNCORE_AUTO
+    bool "Auto - use all available cores"
+    help
+        Do not downCore any CCX, use all available cores in the system.
+
+config  CHOICE_DOWNCORE_7_7
+    bool "CCX-0: 7 cores, CCX-1: 7  cores"
+    help
+        The In each CCD, CCX-0 has 7 cores and CCX-1 has 7 cores enabled.
+
+config  CHOICE_DOWNCORE_6_6
+    bool "CCX-0: 6 cores, CCX-1: 6  cores"
+    help
+        The In each CCD, CCX-0 has 6 cores and CCX-1 has 6 cores enabled.
+
+config  CHOICE_DOWNCORE_5_5
+    bool "CCX-0: 5 cores, CCX-1: 5  cores"
+    help
+        The In each CCD, CCX-0 has 5 cores and CCX-1 has 5 cores enabled.
+
+config  CHOICE_DOWNCORE_4_4
+    bool "CCX-0: 4 cores, CCX-1: 4  cores"
+    help
+        The In each CCD, CCX-0 has 4 cores and CCX-1 has 4 cores enabled.
+
+config  CHOICE_DOWNCORE_3_3
+    bool "CCX-0: 3 cores, CCX-1: 3  cores"
+    help
+        The In each CCD, CCX-0 has 3 cores and CCX-1 has 3 cores enabled.
+
+config  CHOICE_DOWNCORE_2_2
+    bool "CCX-0: 2 cores, CCX-1: 2  cores"
+    help
+        The In each CCD, CCX-0 has 2 cores and CCX-1 has 2 cores enabled.
+
+config  CHOICE_DOWNCORE_1_1
+    bool "CCX-0: 1 cores, CCX-1: 1  cores"
+    help
+        The In each CCD, CCX-0 has 1 cores and CCX-1 has 1 cores enabled.
+
+config  CHOICE_DOWNCORE_6_5
+    bool "CCX-0: 6 cores, CCX-1: 5  cores"
+    help
+        The In each CCD, CCX-0 has 6 cores and CCX-1 has 5 cores enabled.
+
+config  CHOICE_DOWNCORE_7_0
+    bool "CCX-0: 7 cores, CCX-1: 0  cores"
+    help
+        The In each CCD, CCX-0 has 7 cores and CCX-1 has 0 cores enabled.
+
+config  CHOICE_DOWNCORE_6_0
+    bool "CCX-0: 6 cores, CCX-1: 0  cores"
+    help
+        The In each CCD, CCX-0 has 6 cores and CCX-1 has 0 cores enabled.
+
+config  CHOICE_DOWNCORE_5_0
+    bool "CCX-0: 5 cores, CCX-1: 0  cores"
+    help
+        The In each CCD, CCX-0 has 5 cores and CCX-1 has 0 cores enabled.
+
+config  CHOICE_DOWNCORE_4_0
+    bool "CCX-0: 4 cores, CCX-1: 0  cores"
+    help
+        The In each CCD, CCX-0 has 4 cores and CCX-1 has 0 cores enabled.
+
+config  CHOICE_DOWNCORE_3_0
+    bool "CCX-0: 3 cores, CCX-1: 0  cores"
+    help
+        The In each CCD, CCX-0 has 3 cores and CCX-1 has 0 cores enabled.
+
+config  CHOICE_DOWNCORE_2_0
+    bool "CCX-0: 2 cores, CCX-1: 0  cores"
+    help
+        The In each CCD, CCX-0 has 2 cores and CCX-1 has 0 cores enabled.
+
+config  CHOICE_DOWNCORE_1_0
+    bool "CCX-0: 1 cores, CCX-1: 0  cores"
+    help
+        The In each CCD, CCX-0 has 1 cores and CCX-1 has 0 cores enabled.
+
+endchoice
+
+##  define the system variable used in the code
+config CCX_DOWNCORE_MODE
+    int
+    default  0    if   CHOICE_DOWNCORE_AUTO
+    default  1    if   CHOICE_DOWNCORE_1_0
+    default  2    if   CHOICE_DOWNCORE_1_1
+    default  3    if   CHOICE_DOWNCORE_2_0
+    default  4    if   CHOICE_DOWNCORE_3_0
+    default  5    if   CHOICE_DOWNCORE_2_2
+    default  6    if   CHOICE_DOWNCORE_4_0
+    default  7    if   CHOICE_DOWNCORE_3_3
+    default  8    if   CHOICE_DOWNCORE_5_0
+    default  9    if   CHOICE_DOWNCORE_6_0
+    default  10   if   CHOICE_DOWNCORE_7_0
+    default  11   if   CHOICE_DOWNCORE_4_4
+    default  12   if   CHOICE_DOWNCORE_5_5
+    default  13   if   CHOICE_DOWNCORE_6_6
+    default  14   if   CHOICE_DOWNCORE_7_7
+    default  15   if   CHOICE_DOWNCORE_6_5
+
+
+# ------------------------------ Down CCD Mode --------------------------
+choice CCX_CHOICE_CCD_MODE
+    prompt  "Down CCD - Number of CCDs to use. Caution: see Help text."
+    default CHOICE_NUMCCD_AUTO
+    help
+        Selection type for CCD down binning.
+        The values are used to describe the number of core complex dies (CCDs)
+        that should be enabled in the system.
+        PLEASE NOTE: This value will be limited in the code to the maximum
+        number of CCDs available in the SoC that is present in the socket.
+        See also DownCore Mode
+        Ref: typedef enum{} CCX_CCD_MODE;
+
+config  CHOICE_NUMCCD_AUTO
+    bool "Auto - use all available CCDs"
+    help
+      Do not remove any CCDs, use all available CCDs in the system.
+
+config CHOICE_NUMCCD_11_CCDS
+    bool "Use  11 CCDs"
+    help
+      Remove CCDs to get to a count of  11 CCDs.
+
+config CHOICE_NUMCCD_10_CCDS
+    bool "Use  10 CCDs"
+    help
+      Remove CCDs to get to a count of  10 CCDs.
+
+config CHOICE_NUMCCD_9_CCDS
+    bool "Use  9  CCDs"
+    help
+      Remove CCDs to get to a count of  9  CCDs.
+
+config CHOICE_NUMCCD_8_CCDS
+    bool "Use  8  CCDs"
+    help
+      Remove CCDs to get to a count of  8  CCDs.
+
+config CHOICE_NUMCCD_7_CCDS
+    bool "Use  7  CCDs"
+    help
+      Remove CCDs to get to a count of  7  CCDs.
+
+config CHOICE_NUMCCD_6_CCDS
+    bool "Use  6  CCDs"
+    help
+      Remove CCDs to get to a count of  6  CCDs.
+
+config CHOICE_NUMCCD_5_CCDS
+    bool "Use  5  CCDs"
+    help
+      Remove CCDs to get to a count of  5  CCDs.
+
+config CHOICE_NUMCCD_4_CCDS
+    bool "Use  4  CCDs"
+    help
+      Remove CCDs to get to a count of  4  CCDs.
+
+config CHOICE_NUMCCD_3_CCDS
+    bool "Use  3  CCDs"
+    help
+      Remove CCDs to get to a count of  3  CCDs.
+
+config CHOICE_NUMCCD_2_CCDS
+    bool "Use  2  CCDs"
+    help
+      Remove CCDs to get to a count of  2  CCDs.
+
+config CHOICE_NUMCCD_1_CCD
+    bool "Use  1  CCD"
+    help
+      Remove CCDs to get to a count of  1  CCD.
+
+endchoice
+
+
+##  define the system variable used in the code
+config CCX_CCD_MODE
+    int
+    default    0   if    CHOICE_NUMCCD_AUTO
+    default    1   if    CHOICE_NUMCCD_1_CCD
+    default    2   if    CHOICE_NUMCCD_2_CCDS
+    default    3   if    CHOICE_NUMCCD_3_CCDS
+    default    4   if    CHOICE_NUMCCD_4_CCDS
+    default    5   if    CHOICE_NUMCCD_5_CCDS
+    default    6   if    CHOICE_NUMCCD_6_CCDS
+    default    7   if    CHOICE_NUMCCD_7_CCDS
+    default    8   if    CHOICE_NUMCCD_8_CCDS
+    default    9   if    CHOICE_NUMCCD_9_CCDS
+    default    10  if    CHOICE_NUMCCD_10_CCDS
+    default    11  if    CHOICE_NUMCCD_11_CCDS
+
+# ------------------------------ SMT Mode --------------------------
+config CCX_SMT_MODE
+    int "Enable Simultaneous Multi-Threading (SMT) [1/0]"
+    default  1
+    range 0 1
+    help
+        Simultaneous multithreading allows multiple instruction threads
+        to be used on a single core. Recommended to be enabled.
+
+# ------------------------------ CStates --------------------------
+config CCX_CSTATE_ENABLE
+    int "Use processor C-States [1/0]"
+    default 1
+    range 0 1
+    help
+        CStates are run-time power saving states of the processor.
+        Recommended to be enabled.
+
+config CCX_CSTATE_IO_ADDR
+    hex  "C-State IO access zone"
+    default 0x0813
+    #depends on CCX_CSTATE_ENABLE  # cannot use this, causes data init error
+    help
+        C-States need an IO block of 8 bytes to activate the various C-States.
+        The IO block is at this location.
+
+config CCX_CSTATE_CC6_ENABLE
+    int "Use the Deep Sleep (CC6) state [1/0]"
+    default 1
+    range 0 1
+    #depends on CCX_CSTATE_ENABLE  # cannot use this, causes data init error
+    help
+        When all the cores on a CCX are in CC6, the power to the CCX
+        can be reduced. Recommended to be enabled.
+
+# ------------------------------ CPB --------------------------
+config CCX_CPB_ENABLE
+    int "Core Performanc Boost enabled [1/0]"
+    default 1
+    range 0 1
+    help
+        Core Performance Boost (CPB) allows the CPU core to push clock
+        above the highest clock P-State for short times.
+        Recommended to be enabled. Disable if you need
+        deterministic processing times (e.g. typically only embedded Apps)
+
+# ------------------------------ SMEE --------------------------
+config CCX_SMEE_ENABLE
+    int  "Secure Memory Encryption enabled [1/0]"
+    default 0
+    range 0 1
+    help
+        Secure Memory Encryption (SMEE) is used to improve data security.
+        This is an optional feature mostly used by high security environments.
+
+# ------------------------------ <NEXT ITEM> --------------------------
+
+# ------------------------------ <NEXT ITEM> --------------------------
+

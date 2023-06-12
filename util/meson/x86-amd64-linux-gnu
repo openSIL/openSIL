@@ -1,0 +1,14 @@
+[binaries]
+c = '/usr/bin/gcc'
+ar = '/usr/bin/ar'
+nasm = '/usr/bin/nasm'
+strip = '/usr/bin/strip'
+
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+
+[properties]
+is32bit = false

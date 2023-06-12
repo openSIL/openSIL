@@ -1,0 +1,18 @@
+# Config for xUSL/Sdci/Common
+# Copyright 2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+#
+
+# SDCI common variables:
+comment ""
+comment "IP SDCI Common - Controls that are common to all versions of the IP: SDCI"
+
+# ------------------------------ Smart Data Cache Injection --------------------------
+config SDCI_SMART_DATA_CACHE_INJECTION_ENABLE
+    int  "Enable smart data cache injection feature [1/0]"
+    default 0
+    range 0 1
+    help
+        Enable or disable smart data cache injection
+        feature using SDCI.

@@ -1,0 +1,527 @@
+/**
+ * @file  NbioNbifTbl.h
+ * @brief This file contains the Nbif device configurations
+ *
+ */
+/* Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.    */
+// SPDX-License-Identifier: MIT
+
+#pragma once
+
+  #define NBIO_NBIF_DEVICE_CFG_TBL \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1408, \
+      SIL_RESERVED2_1239, \
+      (0x7 << SIL_RESERVED2_1240) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1408, \
+      SIL_RESERVED2_1241, \
+      (0x1 << SIL_RESERVED2_1242) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1413, \
+      SIL_RESERVED2_1239, \
+      (0x7 << SIL_RESERVED2_1240) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1413, \
+      SIL_RESERVED2_1241, \
+      (0x1 << SIL_RESERVED2_1242) \
+      ),
+  #define NBIO_NBIF_DEVICE_TBL \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1327, \
+      SIL_RESERVED2_1104, \
+      (0x1 << SIL_RESERVED2_1105) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1330, \
+      SIL_RESERVED2_1118, \
+      (0x1 << SIL_RESERVED2_1119) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1339, \
+      SIL_RESERVED2_1159, \
+     (0x0 << SIL_RESERVED2_1161) \
+     ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED3_1472, \
+      SIL_RESERVED2_1177, \
+      (0x0 << SIL_RESERVED2_1178) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1348, \
+      SIL_RESERVED2_1191, \
+      (0x1 << SIL_RESERVED2_1193) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED3_1476, \
+      SIL_RESERVED2_1197, \
+      (0x0 << SIL_RESERVED2_1198) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1352, \
+      SIL_RESERVED2_1201, \
+      (0x0 << SIL_RESERVED2_1202) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1380, \
+      SIL_RESERVED2_1104, \
+      (0x1 << SIL_RESERVED2_1105) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED3_1469, \
+      SIL_RESERVED2_1118, \
+      (0x1 << SIL_RESERVED2_1119) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1391, \
+      SIL_RESERVED2_1159, \
+      (0x0 << SIL_RESERVED2_1161) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1397, \
+      SIL_RESERVED2_1177, \
+      (0x0 << SIL_RESERVED2_1178) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1400, \
+      SIL_RESERVED3_1474, \
+      (0x0 << SIL_RESERVED3_1473) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1425, \
+      SIL_RESERVED2_1104, \
+      (0x0 << SIL_RESERVED2_1105) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1427, \
+      SIL_RESERVED2_1118, \
+      (0x0 << SIL_RESERVED2_1119) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1433, \
+      SIL_RESERVED2_1159, \
+      (0x0 << SIL_RESERVED2_1161) \
+      ),
+  #define NBIO_NBIF_DEVICE_INTERRUPT_TBL \
+    SMN_ENTRY_WR ( \
+      SIL_RESERVED2_1318, \
+      ((0x33 << SIL_RESERVED2_1002) | \
+      (0x3 << SIL_RESERVED2_1004)) \
+      ), \
+    SMN_ENTRY_WR ( \
+      SIL_RESERVED2_1372, \
+      (0x3 << SIL_RESERVED2_1002)\
+      ), \
+
+  #define NBIO_NBIF_DISABLE_LTR_TBL \
+    SMN_ENTRY_PROPERTY_RMW ( \
+      TABLE_PROPERTY_IGFX_DISABLED, \
+      SIL_RESERVED2_1355, \
+      SIL_RESERVED2_1211 | \
+      SIL_RESERVED2_1213, \
+      (0x0 << SIL_RESERVED2_1212) | \
+      (0x0 << SIL_RESERVED2_1214) \
+      ),
+
+  #define NBIO_NBIF_DISABLE_AER_TBL \
+    SMN_ENTRY_PROPERTY_RMW ( \
+      TABLE_PROPERTY_IGFX_DISABLED, \
+      SIL_RESERVED2_1328, \
+      SIL_RESERVED2_1108 | \
+      SIL_RESERVED2_1106 | \
+      RCC_DEV0_EPF0_STRAP2_STRAP_ATS_EN_DEV0_F0_MASK | \
+      SIL_RESERVED2_1112 | \
+      RCC_DEV0_EPF0_STRAP2_STRAP_PAGE_REQ_EN_DEV0_F0_MASK | \
+      SIL_RESERVED2_1114, \
+      (0x0 << SIL_RESERVED2_1109) | \
+      (0x0 << SIL_RESERVED2_1107) | \
+      (0x0 << RCC_DEV0_EPF0_STRAP2_STRAP_ATS_EN_DEV0_F0_OFFSET) | \
+      (0x0 << SIL_RESERVED2_1113) | \
+      (0x0 << RCC_DEV0_EPF0_STRAP2_STRAP_PAGE_REQ_EN_DEV0_F0_OFFSET) | \
+      (0x0 << SIL_RESERVED2_1115) \
+      ),
+  #define NBIO_NBIF_FLR_TBL \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED3_1468, \
+      SIL_RESERVED2_1116, \
+      (0x1 << SIL_RESERVED2_1117) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1336, \
+      SIL_RESERVED3_1470, \
+      (0x1 << SIL_RESERVED2_1148) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1342, \
+      SIL_RESERVED2_1167, \
+     (0x1 << SIL_RESERVED3_1471) \
+     ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1345, \
+      SIL_RESERVED2_1179, \
+      (0x1 << SIL_RESERVED2_1180) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1347, \
+      SIL_RESERVED2_1185, \
+      (0x1 << SIL_RESERVED2_1186) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1350, \
+      SIL_RESERVED2_1195, \
+      (0x1 << SIL_RESERVED2_1196) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1351, \
+      SIL_RESERVED2_1199, \
+      (0x1 << SIL_RESERVED2_1200) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1382, \
+      SIL_RESERVED2_1116, \
+      (0x1 << SIL_RESERVED2_1117) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1388, \
+      SIL_RESERVED3_1470, \
+      (0x1 << SIL_RESERVED2_1148) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1394, \
+      SIL_RESERVED2_1167, \
+      (0x1 << SIL_RESERVED3_1471) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1398, \
+      SIL_RESERVED2_1179, \
+      (0x1 << SIL_RESERVED2_1180) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1401, \
+      SIL_RESERVED2_1185, \
+      (0x1 << SIL_RESERVED2_1186) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1409, \
+      SIL_RESERVED2_1243, \
+      (0x1 << SIL_RESERVED2_1244) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1414, \
+      SIL_RESERVED2_1243, \
+      (0x1 << SIL_RESERVED2_1244) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1426, \
+      SIL_RESERVED2_1243, \
+      (0x1 << SIL_RESERVED2_1244) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1431, \
+      SIL_RESERVED2_1243, \
+      (0x1 << SIL_RESERVED2_1244) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1435, \
+      SIL_RESERVED2_1243, \
+      (0x1 << SIL_RESERVED2_1244) \
+      ),
+  #define NBIO_NBIF_DMA_ARBITRATION_TBL \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED3_1463, \
+      SIL_RESERVED2_938 | \
+      SIL_RESERVED2_940 | \
+      SIL_RESERVED2_942 | \
+      SIL_RESERVED2_944, \
+      (0x4 << SIL_RESERVED2_939) | \
+      (0x4 << SIL_RESERVED2_941) | \
+      (0x4 << SIL_RESERVED2_943) | \
+      (0x4 << SIL_RESERVED2_945) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1316, \
+      SIL_RESERVED3_1464 | \
+      SIL_RESERVED2_947 | \
+      SIL_RESERVED2_948 | \
+      SIL_RESERVED2_950, \
+      (0x4 << SIL_RESERVED2_946) | \
+      (0x4 << SIL_RESERVED3_1465) | \
+      (0x4 << SIL_RESERVED2_949) | \
+      (0x4 << SIL_RESERVED2_951) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1370, \
+      SIL_RESERVED2_938 | \
+      SIL_RESERVED2_940 | \
+      SIL_RESERVED2_942 | \
+      SIL_RESERVED2_944, \
+      (0x4 << SIL_RESERVED2_939) | \
+      (0x4 << SIL_RESERVED2_941) | \
+      (0x4 << SIL_RESERVED2_943) | \
+      (0x4 << SIL_RESERVED2_945) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1371, \
+      SIL_RESERVED3_1464 | \
+      SIL_RESERVED2_947 | \
+      SIL_RESERVED2_948 | \
+      SIL_RESERVED2_950, \
+      (0x4 << SIL_RESERVED2_946) | \
+      (0x4 << SIL_RESERVED3_1465) | \
+      (0x4 << SIL_RESERVED2_949) | \
+      (0x4 << SIL_RESERVED2_951) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1420, \
+      SIL_RESERVED2_938 | \
+      SIL_RESERVED2_940 | \
+      SIL_RESERVED2_942 | \
+      SIL_RESERVED2_944, \
+      (0x4 << SIL_RESERVED2_939) | \
+      (0x4 << SIL_RESERVED2_941) | \
+      (0x4 << SIL_RESERVED2_943) | \
+      (0x4 << SIL_RESERVED2_945) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED3_1466, \
+      SIL_RESERVED3_1464 | \
+      SIL_RESERVED2_947 | \
+      SIL_RESERVED2_948 | \
+      SIL_RESERVED2_950, \
+      (0x4 << SIL_RESERVED2_946) | \
+      (0x4 << SIL_RESERVED3_1465) | \
+      (0x4 << SIL_RESERVED2_949) | \
+      (0x4 << SIL_RESERVED2_951) \
+      ),
+
+  #define NBIO_NBIF_SYSHUB_WRT_PERF_ENH_TBL \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1362, \
+      SIL_RESERVED2_1449 | \
+      SIL_RESERVED2_1451, \
+      (0x1 << SIL_RESERVED2_1450) | \
+      (0x1 << SIL_RESERVED2_1452) \
+      ),
+  #define NBIO_NBIF_CLOCK_GATING_TBL \
+    SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_NBIF_MGCG_CLKGATING_ENABLED, \
+      SIL_RESERVED2_1322, \
+      SIL_RESERVED2_1062, \
+      (0x1 << SIL_RESERVED2_1063) \
+      ), \
+      SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_NBIF_MGCG_CLKGATING_ENABLED, \
+      SIL_RESERVED2_1375, \
+      SIL_RESERVED2_1062, \
+      (0x1 << SIL_RESERVED2_1063) \
+      ), \
+      SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_NBIF_MGCG_CLKGATING_ENABLED, \
+      SIL_RESERVED2_1422, \
+      SIL_RESERVED2_1062, \
+      (0x1 << SIL_RESERVED2_1063) \
+      ), \
+      SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_NBIF_MGCG_CLKGATING_ENABLED, \
+      SIL_RESERVED2_1448, \
+      SIL_RESERVED2_1087, \
+      (0x1 << SIL_RESERVED2_1088) \
+      ), \
+      SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_NBIF_MGCG_CLKGATING_ENABLED, \
+      SIL_RESERVED2_1448, \
+      SIL_RESERVED2_1085, \
+      (0x1 << SIL_RESERVED2_1086) \
+      ), \
+      SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_NBIF_MGCG_CLKGATING_ENABLED,\
+      SIL_RESERVED2_1448, \
+      SIL_RESERVED2_1090, \
+      (0x1 << SIL_RESERVED2_1091) \
+      ), \
+      SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_NBIF_MGCG_CLKGATING_ENABLED,\
+      SIL_RESERVED2_1448, \
+      NTB_SMU_SDPPORTEN_SEC_CMPEN_MASK, \
+      (0x1 << SIL_RESERVED2_1089) \
+      ), \
+      SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_NBIF_MGCG_CLKGATING_ENABLED, \
+      SIL_RESERVED2_1423, \
+      SIL_RESERVED2_1074, \
+      (0x0 << SIL_RESERVED2_1075) \
+      ), \
+      SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_NBIF_MGCG_CLKGATING_DISABLED, \
+      SIL_RESERVED2_1322, \
+      SIL_RESERVED2_1062, \
+      (0x0 << SIL_RESERVED2_1063) \
+      ), \
+      SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_NBIF_MGCG_CLKGATING_DISABLED, \
+      SIL_RESERVED2_1375, \
+      SIL_RESERVED2_1062, \
+      (0x0 << SIL_RESERVED2_1063) \
+      ), \
+      SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_NBIF_MGCG_CLKGATING_DISABLED, \
+      SIL_RESERVED2_1422, \
+      SIL_RESERVED2_1062, \
+      (0x0 << SIL_RESERVED2_1063) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED3_1542, \
+      SIL_RESERVED2_1257 | \
+      SIL_RESERVED2_1259 | \
+      SIL_RESERVED2_1260 | \
+      SIL_RESERVED2_1262 | \
+      SIL_RESERVED2_1264 | \
+      SIL_RESERVED2_1266 | \
+      SIL_RESERVED2_1268 | \
+      SIL_RESERVED3_1539 | \
+      SIL_RESERVED2_1271 | \
+      SIL_RESERVED2_1273 | \
+      SIL_RESERVED2_1275 | \
+      SIL_RESERVED2_1277 | \
+      SIL_RESERVED2_1279 | \
+      SIL_RESERVED3_1540 | \
+      SIL_RESERVED2_1282 | \
+      SIL_RESERVED2_1284 | \
+      SIL_RESERVED2_1286 | \
+      SIL_RESERVED3_1541 | \
+      SIL_RESERVED2_1289 | \
+      SIL_RESERVED2_1291, \
+      (0x0 << SIL_RESERVED2_1258) | \
+      (0x0 << SIL_RESERVED3_1538) | \
+      (0x0 << SIL_RESERVED2_1261) | \
+      (0x0 << SIL_RESERVED2_1263) | \
+      (0x0 << SIL_RESERVED2_1265) | \
+      (0x0 << SIL_RESERVED2_1267) | \
+      (0x0 << SIL_RESERVED2_1269) | \
+      (0x0 << SIL_RESERVED2_1270) | \
+      (0x0 << SIL_RESERVED2_1272) | \
+      (0x0 << SIL_RESERVED2_1274) | \
+      (0x0 << SIL_RESERVED2_1276) | \
+      (0x0 << SIL_RESERVED2_1278) | \
+      (0x0 << SIL_RESERVED2_1280) | \
+      (0x0 << SIL_RESERVED2_1281) | \
+      (0x0 << SIL_RESERVED2_1283) | \
+      (0x0 << SIL_RESERVED2_1285) | \
+      (0x0 << SIL_RESERVED2_1287) | \
+      (0x0 << SIL_RESERVED2_1288) | \
+      (0x0 << SIL_RESERVED2_1290) | \
+      (0x0 << SIL_RESERVED2_1292) \
+      ), \
+      SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1416, \
+      SIL_RESERVED2_1257 | \
+      SIL_RESERVED2_1259 | \
+      SIL_RESERVED2_1260 | \
+      SIL_RESERVED2_1262 | \
+      SIL_RESERVED2_1264 | \
+      SIL_RESERVED2_1266 | \
+      SIL_RESERVED2_1268 | \
+      SIL_RESERVED3_1539 | \
+      SIL_RESERVED2_1271 | \
+      SIL_RESERVED2_1273 | \
+      SIL_RESERVED2_1275 | \
+      SIL_RESERVED2_1277 | \
+      SIL_RESERVED2_1279 | \
+      SIL_RESERVED3_1540 | \
+      SIL_RESERVED2_1282 | \
+      SIL_RESERVED2_1284 | \
+      SIL_RESERVED2_1286 | \
+      SIL_RESERVED3_1541 | \
+      SIL_RESERVED2_1289 | \
+      SIL_RESERVED2_1291, \
+      (0x0 << SIL_RESERVED2_1258) | \
+      (0x0 << SIL_RESERVED3_1538) | \
+      (0x0 << SIL_RESERVED2_1261) | \
+      (0x0 << SIL_RESERVED2_1263) | \
+      (0x0 << SIL_RESERVED2_1265) | \
+      (0x0 << SIL_RESERVED2_1267) | \
+      (0x0 << SIL_RESERVED2_1269) | \
+      (0x0 << SIL_RESERVED2_1270) | \
+      (0x0 << SIL_RESERVED2_1272) | \
+      (0x0 << SIL_RESERVED2_1274) | \
+      (0x0 << SIL_RESERVED2_1276) | \
+      (0x0 << SIL_RESERVED2_1278) | \
+      (0x0 << SIL_RESERVED2_1280) | \
+      (0x0 << SIL_RESERVED2_1281) | \
+      (0x0 << SIL_RESERVED2_1283) | \
+      (0x0 << SIL_RESERVED2_1285) | \
+      (0x0 << SIL_RESERVED2_1287) | \
+      (0x0 << SIL_RESERVED2_1288) | \
+      (0x0 << SIL_RESERVED2_1290) | \
+      (0x0 << SIL_RESERVED2_1292) \
+      ), \
+    SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_SYSHUB_MGCG_CLKGATING_ENABLED, \
+      SIL_RESERVED2_1324, \
+      SIL_RESERVED2_1080, \
+      (0x1 << SIL_RESERVED2_1081) \
+      ), \
+    SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_SYSHUB_MGCG_CLKGATING_ENABLED, \
+      SIL_RESERVED2_1377, \
+      SIL_RESERVED2_1080, \
+      (0x1 << SIL_RESERVED2_1081) \
+      ), \
+    SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_SYSHUB_MGCG_CLKGATING_ENABLED, \
+      SIL_RESERVED2_1365, \
+      SYSHUB_MGCG_CTRL_SHUBCLK_SYSHUB_MGCG_EN_SHUBCLK_MASK, \
+      (0x1 << SIL_RESERVED2_1456) \
+      ), \
+    SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_SYSHUB_MGCG_CLKGATING_DISABLED, \
+      SIL_RESERVED2_1324, \
+      SIL_RESERVED2_1080, \
+      (0x0 << SIL_RESERVED2_1081) \
+      ), \
+    SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_SYSHUB_MGCG_CLKGATING_DISABLED, \
+      SIL_RESERVED2_1377, \
+      SIL_RESERVED2_1080, \
+      (0x0 << SIL_RESERVED2_1081) \
+      ), \
+    SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_SYSHUB_MGCG_CLKGATING_DISABLED, \
+      SIL_RESERVED2_1365, \
+      SYSHUB_MGCG_CTRL_SHUBCLK_SYSHUB_MGCG_EN_SHUBCLK_MASK, \
+      (0x0 << SIL_RESERVED2_1456) \
+      ),
+  #define NBIO_Non_VC1_WRITE_TBL \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1312, \
+      A2S_CNTL_SW0_SDP_WR_CHAIN_DIS_MASK, \
+      (0x0 << A2S_CNTL_SW0_SDP_WR_CHAIN_DIS_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1368, \
+      A2S_CNTL_SW0_SDP_WR_CHAIN_DIS_MASK, \
+      (0x0 << A2S_CNTL_SW0_SDP_WR_CHAIN_DIS_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1313, \
+      SIL_RESERVED2_931, \
+      (0x1 << SIL_RESERVED2_932) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1369, \
+      SIL_RESERVED2_931, \
+      (0x1 << SIL_RESERVED2_932) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1314, \
+      SIL_RESERVED2_933, \
+      (0x0 << SIL_RESERVED2_934) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED2_1315, \
+      SIL_RESERVED2_935, \
+      (0x1 << SIL_RESERVED2_936) \
+      ),

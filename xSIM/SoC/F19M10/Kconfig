@@ -1,0 +1,21 @@
+# Config for  xUSL/SoC/F19M10
+# Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+#
+
+config HAVE_SOC_F19M10
+    bool
+#    select ????
+
+
+if HAVE_SOC_F19M10
+comment "** selected: SoC F19M10  a.k.a. 'Genoa' **"
+config SOC_F19M10_FEAT_VAR
+    int
+    default 2
+    help
+        This is an SoC descriptor variable. These are loaded to the xSIM
+        SoC descriptors memory buffer for use by the IP blocks.
+
+endif

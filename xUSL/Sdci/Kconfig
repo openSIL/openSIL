@@ -1,0 +1,15 @@
+# Kconfig vars used for display control. One for each version.
+# These are used in the \konfig.ip file for selecting IP versions.
+config HAVE_SDCI
+    bool
+
+# conditional all elements since this IP device may or may not be included
+if HAVE_SDCI
+    menu "Smart Data Cache Injection (SDCI)"
+        comment "The SDCI IP adds the capability to"
+        comment " perform certain fabric writes directly"
+        comment " into cache rather than to the DRAM first."
+        source "xUSL/Sdci/Common/Kconfig"
+
+    endmenu
+endif

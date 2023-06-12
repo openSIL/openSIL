@@ -1,0 +1,29 @@
+# Config for  openSIL
+# Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+#  top level - selecting the Platform settings, SoC(s) to be included
+#               and IP device settings
+# Nomemclature:
+# * All config elements will be prefixed with "CONFIG_" by Kconfig
+# * Elements with names that start with "HAVE_" are code inclusion control
+#   elements. These will be used in the Meson build files to select which
+#   code modules will be included.
+#
+
+mainmenu "AMD openSIL project"
+comment "                                                               "
+comment " AMD open Silicon Initialization Library                       "
+comment "                                                               "
+
+source "Kconfig.Plat"
+source "Kconfig.SoC"
+source "Kconfig.IP"
+
+## Special selection for including the Example (XMP) device
+config HAVE_EXAMPLE
+    bool    "Do you want to include the Example (XMP) Device?"
+    default n
+
+
+

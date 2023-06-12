@@ -1,0 +1,62 @@
+# Config for  opoenSIL
+#  Platform level - set the platform values needed by openSIL
+#
+# Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+# These are the patform descriptors needed by the openSIL code base. These
+# must be defined for the platform.
+# These values are 'static' in nature - once set, they are not changed by code.
+#
+
+menu "PLATFORM Description Settings"
+
+comment "The following items are placed in the platform address map by the "
+comment "porting Engineer. These locations must be propogated into openSIL."
+comment "                                                                  "
+
+config PLAT_APOB_ADDRESS
+    hex  "AMD Platform Output Block (APOB) location (32bit Hex address)"
+    default 0x75BA0000
+    help
+      Location (32bit Hex address) in the platform memory address
+      allocation map where you have the APOB. (platform dependent)
+      The APOB is the AMD embedded firmware data block describing the
+      topology for the processor found during early power-on. The platform
+      must allocate a <size> space in the memory map to accomodate the data.
+
+
+config PSP_BIOS_BIN_BASE
+    hex  "Base of the initial bootblock"
+    default 0x75CA0000
+    help
+      Location (32bit Hex address) in the platform memory address
+      allocation map where the initial bootblock is placed.
+
+config PSP_BIOS_BIN_SIZE
+    hex "Size of initial bootblock"
+    default 0x360000
+    help
+      Size of the initial bootblock placed in memroy by the PSP.
+
+
+config PLAT_CPU_MICROCODE_LOCATION
+    hex  "CPU uCode buffer location (32bit Hex address)"
+    default 0x003FFF00
+    help
+      Location (32bit Hex address) in the platform memory address
+      allocation map where you have located the buffer containing
+      the CPU core Micro-code patch.
+
+
+config PLAT_NUMBER_SOCKETS
+    int  "Motherboard has N sockets."
+    range 1 2
+    default     1
+    help
+      The SoC may support 1 or 2 sockets, but the motherboard may
+      implement fewer than the SoC max. This is a design decision and
+      is present here to inform the openSIL code.
+
+endmenu
+

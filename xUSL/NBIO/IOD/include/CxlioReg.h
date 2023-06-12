@@ -1,0 +1,41 @@
+/**
+ *  @file CxlioReg.h
+ *  @brief This file contains Cxl Io Register definitions
+ */
+/* Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.    */
+// SPDX-License-Identifier: MIT
+
+#pragma once
+
+/***********************************************************
+* Register Name : CXLIO_SCRATCH
+* Register Description :
+* Scratch register.
+* Visibility : 0x2
+************************************************************/
+// Bitfield Description : Scratch register.
+#define CXLIO_SCRATCH_CXLIO_SCRATCH_OFFSET      0
+#define CXLIO_SCRATCH_CXLIO_SCRATCH_MASK        0xffffffff
+
+typedef union {
+  struct {
+    uint32_t                            CXLIO_SCRATCH:32;
+  } Field;
+  uint32_t Value;
+} CXLIO_SCRATCH_STRUCT;
+#define SMN_FUNC0_PCIE0NBIO0_CXLIO_SCRATCH_ADDRESS    0x80000004UL
+#define SMN_FUNC0_PCIE0NBIO1_CXLIO_SCRATCH_ADDRESS    0x80200004UL
+#define SMN_FUNC0_PCIE3NBIO0_CXLIO_SCRATCH_ADDRESS    0x80100004UL
+#define SMN_FUNC0_PCIE3NBIO1_CXLIO_SCRATCH_ADDRESS    0x80300004UL
+#define SMN_FUNC1_PCIE0NBIO0_CXLIO_SCRATCH_ADDRESS    0x80010004UL
+#define SMN_FUNC1_PCIE0NBIO1_CXLIO_SCRATCH_ADDRESS    0x80210004UL
+#define SMN_FUNC1_PCIE3NBIO0_CXLIO_SCRATCH_ADDRESS    0x80110004UL
+#define SMN_FUNC1_PCIE3NBIO1_CXLIO_SCRATCH_ADDRESS    0x80310004UL
+#define SMN_FUNC2_PCIE0NBIO0_CXLIO_SCRATCH_ADDRESS    0x80020004UL
+#define SMN_FUNC2_PCIE0NBIO1_CXLIO_SCRATCH_ADDRESS    0x80220004UL
+#define SMN_FUNC2_PCIE3NBIO0_CXLIO_SCRATCH_ADDRESS    0x80120004UL
+#define SMN_FUNC2_PCIE3NBIO1_CXLIO_SCRATCH_ADDRESS    0x80320004UL
+#define SMN_FUNC3_PCIE0NBIO0_CXLIO_SCRATCH_ADDRESS    0x80030004UL
+#define SMN_FUNC3_PCIE0NBIO1_CXLIO_SCRATCH_ADDRESS    0x80230004UL
+#define SMN_FUNC3_PCIE3NBIO0_CXLIO_SCRATCH_ADDRESS    0x80130004UL
+#define SMN_FUNC3_PCIE3NBIO1_CXLIO_SCRATCH_ADDRESS    0x80330004UL

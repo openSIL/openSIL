@@ -1,0 +1,1079 @@
+# Config for  xUSL/Mpio/Common
+# Copyright 2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+#
+
+# MPIO common variables:
+comment ""
+comment "IP MPIO Common - Controls that are common to all versions of the IP: MPIO"
+
+# ------------------------------ Clock Gating Configuration --------------------------
+config MPIO_CLOCKGATING_ENABLE
+    int  "Clock gating enabled [1/0]"
+    default 1
+    range 0 1
+    help
+        PCIe clock gating configuration is used to enable/disable MPIO clock gating.
+
+# ------------------------------ Training Timers --------------------------
+config MPIO_TIMINGCTRL_ENABLE
+    int  "Training timing overrides enabled [1/0]"
+    default 0
+    range 0 1
+    help
+        Controls whether or not the PCIe training timing overrides are leveraged by MPIO firmware.
+
+# ------------------------------ PCIe Link Receiver Detection Timeout --------------------------
+config PCIE_LINK_RECEIVER_DETECT_TIMEOUT
+    int  "PCIe link receiver detection timeout in microseconds [0-4294967295]"
+    default 0
+    range 0 4294967295
+    help
+        Used to set the desired timeout (in microseconds) from the beginning of
+        PCIe training until the receiver detection is successful. When set to 0,
+        the user control for the PCIe link receiver detection timeout is disabled
+        and internally this timer defaults to 500 ms. When set to any other value
+        between 1 - 4294967295, the PCIe link receiver detection will time out
+        after expiration of the specified time.
+
+# ------------------------------ PCIe Link Reset to Training Timeout --------------------------
+config PCIE_LINK_RESET_TO_TRAINING_TIMEOUT
+    int  "Set PCIE link reset to training time in microseconds [0-4294967295]"
+    default 0
+    range 0 4294967295
+    help
+        Used to set the desired timeout (in microseconds) from the release
+        of PERST# to the beginning of link training state machine. When set
+        to 0, the user control for the timeout is disabled and internally
+        this timer defaults to 1 microsecond. When set to any other value
+        between 1 - 4294967295, the timer will time out after expiration
+        of the specified time.
+
+# ------------------------------ L0 Link State Timeout --------------------------
+config PCIE_LINK_L0_STATE_TIMEOUT
+    int  "Timeout in microseconds for PCIe link to be in L0 state [0-4294967295]"
+    default 0
+    range 0 4294967295
+    help
+        Used to set the desired timeout (in microseconds) for the link to be
+        in L0 state after receiver detection is complete. When set
+        to 0, the user control for this timeout is disabled and internally
+        the timer defaults to 500 ms. When set to any other value
+        between 1 - 4294967295, the timer will time out after expiration
+        of the specified time.
+
+# ------------------------------ Exact PCIe Port Mapping Enable --------------------------
+config MPIO_EXACT_MATCH_ENABLE
+    int  "Exact engine to port mapping [1/0]"
+    default 0
+    range 0 1
+    help
+        When exact match is enabled, the algorithm that maps an engine to a PCIe
+        port will only map an engine to a port if the size of the engine exactly
+        matches the size of the port. If disabled, an engine is mapped to a port
+        that is the same size or larger than the engine.
+
+# ------------------------------ Valid PHY Firmware --------------------------
+config MPIO_PHY_VALID
+    int "Check for valid PHY firmware [1/0]"
+    default 1
+    range 0 1
+    help
+        Check for the presence of valid MPIO PHY firmware
+
+# ------------------------------ MPIO PHY Programming --------------------------
+config MPIO_PHY_PROGRAMMING
+    int "Select whether PHY programming runs from ROM or SRAM [1/0]"
+    default 1
+    range 0 1
+    help
+        Select the location from where the PHY programming is executed.
+        To run it from ROM, set this to option 0. To run it from SRAM,
+        set this option to 1.
+# ------------------------------ Gnb SMU BLDCFG --------------------------
+config MPIO_SKIP_PSP_MSG
+    int "Skip PSP message configuration [1/0]"
+    default 1
+    range 0 1
+    help
+        todo: Add help text for this setting.
+
+# ------------------------------ MPIO Save Restore Modes --------------------------
+choice CHOICE_SAVE_RESTORE_MODE
+    prompt  "MPIO save restore mode selection"
+    default CHOICE_SAVE_RESTORE_MODE_DEFAULT
+    help
+        Ref: typedef enum{} MPIO_SAVE_RESTORE_MODE;
+
+  config  CHOICE_SAVE_RESTORE_MODE_FULL
+    bool "Choice full"
+    help
+        todo: Add help text for this selection.
+
+config  CHOICE_SAVE_RESTORE_MODE_SELECT
+    bool "Choice select"
+    help
+        todo: Add help text for this selection.
+
+config  CHOICE_SAVE_RESTORE_MODE_HYBRID
+    bool "Choice hybrid"
+    help
+        todo: Add help text for this selection.
+
+config  CHOICE_SAVE_RESTORE_MODE_UNKNOWN
+    bool "Choice unknown"
+    help
+        todo: Add help text for this selection.
+
+config  CHOICE_SAVE_RESTORE_MODE_DEFAULT
+    bool "Choice default"
+    help
+        todo: Add help text for this selection.
+
+endchoice
+
+##  define the system variable that is used in the code
+config MPIO_SAVE_RESTORE_MODE
+    hex
+    default  0x00      if CHOICE_SAVE_RESTORE_MODE_FULL
+    default  0x01      if CHOICE_SAVE_RESTORE_MODE_SELECT
+    default  0x02      if CHOICE_SAVE_RESTORE_MODE_HYBRID
+    default  0x03      if CHOICE_SAVE_RESTORE_MODE_UNKNOWN
+    default  0xFF      if CHOICE_SAVE_RESTORE_MODE_DEFAULT
+
+# ------------------------------ PCIe Polling --------------------------
+choice CHOICE_ALLOW_PCIE_POLLING
+    prompt  "Control to enable PCIe polling"
+    default CHOICE_ENABLE_PCIE_POLLING
+    help
+        Selection to allow PCIe RP to enter polling state
+        Ref: typedef enum{} MPIO_ALLOW_PCIE_POLLING;
+
+  config  CHOICE_ENABLE_PCIE_POLLING
+    bool "Enable PCIe polling"
+    help
+        Allow PCIe RP to enter polling state
+
+config  CHOICE_USE_HARDWARE_DEFAULT
+    bool "Disable PCIe polling"
+    help
+        Do not allow PCIe RP to enter polling state
+
+config  CHOICE_PCIE_POLLING_AUTO
+    bool "Use the hardware default value"
+    help
+        Use the hardware default for PCIe RP polling
+
+endchoice
+
+##  define the system variable that is used in the code
+config MPIO_ALLOW_PCIE_POLLING
+    hex
+    default  0x00      if CHOICE_ENABLE_PCIE_POLLING
+    default  0x01      if CHOICE_USE_HARDWARE_DEFAULT
+    default  0x0F      if CHOICE_PCIE_POLLING_AUTO
+
+# ---------------------------- Hot Plug Mode ------------------------
+choice CHOICE_HOT_PLUG_MODE
+    prompt  "Select the hot plug handling mode"
+    default CHOICE_HOT_PLUG_AUTO
+    help
+        Ref: typedef enum{} MPIO_HOT_PLUG_MODE;
+
+config  CHOICE_HOT_PLUG_AUTO
+    bool "Use the hardware default value for hotplug mode"
+    help
+        todo: Add help text for this selection.
+
+endchoice
+
+##  define the system variable that is used in the code
+config MPIO_HOT_PLUG_MODE
+    hex
+    default  0xFF      if CHOICE_HOT_PLUG_AUTO
+
+# ---------------------------- PCIe SRIS Control ------------------------
+choice CHOICE_PCIE_SRIS_CONTROL
+    prompt  "Control the PCIe SRIS feature support"
+    default CHOICE_PCIE_SRIS_AUTO
+    help
+        Select whether PCIe Separate Reference Clock with
+        Independent Speed (SRIS) feature support is enabled
+        or disabled.
+        Ref: typedef enum{} MPIO_PCIE_SRIS_CONTROL;
+
+config  CHOICE_PCIE_SRIS_ENABLE
+    bool "Enable PCIe SRIS feature support"
+    help
+        PCIe SRIS is supported
+
+config  CHOICE_PCIE_SRIS_DISABLE
+    bool "Disable PCIe SRIS feature support"
+    help
+        PCIe SRIS is not supported
+
+config  CHOICE_PCIE_SRIS_AUTO
+    bool "Use the hardware default value"
+    help
+        Use the hardware default for PCIe SRIS support.
+        The hardware enables PCIe SRIS feature support by default.
+
+endchoice
+
+##  define the system variable that is used in the code
+config MPIO_PCIE_SRIS_CONTROL
+    hex
+    default  0x00      if CHOICE_PCIE_SRIS_ENABLE
+    default  0x01      if CHOICE_PCIE_SRIS_DISABLE
+    default  0xFF      if CHOICE_PCIE_SRIS_AUTO
+
+# ---------------------------- SRIS Skip Generation Interval ------------------------
+choice CHOICE_PCIE_SRIS_SKIP_INTERVAL
+    prompt  "Control the PCIe SRIS skip generation interval"
+    default CHOICE_PCIE_SRIS_SKIP_INTERVAL_0
+    help
+        todo: Add help for SRIS skip generation interval
+        Ref: typedef enum{} MPIO_PCIE_SRIS_SKIP_INTERVAL;
+
+config  CHOICE_PCIE_SRIS_SKIP_INTERVAL_0
+    bool "SRIS skip interval mode 0"
+    help
+        todo: Add an explanation on how these intervals are used
+        0x0: 1506; 144; 6050; 640
+
+config  CHOICE_PCIE_SRIS_SKIP_INTERVAL_1
+    bool "SRIS skip interval mode 1"
+    help
+        todo: Add an explanation on how these intervals are used
+        0x1: 1538; 154; 6068; 656
+
+config  CHOICE_PCIE_SRIS_SKIP_INTERVAL_2
+    bool "SRIS skip interval mode 2"
+    help
+        todo: Add an explanation on how these intervals are used
+        0x2: 1358; 128; 6032; 624
+
+config  CHOICE_PCIE_SRIS_SKIP_INTERVAL_3
+    bool "SRIS skip interval mode 3"
+    help
+        todo: Add an explanation on how these intervals are used
+        0x3: 1180; 112; 5996; 608
+
+endchoice
+
+##  define the system variable that is used in the code
+config MPIO_PCIE_SRIS_SKIP_INTERVAL
+    hex
+    default  0x00      if CHOICE_PCIE_SRIS_SKIP_INTERVAL_0
+    default  0x01      if CHOICE_PCIE_SRIS_SKIP_INTERVAL_1
+    default  0x02      if CHOICE_PCIE_SRIS_SKIP_INTERVAL_2
+    default  0x03      if CHOICE_PCIE_SRIS_SKIP_INTERVAL_3
+
+# ------------------------------ Control SRIS Skip Interval Selection Mode --------------------------
+config MPIO_SRIS_SKIP_INTERVAL_SELECT
+    int  "Control SRIS skip interval selection mode [1/0]"
+    default 1
+    range 0 1
+    help
+        todo: Check the range for this setting. Add help desctiption.
+
+# ------------------------------ SRIS Configuration Type --------------------------
+config MPIO_SRIS_CONFIG_TYPE
+    int  "SRIS configuration type [0-7]"
+    default 0
+    range 0 7
+    help
+        todo: Add help details for SRIS Configuration Type
+
+# ------------------------------ SRIS Auto Detect Mode --------------------------
+choice CHOICE_SRIS_AUTO_DETECT_MODE
+    prompt  "Control SRIS autodetect mode for this platform"
+    default CHOICE_SRIS_AUTO_DETECT_MODE_AUTO
+    help
+        Enable or disable SRIS auto detect mode
+        Ref: typedef enum{} MPIO_SRIS_AUTO_DETECT_MODE;
+
+config  CHOICE_SRIS_AUTO_DETECT_MODE_DISABLED
+    bool "Disable SRIS Auto Detect Mode"
+    help
+        MPIO SRIS Auto Detect Mode is disabled
+
+config  CHOICE_SRIS_AUTO_DETECT_MODE_ENABLED
+    bool "Disable SRIS Auto Detect Mode"
+    help
+        MPIO SRIS Auto Detect Mode is disabled
+
+config  CHOICE_SRIS_AUTO_DETECT_MODE_AUTO
+    bool "Supported from 2.5 to 8.0 GT/s"
+    help
+        Use the hardware default setting for SRIS auto detect mode
+
+endchoice
+
+##  define the system variable that is used in the code
+config MPIO_SRIS_AUTO_DETECT_MODE
+    hex
+    default  0x00      if CHOICE_SRIS_AUTO_DETECT_MODE_DISABLED
+    default  0x01      if CHOICE_SRIS_AUTO_DETECT_MODE_ENABLED
+    default  0x0F      if CHOICE_SRIS_AUTO_DETECT_MODE_AUTO
+
+
+# ------------------------------ SRIS Auto Detect Factor --------------------------
+config MPIO_SRIS_AUTODETECT_FACTOR
+    int  "Controls SRIS autodetect factor [0-2]"
+    default 0
+    range 0 2
+    help
+        Controls the multiplier for SKP ordered set interval
+
+# ---------------------------- SRIS and SKP Ordered Sets Transmission Speed Support ------------------------
+choice CHOICE_PCIE_SRIS_SKP_TRANSMISSION_CONTROL
+    prompt  "Control SRIS and SKP ordered sets transmission speed"
+    default CHOICE_SRIS_SKP_TRANSMISSION_UNSUPPORTED
+    help
+        Indicates if the Port supports both SRIS and software
+        control of the SKP ordered set transmission scheduling
+        rate for the indicated speed.
+        Ref: typedef enum{} MPIO_PCIE_SRIS_SKP_TRANSMISSION_CONTROL;
+
+config  CHOICE_SRIS_SKP_TRANSMISSION_UNSUPPORTED
+    bool "Enable PCIe SRIS feature support"
+    help
+        PCIe SRIS is supported
+
+config  CHOICE_SRIS_SKP_TRANSMISSION_2_5_GT_PER_S
+    bool "Supported at 2.5 GT/s"
+    help
+        Port supports SRIS and software control of SKP ordered
+        sets transmission at 2.5 GT/s.
+
+config  CHOICE_SRIS_SKP_TRANSMISSION_2_5_TO_5_GT_PER_S
+    bool "Supported from 2.5 to 5.0 GT/s"
+    help
+        Port supports SRIS and software control of SKP ordered
+        sets transmission at any speed between 2.5 to 5.0 GT/s.
+
+config  CHOICE_SRIS_SKP_TRANSMISSION_2_5_TO_8_GT_PER_S
+    bool "Supported from 2.5 to 8.0 GT/s"
+    help
+        Port supports SRIS and software control of SKP ordered
+        sets transmission at any speed between 2.5 to 8.0 GT/s.
+
+config  CHOICE_SRIS_SKP_TRANSMISSION_2_5_TO_16_GT_PER_S
+    bool "Supported from 2.5 to 16.0 GT/s"
+    help
+        Port supports SRIS and software control of SKP ordered
+        sets transmission at any speed between 2.5 to 16.0 GT/s.
+
+config  CHOICE_SRIS_SKP_TRANSMISSION_2_5_TO_32_GT_PER_S
+    bool "Supported from 2.5 to 32.0 GT/s"
+    help
+        Port supports SRIS and software control of SKP ordered
+        sets transmission at any speed between 2.5 to 32.0 GT/s.
+
+endchoice
+
+##  define the system variable that is used in the code
+config MPIO_PCIE_SRIS_SKP_TRANSMISSION_CONTROL
+    hex
+    default  0x00      if CHOICE_SRIS_SKP_TRANSMISSION_UNSUPPORTED
+    default  0x01      if CHOICE_SRIS_SKP_TRANSMISSION_2_5_GT_PER_S
+    default  0x03      if CHOICE_SRIS_SKP_TRANSMISSION_2_5_TO_5_GT_PER_S
+    default  0x07      if CHOICE_SRIS_SKP_TRANSMISSION_2_5_TO_8_GT_PER_S
+    default  0x0F      if CHOICE_SRIS_SKP_TRANSMISSION_2_5_TO_16_GT_PER_S
+    default  0x1F      if CHOICE_SRIS_SKP_TRANSMISSION_2_5_TO_32_GT_PER_S
+
+# ---------------------------- SRIS and SKP Ordered Sets Reception Speed Support ------------------------
+choice CHOICE_PCIE_SRIS_SKP_RECEPTION_CONTROL
+    prompt  "Control SRIS and SKP ordered sets reception speed"
+    default CHOICE_SRIS_SKP_RECEPTION_UNSUPPORTED
+    help
+        Indicates if the Port supports both SRIS and receiving
+        SKP ordered sets at the SRNS rate, while running in
+        SRIS, for the indicated speed.
+        Ref: typedef enum{} MPIO_PCIE_SRIS_SKP_RECEPTION_CONTROL;
+
+config  CHOICE_SRIS_SKP_RECEPTION_UNSUPPORTED
+    bool "SRIS and SKP reception speed control unsupported"
+    help
+        PCIe SRIS and SKP ordered sets reception speed control is not supported.
+
+config  CHOICE_SRIS_SKP_RECEPTION_2_5_GT_PER_S
+    bool "Supported at 2.5 GT/s"
+    help
+        Port supports SRIS and SKP ordered sets reception at 2.5 GT/s.
+
+config  CHOICE_SRIS_SKP_RECEPTION_2_5_TO_5_GT_PER_S
+    bool "Supported from 2.5 to 5.0 GT/s"
+    help
+        Port supports SRIS and SKP ordered sets reception at any speed between
+        2.5 to 5.0 GT/s.
+
+config  CHOICE_SRIS_SKP_RECEPTION_2_5_TO_8_GT_PER_S
+    bool "Supported from 2.5 to 8.0 GT/s"
+    help
+        Port supports SRIS and SKP ordered sets reception at any speed between
+        2.5 to 8.0 GT/s.
+
+config  CHOICE_SRIS_SKP_RECEPTION_2_5_TO_16_GT_PER_S
+    bool "Supported from 2.5 to 16.0 GT/s"
+    help
+        Port supports SRIS and SKP ordered sets reception at any speed between
+        2.5 to 16.0 GT/s.
+
+config  CHOICE_SRIS_SKP_RECEPTION_2_5_TO_32_GT_PER_S
+    bool "Supported from 2.5 to 32.0 GT/s"
+    help
+        Port supports SRIS and SKP ordered sets reception at any speed between
+        2.5 to 32.0 GT/s.
+
+endchoice
+
+##  define the system variable that is used in the code
+config MPIO_PCIE_SRIS_SKP_RECEPTION_CONTROL
+    hex
+    default  0x00      if CHOICE_SRIS_SKP_RECEPTION_UNSUPPORTED
+    default  0x01      if CHOICE_SRIS_SKP_RECEPTION_2_5_GT_PER_S
+    default  0x03      if CHOICE_SRIS_SKP_RECEPTION_2_5_TO_5_GT_PER_S
+    default  0x07      if CHOICE_SRIS_SKP_RECEPTION_2_5_TO_8_GT_PER_S
+    default  0x0F      if CHOICE_SRIS_SKP_RECEPTION_2_5_TO_16_GT_PER_S
+    default  0x1F      if CHOICE_SRIS_SKP_RECEPTION_2_5_TO_32_GT_PER_S
+
+# ------------------------------ CXL port control --------------------------
+config MPIO_CXL_PORT_CONTROL
+    int  "Control CXL enablement on all ports [1/0]"
+    default 1
+    range 0 1
+    help
+        Used to enable or disable Compute Express Link (CXL)
+        support on all PCIe ports.
+
+# ------------------------------ CXL Correctable Error Logging --------------------------
+config MPIO_CXL_CORRECTABLE_ERROR_LOGGING
+    int  "Control CXL correctable error logging [1/0]"
+    default 1
+    range 0 1
+    help
+        If CXL is enabled, MPIO configures some CXL debug options.
+        When set, a CXL error will be logged as a correctable
+        internal error in Advanced Error Reporting (AER) control
+        register. Enabled by default.
+
+# ------------------------------ CXL Unorrectable Error Logging --------------------------
+config MPIO_CXL_UNCORRECTABLE_ERROR_LOGGING
+    int  "Control CXL uncorrectable error logging [1/0]"
+    default 1
+    range 0 1
+    help
+        If CXL is enabled, MPIO configures some CXL debug options.
+        When set, a CXL error will be logged as an uncorrectable
+        internal error in Advanced Error Reporting (AER) control
+        register. Enabled by default.
+
+# ------------------------------ CXL Advanced Error Reporting --------------------------
+config MPIO_ADVANCED_ERROR_REPORTING_ENABLE
+    int  "Enable MPIO advanced error reporting capability [1/0]"
+    default 1
+    range 0 1
+    help
+        Used to enable or disable the MPIO advanced error
+        reporting capability. Enabled by default.
+
+# ------------------------------ PCIe Multi-cast Capability --------------------------
+config MPIO_PCIE_MULTICAST_ENABLE
+    int  "MPIO PCIe multicast capability support [1/0]"
+    default 0
+    range 0 1
+    help
+        Used to control the PCIe multicast capability support.
+        When disabled, the communication is point to point.
+        Disabled by default.
+
+# ------------------------------ PCIe Receive Error Configuration --------------------------
+config MPIO_RECEIVE_ERROR_ENABLE
+    int  "MPIO PCIe receive error control [1/0]"
+    default 0
+    range 0 1
+    help
+        Used to enable or disable the PCIe receive error
+        when PCIe multicast capability has been enabled.
+
+# ------------------------------ Early BMC Link Training --------------------------
+config MPIO_EARLY_BMC_LINK_TRAIN_ENABLE
+    int  "Enable the early BMC link training feature [1/0]"
+    default 1
+    range 0 1
+    help
+        Used to notify if the early BMC link training feature
+        is enabled in the ABL. This is used to clear link training
+        status before MPIO initialization.
+
+# ---------------------------- Early BMC Link Socket ------------------------
+choice CHOICE_EARLY_BMC_LINK_SOCKET
+    prompt  "Socket number for connecting the BMC link"
+    default CHOICE_SOCKET_NUM_0
+    help
+        Select the socket number to which the BMC link is
+        connected if early BMC training is enabled.
+        Ref: typedef enum{} MPIO_EARLY_BMC_LINK_SOCKET;
+
+config  CHOICE_SOCKET_NUM_0
+    bool "BMC link connected to socket 0"
+    help
+        BMC link is connected to socket 0.
+
+config  CHOICE_SOCKET_NUM_1
+    bool "BMC link connected to socket 1"
+    help
+        BMC link is connected to socket 1.
+
+config  CHOICE_SOCKET_BMC_EARLY_TRAIN_UNSUPPORTED
+    bool "BMC early training not supported"
+    help
+        BMC early training is not supported.
+
+endchoice
+
+##  define the system variable that is used in the code
+config MPIO_EARLY_BMC_LINK_SOCKET
+    hex
+    default  0x00      if CHOICE_SOCKET_NUM_0
+    default  0x01      if CHOICE_SOCKET_NUM_1
+    default  0xFF      if CHOICE_SOCKET_BMC_EARLY_TRAIN_UNSUPPORTED
+
+# ------------------------------ Early BMC Link Lane Number --------------------------
+config MPIO_EARLY_BMC_LINK_LANE
+    int  "Select the lane number for the BMC link trained in ABL [0-135]"
+    default 134
+    range 0 135
+    help
+        This value identifies the lane number used for the BMC link
+        training in ABL. If the lane number is between 128 and 135,
+        the link is not disabled for reconfiguration. In this case,
+        the link will remain active during PEI. Any value below 128
+        will cause the BMC link to be reconfigured in the PEI phase.
+
+# ------------------------------ Early BMC Link Die --------------------------
+choice CHOICE_EARLY_BMC_LINK_DIE
+    prompt  "Die number to which BMC link is connected for early BMC training"
+    default CHOICE_LANE_0_TO_31
+    help
+        Select the the die number to which the BMC link is
+        connected if early BMC training is enabled.
+        Refer to MPIO_EARLY_BMC_LINK_TRAIN_ENABLE for more details.
+        Ref: typedef enum{} MPIO_EARLY_BMC_LINK_DIE;
+
+config  CHOICE_LANE_0_TO_31
+    bool "Connect BMC to die 0 (lanes 0 - 31)"
+    help
+        BMC is connected to die 0 (lanes 0 - 31) of the socket
+        identified by MPIO_EARLY_BMC_LINK_SOCKET
+
+config  CHOICE_LANE_32_TO_63
+    bool "Connect BMC to die 1 (lanes 32 - 63)"
+    help
+        BMC is connected to die 1 (32 - 63) of the socket
+        identified by MPIO_EARLY_BMC_LINK_SOCKET
+
+config  CHOICE_LANE_64_TO_95
+    bool "Connect BMC to die 2 (lanes 64 - 95)"
+    help
+        BMC is connected to die 2 (lanes 64 - 95) of the socket
+        identified by MPIO_EARLY_BMC_LINK_SOCKET
+
+config  CHOICE_LANE_96_TO_127
+    bool "Connect BMC to die 3 (lanes 96 - 127)"
+    help
+        BMC is connected to die 3 (lanes 96 - 127) of the socket
+        identified by MPIO_EARLY_BMC_LINK_SOCKET
+
+config  CHOICE_DIE_BMC_EARLY_TRAIN_UNSUPPORTED
+    bool "BMC early training is not supported"
+    help
+        BMC early training is not supported
+
+endchoice
+
+##  define the system variable that is used in the code
+config MPIO_EARLY_BMC_LINK_DIE
+    hex
+    default  0x00      if CHOICE_LANE_0_TO_31
+    default  0x01      if CHOICE_LANE_32_TO_63
+    default  0x02      if CHOICE_LANE_64_TO_95
+    default  0x03      if CHOICE_LANE_96_TO_127
+    default  0xFF      if CHOICE_DIE_BMC_EARLY_TRAIN_UNSUPPORTED
+
+# ------------------------------ Surprise Down Feature --------------------------
+config MPIO_SURPRISE_DOWN_ENABLE
+    int  "Surprise down feature control [1/0]"
+    default 1
+    range 0 1
+    help
+        Used to control the PCIe surprise down feature.
+
+# ------------------------------ Adjust PCIe Link Training Speed --------------------------
+config MPIO_PCIE_LINK_TRAINING_SPEED
+    int  "Force PCIe link training speed [1/0]"
+    default 0
+    range 0 1
+    help
+        Allows to force set the PCIe link training speed to the speed
+        last advertised for all ports. When disabled, the speed is set
+        to the highest data rate ever advertised. When enabled, the last
+        advertised data rate is used for link training.
+        This setting is disabled by default.
+
+# ------------------------------ Receiver Margin Enablement --------------------------
+config MPIO_RX_MARGIN_ENABLE
+    int  "Receiver margin enablement [1/0]"
+    default 1
+    range 0 1
+    help
+        Used to enable or disable the receiver margin.
+
+# ------------------------------ CfgPcieCVTestWA --------------------------
+config MPIO_PCIE_CV_TEST_CONFIG
+    int  "Control CV test workarounds"
+    default 1
+    range 0 1
+    help
+        todo: help text for CfgPcieCVTestWA. Check the range for this setting.
+
+# ------------------------------ Alternative Routing-ID Interpretation (ARI) Support Enablement --------------------------
+config MPIO_PCIE_ARI_SUPPORT
+    int  "Enable ARI support for PCIe [1/0]"
+    default 1
+    range 0 1
+    help
+        Used to enable or disable Alternative Routing-ID Interpretation (ARI)
+        support for PCIe.
+
+# ------------------------------ CfgNbioCTOtoSC --------------------------
+config MPIO_TOGGLE_NBIO_TO_SC
+    int  "Toggle NBIO to SC control [1/0]"
+    default 0
+    range 0 1
+    help
+        todo: Add help text for this setting.
+
+# ------------------------------ CfgNbioCTOIgnoreError --------------------------
+config MPIO_TOGGLE_NBIO_IGNORE_CTO_ERROR
+    int  "Toggle NBIO to SC control [1/0]"
+    default 1
+    range 0 1
+    help
+        todo: Add help text for this setting.
+
+# ------------------------------ NBIO Controller SSID --------------------------
+config NBIO_CONTROLLER_SSID
+    int  "Define the SSID assigned to the NBIO controller [0-4294967295]"
+    default 0
+    range 0 4294967295
+    help
+        This 32-bit value is used to define the subsystem ID and
+        subsystem vendor ID assigned to the NBIO controller. The
+        default power-up setting for NBIO SSID is 0. The Upper 16
+        bits are used to set the subsystem ID. Lower 16 bits are
+        used to set the subsystem vendor ID.
+
+
+# ------------------------------ IOMMU Controller SSID --------------------------
+config IOMMU_CONTROLLER_SSID
+    int  "Define the SSID assigned to the IOMMU controller [0-4294967295]"
+    default 0
+    range 0 4294967295
+    help
+        This 32-bit value is used to define the subsystem ID and
+        subsystem vendor ID assigned to the IOMMU controller. The
+        default power-up setting for IOMMU SSID is 0. The Upper 16
+        bits are used to set the subsystem ID. Lower 16 bits are used
+        to set the subsystem vendor ID.
+
+# ------------------------------ PSP CCP Controller SSID --------------------------
+config PSP_CCP_CONTROLLER_SSID
+    int  "Define the SSID assigned to the PSP CCP controller [0-4294967295]"
+    default 0
+    range 0 4294967295
+    help
+        This 32-bit value is used to define the subsystem ID and
+        subsystem vendor ID assigned to the PSP CCP controller. The
+        default power-up setting for IOMMU SSID is 0. The Upper 16 bits
+        are used to set the subsystem ID. Lower 16 bits are used to set
+        the subsystem vendor ID.
+
+# ------------------------------ NTB CCP Controller SSID --------------------------
+config NTB_CCP_CONTROLLER_SSID
+    int  "Define the SSID assigned to the NTB CCP controller [0-4294967295]"
+    default 0
+    range 0 4294967295
+    help
+        This 32-bit value is used to define the subsystem ID and
+        subsystem vendor ID assigned to the NTB CCP controller. The
+        default power-up setting for NTB CCP SSID is 0. The Upper 16
+        bits are used to set the subsystem ID. Lower 16 bits are used
+        to set the subsystem vendor ID.
+
+# ------------------------------ NBIF0 Controller SSID --------------------------
+config NBIF0_CONTROLLER_SSID
+    int  "Define the SSID assigned to the NBIF0 controller [0-4294967295]"
+    default 0
+    range 0 4294967295
+    help
+        This 32-bit value is used to define the subsystem ID and
+        subsystem vendor ID assigned to the NBIF0 controller. The
+        default power-up setting for NBIF0 SSID is 0. The Upper 16
+        bits are used to set the subsystem ID. Lower 16 bits are used
+        to set the subsystem vendor ID.
+
+# ------------------------------ NTB Controller SSID --------------------------
+config NTB_CONTROLLER_SSID
+    int  "Define the SSID assigned to the NTB controller [0-4294967295]"
+    default 0
+    range 0 4294967295
+    help
+        This 32-bit value is used to define the subsystem ID and
+        subsystem vendor ID assigned to the NTB controller. The
+        default power-up setting for NTB SSID is 0. The Upper 16
+        bits are used to set the subsystem ID. Lower 16 bits are used
+        to set the subsystem vendor ID.
+
+# ------------------------------ Subsystem Device ID --------------------------
+config PCIE_SUBSYSTEM_DEVICE_ID
+    int  "Subsystem device ID assigned to PCIe device [0-65535]"
+    default 0
+    range 0 65535
+    help
+        This 16-bit value is used to define the subsystem
+        device ID assigned to a PCIe device. The default
+        power-up setting is 0, which sets the subsystem device
+        ID to 0x1453. Any value other than 0 sets the subsystem
+        device ID to that value.
+        todo: Check the range of values.
+
+# ------------------------------ Subsystem Vendor ID --------------------------
+config PCIE_SUBSYSTEM_VENDOR_ID
+    int  "Vendor device ID assigned to PCIe device [0-65535]"
+    default 0
+    range 0 65535
+    help
+        This 16-bit value is used to define the vendor
+        device ID assigned to a PCIe device. The default
+        power-up setting is 0, which sets the vendor device
+        ID to 0x1022. Any value other than 0 sets the vendor
+        device ID to that value.
+        todo: Check the range of values.
+
+# ------------------------------ GppAtomicOps --------------------------
+config MPIO_GPP_ATOMIC_OPS
+    int  "Gpp Atomic Ops [0-255]"
+    default 1
+    range 0 255
+    help
+        todo: Add help text for this setting. Check
+        whether the range is correct.
+
+# ------------------------------ GfxAtomicOps --------------------------
+config MPIO_GPFXATOMIC_OPS
+    int  "Gfx Atomic Ops [0-255]"
+    default 1
+    range 0 255
+    help
+        todo: Add help text for this setting. Check
+        whether the range is correct.
+
+# ------------------------------ EDB Error Reporting --------------------------
+config MPIO_EDB_ERROR_REPORTING_ENABLE
+    int  "Enable reporting of EDB errors [1/0]"
+    default 0
+    range 0 1
+    help
+        This value enables reporting of EDB errors from
+        the PCIe device.
+
+# ------------------------------ OpnSpare --------------------------
+config MPIO_OPN_SPARE
+    int  "MPIO Open Spare [0-4294967295]"
+    default 0
+    range 0 4294967295
+    help
+        todo: Add help text for this setting. Check
+        whether the range is correct.
+
+# ------------------------------ AmdPreSilCtrl0 --------------------------
+config AMD_PRE_SIL_CONTROL
+    int  "Environment flag for SilCtrl0 [0-4294967295]"
+    default 0
+    range 0 4294967295
+    help
+        todo: Add help text for this setting. Check
+        whether the range is correct.
+
+# ------------------------------ MPIO Ancillary Data Support --------------------------
+config MPIO_ANCILLARY_DATA_SUPPORT_ENABLE
+    int  "Enable MPIO ancillary data support [1/0]"
+    default 0
+    range 0 1
+    help
+        Used to enable MPIO ancillary data sypport.
+        Disabled by default.
+
+# ------------------------------ MPIO After Reset Delay --------------------------
+config MPIO_AFTER_RESET_DELAY
+    int  "Specify the delay between PCI reset de-assertion and start of link training [0-65535]"
+    default 0
+    range 0 65535
+    help
+        Used to specify the delay in milliseconds, to be
+        inserted between PCI reset de-assertion and start
+        of link training. This delay is inserted once for
+        each socket.
+
+# ------------------------------ Early Link Training Enable --------------------------
+config MPIO_EARLY_LINK_TRAINING_ENABLE
+    int  "Enable early link training [1/0]"
+    default 0
+    range 0 1
+    help
+        Use to enable or disable MPIO early link training.
+        Disabled by default.
+
+# ------------------------------ Expose Unused PCIe Ports --------------------------
+choice CHOICE_EXPOSE_UNUSED_PCIE_PORTS
+    prompt  "Setting to expose unused PCIe ports to the OS"
+    default CHOICE_USE_PLATFORM_CONFIG_DEFAULT
+    help
+        Control whethere or not to show unused PCIe ports to the OS.
+        Ref: typedef enum{} MPIO_EXPOSE_UNUSED_PCIE_PORTS;
+
+config  CHOICE_HIDE_UNUSED_PORTS
+    bool "Hide all unused ports"
+    help
+      Hide all unused PCIe ports from the OS.
+
+config  CHOICE_EXPOSE_UNUSED_PORTS
+    bool "Expose all unused ports"
+    help
+      Expose all unused PCIe ports to the OS
+
+config  CHOICE_USE_PLATFORM_CONFIG_DEFAULT
+    bool "Use the default configuration"
+    help
+      Use the default platform configuration to determine whether
+      the unused PCIe ports should be exposed to the OS.
+
+endchoice
+
+##  define the system variable that is used in the code
+config MPIO_EXPOSE_UNUSED_PCIE_PORTS
+    hex
+    default  0x00      if CHOICE_HIDE_UNUSED_PORTS
+    default  0x01      if CHOICE_EXPOSE_UNUSED_PORTS
+    default  0xFF      if CHOICE_USE_PLATFORM_CONFIG_DEFAULT
+
+# ------------------------------ Max PCIe Link Speed --------------------------
+choice CHOICE_MAX_PCIE_LINK_SPEED
+    prompt  "Upper limit for PCIe link speed"
+    default CHOICE_NO_LINK_SPEED_LIMIT
+    help
+        Define an upper limit for PCIe link speed.
+        Ref: typedef enum{} MPIO_MAX_PCIE_LINK_SPEED;
+
+config  CHOICE_NO_LINK_SPEED_LIMIT
+    bool "Do not limit PCIe link speed"
+    help
+      These is no upper limit on the PCIe link speed.
+
+config  CHOICE_PCIE_LIMIT_TO_GEN1
+    bool "Limit all PCIe links to Gen1"
+    help
+      The maximum speed of all PCIe links is limited to
+      PCIe Gen1 speed.
+
+config  CHOICE_PCIE_LIMIT_TO_GEN2
+    bool "Limit all PCIe links to Gen2"
+    help
+      The maximum speed of all PCIe links is limited to
+      PCIe Gen2 speed.
+
+config  CHOICE_PCIE_LIMIT_TO_GEN3
+    bool "Limit all PCIe links to Gen3"
+    help
+      The maximum speed of all PCIe links is limited to
+      PCIe Gen3 speed.
+
+config  CHOICE_PCIE_LIMIT_TO_GEN4
+    bool "Limit all PCIe links to Gen4"
+    help
+      The maximum speed of all PCIe links is limited to
+      PCIe Gen4 speed.
+
+config  CHOICE_PCIE_LIMIT_TO_GEN5
+    bool "Limit all PCIe links to Gen5"
+    help
+      The maximum speed of all PCIe links is limited to
+      PCIe Gen5 speed.
+
+endchoice
+
+##  define the system variable that is used in the code
+config MPIO_MAX_PCIE_LINK_SPEED
+    int
+    default  0      if CHOICE_NO_LINK_SPEED_LIMIT
+    default  1      if CHOICE_PCIE_LIMIT_TO_GEN1
+    default  2      if CHOICE_PCIE_LIMIT_TO_GEN2
+    default  3      if CHOICE_PCIE_LIMIT_TO_GEN3
+    default  4      if CHOICE_PCIE_LIMIT_TO_GEN4
+    default  5      if CHOICE_PCIE_LIMIT_TO_GEN5
+
+# ------------------------------ SATA PHY Tuning --------------------------
+config MPIO_SATA_PHY_TUNING
+    int  "Control for SATA PHY tuning [0-255]"
+    default 0
+    range 0 255
+    help
+        todo: Add help text for this setting. Check the range for this setting.
+
+# ------------------------------ Enable Compilance Mode for PCIe Ports --------------------------
+config PCIE_LINK_COMPILANCE_MODE_ENABLE
+    int  "Set all PCIe ports to compliance mode [1/0]"
+    default 1
+    range 0 1
+    help
+        This control will configure all the PCIe ports to be in compliance mode.
+
+# ------------------------------ MCTP Enable --------------------------
+config MPIO_MCTP_SUPPORT_ENABLE
+    int  "Enable MCTP support [1/0]"
+    default 0
+    range 0 1
+    help
+        Enable or disable MCTP support.
+
+# ------------------------------ SBR Broken Lane Avoidance Suppport --------------------------
+config SBR_BROKEN_LANE_AVOIDANCE_ENABLE
+    int  "SBR broken lane avoidance support enable [1/0]"
+    default 1
+    range 0 1
+    help
+        Enable or disable SBR broken lane avoidance support.
+
+# ------------------------------ Auto Full Margining Support --------------------------
+config AUTO_FULL_MARGINING_SUPPORT_ENABLE
+    int  "Auto full margining support enable [1/0]"
+    default 1
+    range 0 1
+    help
+        Enable or disable auto full margining support.
+
+# ------------------------------ Gen3 PCIE LC Preset Mask Control --------------------------
+config GEN3_PCIE_PRESET_MASK
+    hex  "Set the default value for Gen3 PCIE LC Preset Mask Control [0-3FF, FFFFFFFF]"
+    default 0xFFFFFFFF
+    help
+        This 32-bit value specifies the default value
+        for the Gen3 PCIE LC Preset Mask Control for all
+        ports. This setting can use any value between 0-3FF.
+        The values between 0-3FF form a bit mask. For each
+        bit value set to 1, the corresponding preset is included
+        in the evaluation. A bit value of 0 excludes the
+        corresponding preset from evaluation.
+        The default value set by the platform configuration
+        for all ports is 0xFFFFFFFF.
+
+# ------------------------------ Gen4 PCIE LC Preset Mask Control --------------------------
+config GEN4_PCIE_PRESET_MASK
+    hex  "Set the default value for Gen4 PCIE LC Preset Mask Control [0-3FF, FFFFFFFF]"
+    default 0xFFFFFFFF
+    help
+        This 32-bit value specifies the default value
+        for the Gen4 PCIE LC Preset Mask Control for all
+        ports. This setting can use any value between 0-3FF.
+        The values between 0-3FF form a bit mask. For each
+        bit value set to 1, the corresponding preset is included
+        in the evaluation. A bit value of 0 excludes the
+        corresponding preset from evaluation.
+        The default value set by the platform configuration
+        for all ports is 0xFFFFFFFF.
+
+# ------------------------------ Gen5 PCIE LC Preset Mask Control --------------------------
+config GEN5_PCIE_PRESET_MASK
+    hex  "Set the default value for Gen5 PCIE LC Preset Mask Control [0-3FF, FFFFFFFF]"
+    default 0xFFFFFFFF
+    help
+        This 32-bit value specifies the default value
+        for the Gen5 PCIE LC Preset Mask Control for all
+        ports. This setting can use any value between 0-3FF.
+        The values between 0-3FF form a bit mask. For each
+        bit value set to 1, the corresponding preset is included
+        in the evaluation. A bit value of 0 excludes the
+        corresponding preset from evaluation.
+        The default value set by the platform configuration
+        for all ports is 0xFFFFFFFF.
+
+# ------------------------------ PCIe Link Active State Power Management --------------------------
+choice CHOICE_LINK_ACTIVE_STATE_PWR_MGMT
+    prompt  "Global override for ASPM for all ports"
+    default CHOICE_ACTIVE_STATE_PWR_MGMT_AUTO
+    help
+        Configure the global override for link Active State Power
+        Management (ASPM) for all ports.
+        Ref: typedef enum{} PCIE_LINK_ACTIVE_STATE_PWR_MGMT;
+
+config  CHOICE_ACTIVE_STATE_PWR_MGMT_DISABLED
+    bool "Disable global override for active state power management"
+    help
+      The global override for active start power management for all
+      ports is disabled
+
+config  CHOICE_ACTIVE_STATE_PWR_MGMT_L0
+    bool "Set all ports to use L0"
+    help
+      All ports are set to use the L0 global override.
+
+config  CHOICE_ACTIVE_STATE_PWR_MGMT_L1
+    bool "Set all ports to use L1"
+    help
+      All ports are set to use the L1 global override.
+
+config  CHOICE_ACTIVE_STATE_PWR_MGMT_L0SL1
+    bool "Set all ports to use L0sL1"
+    help
+      All ports are set to use the L0sL1 global override.
+
+config  CHOICE_ACTIVE_STATE_PWR_MGMT_AUTO
+    bool "Use the default setting for active state power management"
+    help
+      The global override setting is skipped by default. The per
+      port configuration value populated by the customer in the
+      MPIO config descriptors is used for all ports.
+
+endchoice
+
+##  define the system variable that is used in the code
+config PCIE_LINK_ACTIVE_STATE_PWR_MGMT
+    hex
+    default  0x00      if CHOICE_ACTIVE_STATE_PWR_MGMT_DISABLED
+    default  0x01      if CHOICE_ACTIVE_STATE_PWR_MGMT_L0
+    default  0x02      if CHOICE_ACTIVE_STATE_PWR_MGMT_L1
+    default  0x03      if CHOICE_ACTIVE_STATE_PWR_MGMT_L0SL1
+    default  0xFF      if CHOICE_ACTIVE_STATE_PWR_MGMT_AUTO
+
+# ------------------------------ PCI Address Segment of MCTP Master --------------------------
+config MCTP_MASTER_PCI_ADDR_SEGMENT
+    int  "Define segment of PCI address of MCTP master [0-127]"
+    default 0
+    range 0 127
+    help
+        Specify the 8-bit segment of the PCI address of MCTP master.
+        This has no effect if MPIO_MCTP_SUPPORT_ENABLE is not enabled.
+        Refer to MPIO_MCTP_SUPPORT_ENABLE for more details.
+
+# ------------------------------ PCI Address of MCTP Master --------------------------
+config MCTP_MASTER_PCI_ADDR
+    int  "Define the PCI address of MCTP master"
+    default 0
+    help
+        Specify the 16-bit PCI address of MCTP master. This has no
+        effect if MPIO_MCTP_SUPPORT_ENABLE is not enabled.
+        Refer to MPIO_MCTP_SUPPORT_ENABLE for more details.

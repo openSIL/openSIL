@@ -1,0 +1,21 @@
+# Config for  xUSL/CCX
+# Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+#
+
+# Kconfig vars used for display control. One for each version.
+# These are used in the \konfig.ip file for selecting IP versions.
+config HAVE_CCX_ZEN4
+    bool
+
+# conditional all elements since this IP device may or may not be included
+if HAVE_CCX_ZEN4
+    menu "Compute Core Complex (CCX) Device"
+        comment "The CCX device controls the quantity and operation of the"
+        comment " compute core in the system"
+        source "xUSL/CCX/Common/Kconfig"
+        source "xUSL/CCX/*/Kconfig"
+
+    endmenu
+endif

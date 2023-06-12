@@ -1,0 +1,33 @@
+# Config for  xUSL/XMP/Ver-A
+# Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+#
+
+
+if HAVE_XMP_VER_A
+comment ""
+comment "IP: XMP Ver-A  **"
+config XMP_A_FEAT_VARINT
+    int "Length of some Rev-A item"
+    default 2
+    range 1 10
+    help
+        This is a random variable specific to only Version A of the IP.
+        PLEASE do not name the variable with the version, use a feature based title.
+
+config XMP_A_FEAT_VARHEX
+    hex "Value, e.g. location, of an XMP data element."
+    default 0x0000
+    help
+        This is an example of a hex value field. This is for illustration.
+        This variable uses IP and version in the name for clarity of the example.
+
+config XMP_A_FEAT_VARSTR
+    string "Name or title of some XMP Feature."
+    default "Empty"
+    help
+        This is an example of a string field. This is for illustration.
+        This string is limited to 16 chars in length.
+
+endif

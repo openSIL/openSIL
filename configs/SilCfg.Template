@@ -1,0 +1,14 @@
+/* Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.    */
+// SPDX-License-Identifier: MIT
+
+#pragma once
+
+/* fixup coverity build issues */
+#mesondefine IS_COVERITY_BUILD
+#ifdef IS_COVERITY_BUILD
+  #include "util/meson/mason-coverity.h"
+#endif
+
+/* Now include the platform openSIL config file generated from Kconfig */
+#include "@PlatFormKcfg@.h"
+

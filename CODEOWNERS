@@ -1,0 +1,10 @@
+# openSIL CODEOWNERS
+#
+# Code owners are automatically requested for review when someone opens a pull request that modifies code that they own
+#
+# Default Reviewers
+#
+# Internal Members: Include everyone in the "AMD Developers" team
+# External Collaborators: From organizations who have signed the CLA and part of the development team
+#
+# @TODO: add CODEOWNERS

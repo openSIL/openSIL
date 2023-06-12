@@ -1,0 +1,40 @@
+# Config for  xUSL/XMP/Common
+# Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+#
+
+# XMP common variables:
+comment ""
+comment "IP XMP Common - Controls that are common to all versions of the IP: XMP"
+config XMP_CMN_VARHEX
+    hex     "This value is for (XMP_CMN_VARHEX)"
+    default 0x00
+    help
+        This is an example of how to set a config for an IP variable
+        common to all versions of the Device. This is used to set
+        defaults in the input block for the IP. See XmpClassDflts.c
+
+config XMP_CMN_FEAT1_VAR
+    int     "Value for Feature 1"
+    default 12
+    help
+        Used for var: XMP_CMN_FEAT1_VAR
+
+config XMP_CMN_FEAT2_VAR
+    int "Value for Feature 2"
+    default 34
+    help
+        Used for var: XMP_CMN_FEAT2_VAR
+
+config XMP_CMN_VAR_TWO
+    int "Value for Var2"
+    default 56
+    help
+        Used for var: XMP_CMN_VAR_TWO
+
+config XMP_CMN_FEAT_X_EN
+    bool "Value to enable Feature X"
+    default n
+    help
+        Used for var: XMP_CMN_FEAT_X_EN

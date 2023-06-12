@@ -1,0 +1,55 @@
+# Config for  opoenSIL
+#  Platform level - set the platform values needed by openSIL
+#
+# Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+# These are config fields used to select the Market Segment
+#  and Socket type for the platform. These will then be used to further
+#  select the group of SoC available in those sockets.
+# These values are 'static' in nature - once set, they are not changed by code.
+#
+
+choice  MARKET_SEGMENT
+    prompt "Market segment for this plaform"
+    default MKT_SEG_SERVER
+    help
+      The AMD processors are grouped and sold by these market classes.
+      This field is used to limit the SoC choice list to those sold
+      in the selected market group/segment.
+
+config  MKT_SEG_SERVER
+    bool  "Server"
+    help
+      Larger towers or rack mount systems possibly multi-socket
+
+
+endchoice
+
+## optionally define a string for the Market Segment name for use in messages
+config PLAT_MARKET_SEGMENT_NAME
+    string
+    default  "Data Center"      if MKT_SEG_SERVER
+
+
+##-------------------------------------------------------------
+#   Select the Socket type
+#
+choice PLAT_SOCKET_TYPE
+    prompt  "Motherboard socket(s) type:"
+    default SKT_TYPE_SP5
+
+config  SKT_TYPE_SP5
+    bool "SP5"
+    depends on MKT_SEG_SERVER
+    help
+      Server
+
+
+endchoice
+
+## optionally define a string for the socket name for use in messages
+config PLAT_SOCKET_TYPE_NAME
+    string
+    default  "SP5"      if SKT_TYPE_SP5
+

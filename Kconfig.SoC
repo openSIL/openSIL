@@ -1,0 +1,44 @@
+# Config for  openSIL
+# Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+#  top level - selecting the SoC(s) to be included
+# Nomemclature:
+# * All config elements will be prefixed with "CONFIG_" by Kconfig
+# * Elements with names that start with "HAVE_" are code inclusion control
+#   elements. These will be used in the Meson build files to select which
+#   code modules will be included.
+# * Elements with names that start with "PLAT_" are platform description
+#   elements.
+#
+
+menu "AMD Processor(s) Selection"
+comment " This is the list of supported AMD processors for openSIL. Please "
+comment " select the Socket and processor designed into your motherboard.  "
+comment "                                                                  "
+
+source "Kconfig.Skt"
+
+# This is where the SoC(s) are determined for the build
+# The select statements define which IP-Version are used in each SoC
+# Several SoCs may use the same IP-version
+
+##if  (PLAT_SOCKET_TYPE = "SP5")
+if (SKT_TYPE_SP5)
+config SOC_F19M10
+    boolean "F19M10 (Genoa) Support"
+    select HAVE_SOC_COMMON
+    select HAVE_DF_DFX
+    select HAVE_CCX_ZEN4
+    select HAVE_MPIO
+    select HAVE_SDCI
+    select HAVE_NBIO_IOD
+    select HAVE_FCH_9004
+    select HAVE_SMU_V13
+    select HAVE_XMP_VER_B  if HAVE_EXAMPLE
+    help
+      Does your project use a Family 19h Model 10h
+      Choose 'y' to include the Genoa support code
+endif
+
+endmenu

@@ -1,0 +1,263 @@
+/**
+ * @file  NbioIoapicTbl.h
+ * @brief This file contains the Nbio Ioapic configurations
+ *
+ */
+/* Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.    */
+// SPDX-License-Identifier: MIT
+
+#pragma once
+
+// --------------------------------------------------
+// 15.2.3.1 IOAPIC Clock Gating and Power Management
+// --------------------------------------------------
+
+  // IOAPIC::IOAPIC_GLUE_CG_LCLK_CTRL_0[SOFT_OVERRIDE_CLK2~0]=0h
+  #define NBIO_IOAPIC_CLOCK_GATING_TBL \
+    SMN_ENTRY_PROPERTY_RMW ( \
+    PROPERTY_IOHC_CLKGATING_ENABLED, \
+      SIL_RESERVED_731, \
+      SIL_RESERVED_113 | \
+      SIL_RESERVED_111 | \
+      SIL_RESERVED_109 | \
+      SIL_RESERVED_107 | \
+      SIL_RESERVED_105 | \
+      SIL_RESERVED_103 | \
+      SIL_RESERVED_101 | \
+      IOAPIC_GLUE_CG_LCLK_CTRL_0_SOFT_OVERRIDE_CLK2_MASK | \
+      SIL_RESERVED_98 | \
+      SIL_RESERVED_96, \
+      (0x0 << SIL_RESERVED_114) | \
+      (0x0 << SIL_RESERVED_112) | \
+      (0x0 << SIL_RESERVED_110) | \
+      (0x0 << SIL_RESERVED_108) | \
+      (0x0 << SIL_RESERVED_106) | \
+      (0x0 << SIL_RESERVED_104) | \
+      (0x0 << SIL_RESERVED_102) | \
+      (0x0 << SIL_RESERVED_100) | \
+      (0x0 << SIL_RESERVED_99) | \
+      (0x0 << SIL_RESERVED_97) \
+      ),
+  // End of NBIO_IOAPIC_CLOCK_GATING_TBL
+// --------------------------------------------------
+// 15.2.3.2 IOAPIC Initialization
+//   Table 185: Recommended Interrupt Routing and Swizzling
+// --------------------------------------------------
+  #define NBIO_IOAPIC_INTR_ROUTING_TBL \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N0NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N1NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED_618, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N3NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x3 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N4NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x4 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N5NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x4 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SIL_RESERVED_719, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x3 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N7NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N8NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N9NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N10NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N11NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N12NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N13NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x3 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N14NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x4 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N15NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x4 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x3 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N16NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x3 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x3 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N17NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x3 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N18NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x3 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N19NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x3 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N20NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N21NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x1 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N22NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x2 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x3 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      SMN_IOHUB0_N23NBIO0_IOAPIC_BR_INTERRUPT_ROUTING_ADDRESS, \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_MASK | \
+      IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_MASK, \
+      (0x3 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_grp_OFFSET) | \
+      (0x0 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_swz_OFFSET) | \
+      (0x3 << IOAPIC_BR_INTERRUPT_ROUTING_Br_ext_Intr_map_OFFSET) \
+      ),
+  // End of NBIO_IOAPIC_INTR_ROUTING_TBL

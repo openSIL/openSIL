@@ -1,0 +1,648 @@
+# Config for  xUSL/NBIIO/IOD
+# Copyright 2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+#
+
+if HAVE_NBIO_IOD
+comment ""
+comment "IP: NBIO IOD used by F19M10 **"
+
+# ------------------------------ Advanced Programmable Interrupt Controlle (IOAPIC) settings --------------------------
+menu "IOAPIC settings          "
+comment "                                                               "
+comment " IO Advanced Programmable Interrupt Controller IOAPIC settings "
+comment "                                                               "
+
+# ------------------------------ IOAPIC MMIO reserved from GNB driver --------------------------
+config IOAPIC_MMIO_ADDRESS_RESERVED_ENABLE
+    int "Enable IOAPIC MMIO reserved from GNB driver"
+    default 1
+    range 0 1
+    help
+        Enable IOAPIC MMIO reserved from GNB driver
+
+# ------------------------------ IOAPIC ID assignement --------------------------
+config IOAPIC_ID_PREDEFINE_EN
+    int "Enable assign IOAPIC ID"
+    default 0
+    range 0 1
+    help
+        Enable assign IOAPIC ID
+
+# ------------------------------ IOAPIC ID base --------------------------
+config IOAPIC_ID_BASE
+    hex "Base NBIO IOAPIC ID"
+    default 0xF1
+    help
+        Base NBIO IOAPIC ID. ID assigned start from this value
+endmenu
+
+# ------------------------------ NBIO PMM - General --------------------------
+menu "NBIO PMM - General       "
+comment "                                                               "
+comment " NBIO Post Memory Manager (PMM) - General                      "
+comment "                                                               "
+
+# ------------------------------ NBIO Global CG Override --------------------------
+choice CHOICE_NBIO_GLOBAL_CG_OVERRIDE
+    prompt  "NBIO Global CG Override"
+    default CHOICE_AUTO
+    help
+        NBIO Global CG Override
+
+config  CHOICE_AUTO
+    bool "Auto"
+    help
+        Auto
+
+config  CHOICE_DISABLED
+    bool "Disabled"
+    help
+        Disabled
+endchoice
+
+##  define the system variable that is used in the code
+config NBIO_GLOBAL_CG_OVERRIDE
+    hex
+    default  0x0f      if CHOICE_AUTO
+    default  0x00      if CHOICE_DISABLED
+
+# ------------------------------ Source Synchronous Tunnel (SST) Clock Gating support --------------------------
+config SSTUNL_CLK_GATING
+    int "SST Clock Gating support"
+    default 1
+    range 0 1
+    help
+        Enable/Disable Source Synchronous Tunnel (SST) Clock Gating support
+
+# ------------------------------ NBIF mid-grain Clock Gating support --------------------------
+config NBIF_MGCG_CLK_GATING
+    int "NBIF mid-grain Clock Gating support"
+    default 1
+    range 0 1
+    help
+        Enable/Disable NBIF mid-grain Clock Gating support
+
+# ------------------------------ NBIF MGCG Hysteresis --------------------------
+config NBIF_MGCG_HYSTERESIS
+    int "NBIF MGCG Hysteresis for gating count"
+    default 0
+    help
+        NBIF MGCG Hysteresis for gating count
+
+# ------------------------------ SysHub mid-grain Clock --------------------------
+config SYSHUB_MGCG_CLK_GATING
+    int "SysHub mid-grain Clock Gating support"
+    default 0
+    range 0 1
+    help
+        Enable/Disable SysHub mid-grain Clock Gating support
+
+# ------------------------------ SYSHUB MGCG Hysteresis --------------------------
+config SYSHUB_MGCG_HYSTERESIS
+    int "SysHub MGCG Hysteresis for gating count"
+    default 0
+    help
+        SYSHUB MGCG Hysteresis for gating count
+
+# ------------------------------ IOHC Clock Gating support --------------------------
+config IOHC_CLK_GATING_SUPPORT
+    int "IOHC Clock Gating support"
+    default 1
+    range 0 1
+    help
+        Enable/Disable IO Hub Contoller (IOHC) Clock Gating support
+
+# ------------------------------ NTB Clock Gating support --------------------------
+config NTB_CLOCK_GATING_ENABLE
+    int "NTB Clock Gating support"
+    default 1
+    range 0 1
+    help
+        Enable/Disable NTB Clock Gating support
+
+config IOHC_PG_ENABLE
+    int "IOHC Power Gating"
+    default 1
+    range 0 1
+    help
+        Enable/Disable IO Hub Contoller (IOHC) Power Gating
+
+# ------------------------------ Non PCI device bar for DBG --------------------------
+config IOHC_NONPCI_BAR_INIT_DBG
+    int "Configure non pci device bar for DBG"
+    default 0
+    range 0 1
+    help
+        Configure non pci device bar for DBG
+
+# ------------------------------ Non PCI device bar for FastReg --------------------------
+config IOHC_NONPCI_BAR_INIT_FAST_REG
+    int "Configure non pci device bar for FastReg"
+    default 0
+    range 0 1
+    help
+        Configure non pci device bar for FastReg
+
+# ------------------------------ Non PCI device bar for FastRegCtl --------------------------
+config IOHC_NONPCI_BAR_INIT_FAST_REGCTL
+    int "Configure non pci device bar for FastRegCtl"
+    default 0
+    range 0 1
+    help
+        Configure non pci device bar for FastRegCtl
+endmenu
+
+# ------------------------------ NBIO common Options --------------------------
+menu "NBIO common Options      "
+comment "                                                               "
+comment " NBIO common Options                                           "
+comment "                                                               "
+
+# ------------------------------ IOMMU support --------------------------
+config IOMMU_SUPPORT
+    int "IOMMU support"
+    default 1
+    range 0 1
+    help
+        Enable/Disable I/O Memory Management Unit (IOMMU)
+
+# ------------------------------ I/O Memory Management Unit (IOMMU) L1 clock gating support --------------------------
+config IOMMU_L1_CLOCK_GATING_EN
+    int "IOMMU L1 clock gating support"
+    default 1
+    range 0 1
+    help
+        Enable/Disable I/O Memory Management Unit (IOMMU) L1 clock gating support
+
+# ------------------------------ IOMMU L2 clock gating support --------------------------
+config IOMMU_L2_CLOCK_GATING_EN
+    int "IOMMU L2 clock gating support"
+    default 1
+    range 0 1
+    help
+        Enable/Disable I/O Memory Management Unit (IOMMU) L2 clock gating support
+
+# ------------------------------ IOMMU General AVIC modes support --------------------------
+config IOMMU_AVIC_SUPPORT
+    int "IOMMU General AVIC modes support"
+    default 0
+    range 0 1
+    help
+        I/O Memory Management Unit (IOMMU) General AVIC modes support
+
+# ------------------------------ IOMMU MMIO reserved --------------------------
+config IOMMU_MMIO_ADDRESS_RESERVED_ENABLE
+    int "IOMMU MMIO reserved"
+    default 1
+    range 0 1
+    help
+        Enable/Disable I/O Memory Management Unit (IOMMU) MMIO reserved from GNB driver
+# ------------------------------ PCIE all port ECRC --------------------------
+config PCIE_ECRC_ENABLEMENT
+    int "PCIE all port ECRC"
+    default 1
+    range 0 1
+    help
+        Enable/Disable PCIE all port ECRC
+
+# ------------------------------ Multi Upstream Auto Speed --------------------------
+config AUTO_SPEED_CHANGE_EN
+    hex "Multi Upstream Auto Speed Change"
+    default 0
+        range 0 1
+    help
+        Defines the setting of this feature for all PCIe devices.
+
+# ------------------------------ Alternative Routing-ID Interpretation --------------------------
+config PCIE_ARI_SUPPORT
+    int "Alternative Routing-ID Interpretation"
+    default 1
+    range 0 1
+    help
+        Enables Alternative Routing-ID Interpretation
+
+# ------------------------------ Rx Margin persistence mode --------------------------
+config RX_MARGIN_PERSISTENCE_MODE
+    int "Rx Margin persistence mode"
+    default 1
+        range 0 1
+    help
+        Rx Margin persistence mode (Enable/Disable)
+endmenu
+
+# ------------------------------ Advanced Error Reporting --------------------------
+menu "Advanced Error Reporting "
+comment "                                                               "
+comment " Advanced Error Reporting                                      "
+comment "                                                               "
+
+
+# ------------------------------ Advanced Error Reporting Support (AER) --------------------------
+config AER_ENABLE
+    int "Advanced Error Reporting (AER)"
+    default 1
+    range 0 1
+    help
+        Enables support for Advanced Error Reporting (AER).
+
+# ------------------------------ Access Control Services Support (ACS) --------------------------
+config ACS_ENABLE
+    int "Access Control Services (ACS)"
+    default 1
+    range 0 1
+    help
+        This value controls Access Control Services (ACS)
+        AER must be enabled for ACS enable to work
+
+# ------------------------------ Latency Tolerance Reporting (LTR) support --------------------------
+config PCIE_LTR_ENABLE
+    int "LTR support"
+    default 1
+    range 0 1
+    help
+        Enables support for Latency Tolerance Reporting (LTR)
+
+# ------------------------------ TLP Processing Hints (TPH) completer/requester capability --------------------------
+config TPH_COMPLETER_ENABLE
+    int "TPH completer/requester capability"
+    default 1
+    range 0 1
+    help
+        Enable/Disable TPH completer/requester capability
+
+# ------------------------------ SRIOV capability Enablement --------------------------
+config SRIOV_EN_DEV0F1
+    int "SRIOV capability"
+    default 0
+    range 0 1
+    help
+        SRIOV capability Enablement for Pcie capability enablement
+
+# ------------------------------ Alternative Routing-ID (ARI) capability Enablement --------------------------
+config ARI_EN_DEV0F1
+    int "ARI capability"
+    default 0
+    range 0 1
+    help
+        Enable ARI cap in Error Poisoned (EP) function for Pcie capability enablement
+
+# ------------------------------ Advanced Error Reporting Support (AER) capability Enablement --------------------------
+config AER_EN_DEV0F1
+    int "AER capability"
+    default 0
+    range 0 1
+    help
+        Enable AER cap in EP function for Pcie capability enablement
+
+# ------------------------------ ACS Support capability Enablement --------------------------
+config ACS_EN_DEV0F1
+    int "ACS capability"
+    default 0
+    range 0 1
+    help
+        Enable ACS cap in EP function for Pcie capability enablement
+
+# ------------------------------ Address Translation Services (ATS) capability Enablement --------------------------
+config ATS_EN_DEV0F1
+    int "ATS capability"
+    default 0
+    range 0 1
+    help
+        Enable ATS cap in EP function for Pcie capability enablement
+
+# ------------------------------ Process Address Space ID (PASID) capability Enablement --------------------------
+config PASID_EN_DEV0F1
+    int "PASID capability"
+    default 0
+    range 0 1
+    help
+        Enable PASID cap in EP function for Pcie capability enablement
+
+
+# ------------------------------ Retry (RTR) capability Enablement --------------------------
+config RTR_EN_DEV0F1
+    int "RTR capability"
+    default 0
+    range 0 1
+    help
+        Enable RTR cap in EP function for Pcie capability enablement
+
+# ------------------------------ Page request capability --------------------------
+config PRI_EN_DEV0F1
+    int "Page request capability"
+    default 0
+    range 0 1
+    help
+        Enable Page request capability in EP function for Pcie capability enablement
+
+# ------------------------------ Address Translation Cache (ATC) enable --------------------------
+config ATC_ENABLE
+    int "ATC enable"
+    default 0
+    range 0 1
+    help
+        Enable ATC enable for Pcie ATS Control
+
+# ------------------------------ ACS RCC Dev0 enable --------------------------
+config ACS_EN_RCC_DEV0
+    int "ACS RCC Device 0 enable"
+    default 0
+    range 0 1
+    help
+        Enable ACS enable for RCC Device 0
+
+# ------------------------------ AER RCC Dev0 enable --------------------------
+config AER_EN_RCC_DEV0
+    int "AER RCC Device 0 enable"
+    default 0
+    range 0 1
+    help
+        Enable AER enable for RCC Device 0
+
+# ------------------------------ ACS Source Value Strap5 --------------------------
+config ACS_SOURCE_VAL_STRAP5
+    int "Source Validation Strap5"
+    default 1
+    range 0 1
+    help
+        Enable ACS Source Validation in ACS capability Strap5
+
+# ------------------------------ ACS Translational Blocking Strap5 --------------------------
+config ACS_TRANSLATIONAL_BLOCKING_STRAP5
+    int "Translational Blocking Strap5"
+    default 1
+    range 0 1
+    help
+        Enable Transalation Blocking in ACS capability Strap 5
+
+# ------------------------------ ACS P2P request redirec --------------------------
+config ACS_P2P_REQ_STRAP5
+    int "P2P request redirect Strap5"
+    default 1
+    range 0 1
+    help
+        Enable ACS Peer-to-peer (P2P) request redirect in ACS capability strap5
+
+# ------------------------------ ACS P2P Completion --------------------------
+config ACS_P2P_COMP_STRAP5
+    int "P2P Completion redirect Strap5"
+    default 1
+    range 0 1
+    help
+        Enable P2P completion redirect in ACS capability Strap 5
+
+# ------------------------------ ACS Upstream Forwarding --------------------------
+config ACS_UPSTREAM_FWD_STRAP5
+    int "Upstream Forwarding Strap5"
+    default 1
+    range 0 1
+    help
+        Enable Upstream forwarding in ACS capability Strap5
+
+# ------------------------------ ACS P2P Egress --------------------------
+config ACS_P2P_EGRESS_STRAP5
+    int "P2P Egress Strap5"
+    default 0
+    range 0 1
+    help
+        Enable P2P Egress control capability Strap 5
+
+# ------------------------------ ACS Direct Translated --------------------------
+config ACS_DIRECT_TRANSLATED_STRAP5
+    int "Direct translated P2P Strap5"
+    default 1
+    range 0 1
+    help
+        Enable ACS direct translated P2P in Strap5
+
+# ------------------------------ ACS SSID Enable --------------------------
+config ACS_SSID_EN_STRAP5
+    int "SSID in Strap5"
+    default 1
+    range 0 1
+    help
+        Enable SSID in Strap5
+
+# ------------------------------ Dlf Enable Strap1 --------------------------
+config DLF_EN_STRAP1
+    int "Dlf Enable Strap1"
+    default 1
+    range 0 1
+    help
+        Dlf Enable Strap1
+
+# ------------------------------ Phy16GTStrap1 --------------------------
+config PHY_16GT_STRAP1
+    int "Phy 16 GT Strap1"
+    default 1
+    range 0 1
+    help
+        Phy 16 GT Strap1
+
+# ------------------------------ Margin Enable Strap1 --------------------------
+config MARGIN_EN_STRAP1
+    int "Margin Enable Strap1"
+    default 1
+    range 0 1
+    help
+        Margin Enable Strap1
+
+# ------------------------------ Enable PRI Enable --------------------------
+config PRI_EN_PAGE_REQ
+    int "PRI Enable"
+    default 1
+    range 0 1
+    help
+        Enable PRI Enable for PCIE page request control
+
+# ------------------------------ PRI reset for PCIE --------------------------
+config PRI_RESET_PAGE_REQ
+    int "PRI reset for PCIE"
+    default 1
+    range 0 1
+    help
+        Enable PRI reset for PCIE page request control
+
+# ------------------------------ ACS Source Validation in PCIE --------------------------
+config ACS_SOURCE_VAL
+    int "ACS Source Validation in PCIE"
+    default 1
+    range 0 1
+    help
+        Enable ACS Source Validation in PCIE ACS control
+
+# ------------------------------ ACS Transalation Blocking in PCIE --------------------------
+config ACS_TRANSLATIONAL_BLOCKING
+    int "Transalation Blocking in PCIE"
+    default 0
+    range 0 1
+    help
+        Enable Transalation Blocking in PCIE ACS control
+
+# ------------------------------ ACS P2P request redirect in PCIE --------------------------
+config ACS_P2P_REQ
+    int "ACS P2P request redirect in PCIE"
+    default 1
+    range 0 1
+    help
+        Enable ACS P2P request redirect in PCIE ACS control
+
+# ------------------------------ ACS P2P completion redirect in PCIE --------------------------
+config ACS_P2P_COMP
+    int "P2P completion redirect in PCIE"
+    default 1
+    range 0 1
+    help
+         Enable P2P completion redirect in PCIE ACS control
+
+# ------------------------------ ACS Upstream forwarding in PCIE --------------------------
+config ACS_UPSTREAM_FWD
+    int "ACS Upstream forwarding in PCIE"
+    default 1
+    range 0 1
+    help
+        Enable ACS Upstream forwarding in PCIE ACS control
+
+# ------------------------------ P2P Egress control in PCIE --------------------------
+config ACS_P2P_EGRESS
+    int "P2P Egress control in PCIE"
+    default 0
+    range 0 1
+    help
+        Enable P2P Egress control in PCIE ACS control
+
+# ------------------------------ Masked DPC Capability --------------------------
+config AMD_MASK_DPC_CAPABILITY
+    int "Masked DPC Capability"
+    default 0
+    range 0 1
+    help
+        Masked Downstream Port Containment (DPC) Capability
+
+endmenu
+
+# ------------------------------ PCIe Speed Control --------------------------
+choice CHOICE_PCIE_SPEED_CONTROL
+    prompt  "PCIe Speed Control"
+    default CHOICE_PCIE_SPEEDCTRL_AUTO
+    help
+        PCIe Speed Control of PCIe Rate on Gen5-Capable devicese
+
+config  CHOICE_ENABLE_PCIE_SPEEDCTRL
+    bool "Enable PCIe speed controller"
+    help
+        Dynamic link speed determined by Power Management functionality
+
+config  CHOICE_LIMIT_TO_GEN4
+    bool "Limit to GEN4"
+    help
+        Static Target Link Speed (GEN4)
+
+config  CHOICE_LIMIT_TO_GEN5
+    bool "Limit to GEN5"
+    help
+        Static Target Link Speed (GEN5)
+
+config  CHOICE_PCIE_SPEEDCTRL_AUTO
+    bool "Auto"
+    help
+        Disable PCIe speed controller
+endchoice
+
+##  define the system variable that is used in the code
+config PCIE_SPEED_CONTROL
+    hex
+    default  0x00      if CHOICE_ENABLE_PCIE_SPEEDCTRL
+    default  0x01      if CHOICE_LIMIT_TO_GEN4
+    default  0x02      if CHOICE_LIMIT_TO_GEN5
+    default  0x0F      if CHOICE_PCIE_SPEEDCTRL_AUTO
+
+# ------------------------------ Power capability Enablement --------------------------
+config PWR_EN_DEV0F1
+    int "Power capability"
+    default 0
+    range 0 1
+    help
+        Enable Power cap in EP function for Pcie capability enablement
+
+# ------------------------------ Transaction Layer Packet (TLP) prefix setting --------------------------
+config TLP_PREFIX_SETTING
+    int "TLP prefix setting"
+    default 0
+    range 0 1
+    help
+       Enable End to End TLP prefix setting
+
+# ------------------------------ Extended Format support--------------------------
+config RCC_DEV0_EXTENDED_FMT_SUPPORTED
+    int "Extended Format support"
+    default 0
+    range 0 1
+    help
+       Enable Extended Format support.  It must be set for functions that support End-End TLP Prefixes.
+
+# ------------------------------ The Data Link Feature capability --------------------------
+config DLF_CAP_EN
+    int "The Data Link Feature"
+    default 1
+    range 0 1
+    help
+        This value determines the Data Link Feature capability on all PCIe ports Gen4 or higher
+
+# ------------------------------ Data Link Feature Exchange --------------------------
+config DL_FEX_EN
+    int "Data Link Feature Exchange"
+    default 1
+    range 0 1
+    help
+        This value determines the Data Link Feature Exchange on all PCIe ports Gen4 or higher.
+        The PCIe specification explicitly provides this option so a root comple can disable the DL Feature
+        Exchange transactions in the event a PCIe endpoint is present in a system that cannot respond properly to those packets.
+
+# ------------------------------ Precode Request --------------------------
+config PRE_CODE_REQUEST_ENABLE
+    int "Precode Request"
+    default 0
+    range 0 1
+    help
+        Enable Precode Request
+
+# ------------------------------ Advertise EQ To High Rate Support --------------------------
+config ADVERTISE_EQ_TO_HIGH_RATE_SUPPORT
+    int "Advertise EQ To High Rate Support"
+    default 0
+    range 0 1
+    help
+        Advertise EQ To High Rate Support
+
+# ------------------------------ Enable SDCI feature --------------------------
+config FABRIC_SDCI
+    int "Enable SDCI feature"
+    default 0
+    range 0 1
+    help
+        Enable/Disable SDCI feature
+
+# ------------------------------ Enhanced Speed Mode (ESM) enablement --------------------------
+config ESM_EN_ALL_ROOT_PORTS
+    int "ESM enablement"
+    default 0
+    range 0 1
+    help
+        If set PCIe Enhanced Speed Mode (ESM) sequence is attempted on all root ports with supported devices
+        true - Enable PCIe ESM sequence on all root ports with supported devices
+        false - Disable PCIe ESM sequence on all root ports with supported devices
+
+# ------------------------------ Esm Target Speed --------------------------
+if  (ESM_EN_ALL_ROOT_PORTS=1)
+config ESM_TARGET_SPEED
+    hex "Esm Target Speed"
+    default 16
+    range 16 25
+    help
+        Target Speed to attempt with any Gen4 Enhanced Speed Mode (ESM) supported cards in the system.
+        ESM must also be enabled in per port settings. Failure to achieve speed may leave card at sub-gen4 speeds
+endif
+endif

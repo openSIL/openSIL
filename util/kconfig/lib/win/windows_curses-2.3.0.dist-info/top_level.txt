@@ -1,0 +1,2 @@
+_curses
+_curses_panel

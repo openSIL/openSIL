@@ -1,0 +1,26 @@
+# Config for  xUSL/XMP
+# Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+#
+
+# Kconfig vars used for display control. One for each version.
+# These are used in the \konfig.ip file for selecting IP versions.
+config HAVE_XMP_VER_A
+    bool
+
+config HAVE_XMP_VER_B
+    bool
+
+# conditional all elements since this IP device may or may not be included
+if HAVE_XMP_VER_A || HAVE_XMP_VER_B
+    menu "Example (XMP) Device"
+        comment "The XMP device is an example for developers"
+        comment " Scan this device for ideas on how to implement"
+        comment " Kconfig controls for your IP block."
+        source "xUSL/XMP/Common/Kconfig"
+        source "xUSL/XMP/Ver-A/Kconfig"
+        source "xUSL/XMP/Ver-B/Kconfig"
+
+    endmenu
+endif

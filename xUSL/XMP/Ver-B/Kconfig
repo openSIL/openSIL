@@ -1,0 +1,18 @@
+# Config for  xUSL/XMP/Ver-B
+# Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+#
+
+if HAVE_XMP_VER_B
+comment ""
+comment "IP: XMP Ver-B is used by F19M10 **"
+config XMP_B_VARINT
+    int "Some value new to Rev-B of the IP."
+    default 5
+    help
+        This is a random variable specific to only Version B of the IP.
+        PLEASE do not name the variable with the version, use a feature based title.
+        This variable uses IP and version in the name for clarity of the example.
+
+endif

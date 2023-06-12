@@ -1,0 +1,242 @@
+/**
+ * @file  SilFabricInfo.h
+ * @brief OpenSIL AMD Family 19h Information definition.
+ *
+ */
+/* Copyright 2021-2023 Advanced Micro Devices, Inc. All rights reserved.    */
+// SPDX-License-Identifier: MIT
+
+#pragma once
+#include <NBIO/PciStructs.h>
+#include <Apob.h>
+
+// Instance IDs
+#define DFX_MAX_RBS_PER_SOCKET   20   ///< Max number of root bridges per socket in DFX
+#define DFX_MAX_HOST_BRIDGES (MAX_SOCKETS_SUPPORTED * DFX_MAX_HOST_BRIDGES_PER_SOCKET)
+
+// Genoa Fabric IDs
+#define  DFX_CS0_FABRIC_ID         0
+#define  DFX_CS1_FABRIC_ID         1
+#define  DFX_CS2_FABRIC_ID         2
+#define  DFX_CS3_FABRIC_ID         3
+#define  DFX_CS4_FABRIC_ID         4
+#define  DFX_CS5_FABRIC_ID         5
+#define  DFX_CS6_FABRIC_ID         6
+#define  DFX_CS7_FABRIC_ID         7
+#define  DFX_CS8_FABRIC_ID         8
+#define  DFX_CS9_FABRIC_ID         9
+#define  DFX_CS10_FABRIC_ID       10
+#define  DFX_CS11_FABRIC_ID       11
+#define  DFX_CS12_FABRIC_ID       12
+#define  DFX_CS13_FABRIC_ID       13
+#define  DFX_CS14_FABRIC_ID       14
+#define  DFX_CS15_FABRIC_ID       15
+
+#define  DFX_CSUMC0_FABRIC_ID     DFX_CS0_FABRIC_ID
+#define  DFX_CSUMC1_FABRIC_ID     DFX_CS1_FABRIC_ID
+#define  DFX_CSUMC2_FABRIC_ID     DFX_CS2_FABRIC_ID
+#define  DFX_CSUMC3_FABRIC_ID     DFX_CS3_FABRIC_ID
+#define  DFX_CSUMC4_FABRIC_ID     DFX_CS4_FABRIC_ID
+#define  DFX_CSUMC5_FABRIC_ID     DFX_CS5_FABRIC_ID
+#define  DFX_CSUMC6_FABRIC_ID     DFX_CS6_FABRIC_ID
+#define  DFX_CSUMC7_FABRIC_ID     DFX_CS7_FABRIC_ID
+#define  DFX_CSUMC8_FABRIC_ID     DFX_CS8_FABRIC_ID
+#define  DFX_CSUMC9_FABRIC_ID     DFX_CS9_FABRIC_ID
+#define  DFX_CSUMC10_FABRIC_ID    DFX_CS10_FABRIC_ID
+#define  DFX_CSUMC11_FABRIC_ID    DFX_CS11_FABRIC_ID
+
+#define  DFX_CSCMP0_FABRIC_ID     DFX_CS12_FABRIC_ID
+#define  DFX_CSCMP1_FABRIC_ID     DFX_CS13_FABRIC_ID
+#define  DFX_CSCMP2_FABRIC_ID     DFX_CS14_FABRIC_ID
+#define  DFX_CSCMP3_FABRIC_ID     DFX_CS15_FABRIC_ID
+
+#define  DFX_CCM0_FABRIC_ID       16
+#define  DFX_CCM1_FABRIC_ID       17
+#define  DFX_CCM2_FABRIC_ID       18
+#define  DFX_CCM3_FABRIC_ID       19
+#define  DFX_CCM4_FABRIC_ID       20
+#define  DFX_CCM5_FABRIC_ID       21
+#define  DFX_CCM6_FABRIC_ID       22
+#define  DFX_CCM7_FABRIC_ID       23
+
+#define  DFX_IOMS0_FABRIC_ID      32
+#define  DFX_IOMS1_FABRIC_ID      33
+#define  DFX_IOMS2_FABRIC_ID      34
+#define  DFX_IOMS3_FABRIC_ID      35
+
+#define  DFX_PIE_FABRIC_ID        44
+
+// Instance IDs
+#define  DFX_CS0_INSTANCE_ID       0
+#define  DFX_CS1_INSTANCE_ID       1
+#define  DFX_CS2_INSTANCE_ID       2
+#define  DFX_CS3_INSTANCE_ID       3
+#define  DFX_CS4_INSTANCE_ID       4
+#define  DFX_CS5_INSTANCE_ID       5
+#define  DFX_CS6_INSTANCE_ID       6
+#define  DFX_CS7_INSTANCE_ID       7
+#define  DFX_CS8_INSTANCE_ID       8
+#define  DFX_CS9_INSTANCE_ID       9
+#define  DFX_CS10_INSTANCE_ID     10
+#define  DFX_CS11_INSTANCE_ID     11
+#define  DFX_CS12_INSTANCE_ID     12
+#define  DFX_CS13_INSTANCE_ID     13
+#define  DFX_CS14_INSTANCE_ID     14
+#define  DFX_CS15_INSTANCE_ID     15
+
+#define  DFX_CSUMC0_INSTANCE_ID   DFX_CS0_INSTANCE_ID
+#define  DFX_CSUMC1_INSTANCE_ID   DFX_CS1_INSTANCE_ID
+#define  DFX_CSUMC2_INSTANCE_ID   DFX_CS2_INSTANCE_ID
+#define  DFX_CSUMC3_INSTANCE_ID   DFX_CS3_INSTANCE_ID
+#define  DFX_CSUMC4_INSTANCE_ID   DFX_CS4_INSTANCE_ID
+#define  DFX_CSUMC5_INSTANCE_ID   DFX_CS5_INSTANCE_ID
+#define  DFX_CSUMC6_INSTANCE_ID   DFX_CS6_INSTANCE_ID
+#define  DFX_CSUMC7_INSTANCE_ID   DFX_CS7_INSTANCE_ID
+#define  DFX_CSUMC8_INSTANCE_ID   DFX_CS8_INSTANCE_ID
+#define  DFX_CSUMC9_INSTANCE_ID   DFX_CS9_INSTANCE_ID
+#define  DFX_CSUMC10_INSTANCE_ID  DFX_CS10_INSTANCE_ID
+#define  DFX_CSUMC11_INSTANCE_ID  DFX_CS11_INSTANCE_ID
+
+#define  DFX_CSCMP0_INSTANCE_ID  DFX_CS12_INSTANCE_ID
+#define  DFX_CSCMP1_INSTANCE_ID  DFX_CS13_INSTANCE_ID
+#define  DFX_CSCMP2_INSTANCE_ID  DFX_CS14_INSTANCE_ID
+#define  DFX_CSCMP3_INSTANCE_ID  DFX_CS15_INSTANCE_ID
+
+#define  DFX_CCM0_INSTANCE_ID     16
+#define  DFX_CCM1_INSTANCE_ID     17
+#define  DFX_CCM2_INSTANCE_ID     18
+#define  DFX_CCM3_INSTANCE_ID     19
+#define  DFX_CCM4_INSTANCE_ID     20
+#define  DFX_CCM5_INSTANCE_ID     21
+#define  DFX_CCM6_INSTANCE_ID     22
+#define  DFX_CCM7_INSTANCE_ID     23
+
+#define  DFX_ACM0_INSTANCE_ID     24
+#define  DFX_ACM1_INSTANCE_ID     25
+#define  DFX_ACM2_INSTANCE_ID     26
+#define  DFX_ACM3_INSTANCE_ID     27
+
+#define  DFX_NCM0_INSTANCE_ID     28
+#define  DFX_NCM1_INSTANCE_ID     29
+#define  DFX_NCM2_INSTANCE_ID     30
+#define  DFX_NCM3_INSTANCE_ID     31
+
+#define  DFX_IOMS0_INSTANCE_ID    32
+#define  DFX_IOMS1_INSTANCE_ID    33
+#define  DFX_IOMS2_INSTANCE_ID    34
+#define  DFX_IOMS3_INSTANCE_ID    35
+
+#define  DFX_IOS0_INSTANCE_ID     36
+#define  DFX_IOS1_INSTANCE_ID     37
+#define  DFX_IOS2_INSTANCE_ID     38
+#define  DFX_IOS3_INSTANCE_ID     39
+
+#define  DFX_ICNG0_INSTANCE_ID    40
+#define  DFX_ICNG1_INSTANCE_ID    41
+#define  DFX_ICNG2_INSTANCE_ID    42
+#define  DFX_ICNG3_INSTANCE_ID    43
+
+#define  DFX_PIE_INSTANCE_ID      44
+
+#define  DFX_CAKE0_INSTANCE_ID    45
+#define  DFX_CAKE1_INSTANCE_ID    46
+#define  DFX_CAKE2_INSTANCE_ID    47
+#define  DFX_CAKE3_INSTANCE_ID    48
+#define  DFX_CAKE4_INSTANCE_ID    49
+#define  DFX_CAKE5_INSTANCE_ID    50
+#define  DFX_CAKE6_INSTANCE_ID    51
+#define  DFX_CAKE7_INSTANCE_ID    52
+
+#define  DFX_CNLI0_INSTANCE_ID    53
+#define  DFX_CNLI1_INSTANCE_ID    54
+#define  DFX_CNLI2_INSTANCE_ID    55
+#define  DFX_CNLI3_INSTANCE_ID    56
+
+#define  DFX_PFX0_INSTANCE_ID     57
+#define  DFX_PFX1_INSTANCE_ID     58
+#define  DFX_PFX2_INSTANCE_ID     59
+#define  DFX_PFX3_INSTANCE_ID     60
+#define  DFX_PFX4_INSTANCE_ID     61
+#define  DFX_PFX5_INSTANCE_ID     62
+#define  DFX_PFX6_INSTANCE_ID     63
+#define  DFX_PFX7_INSTANCE_ID     64
+
+#define  DFX_SPF0_INSTANCE_ID     65
+#define  DFX_SPF1_INSTANCE_ID     66
+#define  DFX_SPF2_INSTANCE_ID     67
+#define  DFX_SPF3_INSTANCE_ID     68
+#define  DFX_SPF4_INSTANCE_ID     69
+#define  DFX_SPF5_INSTANCE_ID     70
+#define  DFX_SPF6_INSTANCE_ID     71
+#define  DFX_SPF7_INSTANCE_ID     72
+#define  DFX_SPF8_INSTANCE_ID     73
+#define  DFX_SPF9_INSTANCE_ID     74
+#define  DFX_SPF10_INSTANCE_ID    75
+#define  DFX_SPF11_INSTANCE_ID    76
+#define  DFX_SPF12_INSTANCE_ID    77
+#define  DFX_SPF13_INSTANCE_ID    78
+#define  DFX_SPF14_INSTANCE_ID    79
+#define  DFX_SPF15_INSTANCE_ID    80
+
+#define  DFX_TCDX0_INSTANCE_ID    81
+#define  DFX_TCDX1_INSTANCE_ID    82
+#define  DFX_TCDX2_INSTANCE_ID    83
+#define  DFX_TCDX3_INSTANCE_ID    84
+#define  DFX_TCDX4_INSTANCE_ID    85
+#define  DFX_TCDX5_INSTANCE_ID    86
+#define  DFX_TCDX6_INSTANCE_ID    87
+#define  DFX_TCDX7_INSTANCE_ID    88
+#define  DFX_TCDX8_INSTANCE_ID    89
+#define  DFX_TCDX9_INSTANCE_ID    90
+#define  DFX_TCDX10_INSTANCE_ID   91
+#define  DFX_TCDX11_INSTANCE_ID   92
+#define  DFX_TCDX12_INSTANCE_ID   93
+#define  DFX_TCDX13_INSTANCE_ID   94
+#define  DFX_TCDX14_INSTANCE_ID   95
+#define  DFX_TCDX15_INSTANCE_ID   96
+
+#define  DFX_NUM_CS_BLOCKS        16
+#define  DFX_NUM_CS_UMC_BLOCKS    12
+#define  DFX_NUM_CS_CMP_BLOCKS     4
+#define  DFX_NUM_CCM_BLOCKS        8
+#define  DFX_NUM_ACM_BLOCKS        4
+#define  DFX_NUM_NCM_BLOCKS        4
+#define  DFX_NUM_IOMS_BLOCKS       4
+#define  DFX_NUM_IOS_BLOCKS        4
+#define  DFX_NUM_ICNG_BLOCKS       4
+#define  DFX_NUM_PIE_BLOCKS        1
+#define  DFX_NUM_CAKE_BLOCKS       8
+#define  DFX_NUM_CNLI_BLOCKS       4
+#define  DFX_NUM_PFX_BLOCKS        8
+#define  DFX_NUM_SPF_BLOCKS       16
+#define  DFX_NUM_TCDX_BLOCKS      16
+
+#define  DFX_NUM_DF_BLOCKS        97
+
+/* PCI Bus Regions */
+#define DFX_NUMBER_OF_BUS_REGIONS         0x8
+#define DFX_BUS_REGION_REGISTER_OFFSET    0x8
+
+/* x86 IO Regions */
+#define DFX_NUMBER_OF_X86IO_REGIONS       0x8
+#define DFX_X86IO_REGION_REGISTER_OFFSET  0x8
+
+/* DRAM Regions */
+#define DFX_NUMBER_OF_DRAM_REGIONS        20
+#define DFX_DRAM_REGION_REGISTER_OFFSET   0x10
+
+/* MMIO Regions */
+#define DFX_NUMBER_OF_MMIO_REGIONS        0x10
+#define DFX_MMIO_REGION_REGISTER_OFFSET   0x10
+
+#define DFX_MAX_CCD_PER_SOCKET            12  ///< Max number of CCD per socket
+#define DFX_MAX_CHANNELS_PER_SOCKET       12  ///< Max Channels per socket
+#define DFX_MAX_HOST_BRIDGES_PER_SOCKET   4   ///< Max host bridges per socket
+
+#define DFX_FABRIC_ID_SOCKET_SHIFT        8
+#define DFX_FABRIC_ID_SOCKET_SIZE_MASK    1
+#define DFX_FABRIC_ID_DIE_SHIFT           7
+#define DFX_FABRIC_ID_DIE_SIZE_MASK       0
+
+#define DFX_FABRIC_ID_COMP_ID_MASK        0x7F
+

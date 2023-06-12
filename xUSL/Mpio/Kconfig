@@ -1,0 +1,20 @@
+# Config for  xUSL/MPIO
+# # Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+#
+
+# Kconfig vars used for display control. One for each version.
+# These are used in the \konfig.ip file for selecting IP versions.
+config HAVE_MPIO
+    bool
+
+# conditional all elements since this IP device may or may not be included
+if HAVE_MPIO
+    menu "MicroProcessor Input Output (MPIO)"
+        comment "The MPIO IP controls the microprocessor for NBIO"
+        comment " firmware/management"
+        source "xUSL/Mpio/Common/Kconfig"
+
+    endmenu
+endif
