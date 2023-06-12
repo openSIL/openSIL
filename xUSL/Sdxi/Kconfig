@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+#
+# Kconfig vars used for display control. One for each version.
+# These are used in the \konfig.ip file for selecting IP versions.
+config HAVE_SDXI_RS
+    bool
+
+config HAVE_SDXI_BRH
+    bool
+
+# conditional all elements since this IP device may or may not be included
+if HAVE_SDXI_HAVE_SDXI_BRH
+    menu "Cacheable Direct Memory Access (SDXI)"
+        comment "                                                              "
+        comment " The SDXI IP adds the capability to                           "
+        comment " perform certain fabric writes directly                       "
+        comment " into cache rather than to the DRAM first.                    "
+        comment "                                                              "
+        source "xUSL/Sdxi/Common/Kconfig"
+
+    endmenu
+endif

@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+# Config for  xUSL/FCH
+#
+#
+
+# Kconfig vars used for display control. One for each version.
+# These are used in the \konfig.ip file for selecting IP versions.
+config HAVE_FCH_KUNLUN
+    bool
+
+# conditional all elements since this IP device may or may not be included
+  menu "FCH Device"
+      comment "                                                      "
+      comment "The FCH is a bridge device under which many of the     "
+      comment "legacy and traditional components of a PC are located."
+      comment "                                                      "
+      source "xUSL/FCH/Common/Kconfig"
+  endmenu

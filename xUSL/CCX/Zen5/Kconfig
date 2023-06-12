@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+# Config for  xUSL/CCX/Zen5
+#
+#
+
+if HAVE_CCX_ZEN5
+  menu "CCX Zen5 Configuration"
+    comment "                                                              "
+    comment "CCX Zen5 Configuration                                        "
+    comment "                                                              "
+    config CCX_ZEN5_VARIANT
+      int "Some value new to ZEN5 of the IP."
+      default 5
+      help
+          This is a random variable specific to only Zen5 of the IP.
+          PLEASE do not name the variable with the version, use a feature based title.
+          This variable uses IP and version in the name for clarity of the example.
+  endmenu
+endif

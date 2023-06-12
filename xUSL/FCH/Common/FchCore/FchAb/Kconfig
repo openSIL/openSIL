@@ -1,0 +1,184 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+# Config for  xUSL/FCH/Common/FchCore/FchAb
+#
+#
+menu "FCH-AB System Bus interface for FCH"
+comment "                                                                "
+comment " The AB block is the system bus interface for the sub-components"
+comment " located in the FCH. These include clock gating, reset and      "
+comment " DMA control options.                                           "
+comment "                                                                "
+
+#---------------------- A-Link Clk Gating ---------------------
+
+config FCH_ALINK_CLK_GATING
+    int "Enable Clock Gating on the A-Link"
+    range 0 1
+    default 1
+    help
+        Gating off a clock when it is not being used can save some
+        power in the system. A-link Clock Gate-Off function:
+        0:Clk always running,
+        1:Clk can be gated off
+
+#---------------------- B-Link Clk Gating ---------------------
+
+config FCH_BLINK_CLK_GATING
+    int "Enable Clock Gating on the B-Link"
+    range 0 1
+    default 1
+    help
+        Gating off a clock when it is not being used can save some
+        power in the system. B-link Clock Gate-Off function:
+        0:Clk always running,
+        1:Clk can be gated off
+
+#---------------------- AB I/F Clk Gating ---------------------
+
+config FCH_AB_CLK_GATING
+    int "Enable Clock Gating on A/B interface"
+    range 0 1
+    default 1
+    help
+        This should be enabled when either Alink or Blink gating is enabled
+        AB Clock Gating:
+        0:disable - clocks run always
+        1:enable the gating option
+
+#---------------------- Slow B-Clock ---------------------
+
+config FCH_SLOW_BCLOCK
+    int "Use slow B-clock? (save power)"
+    range 0 1
+    default 0
+    help
+        Slow down Internal Core Clock (B-Link clock) for power saving
+        0:Use full speed clock
+        1:Use slow clock
+
+#---------------------- Reset on SyncFlood ---------------------
+
+config FCH_RESET_SYNC_FLOOD
+    int "Enable a reset on detecting an error (SyncFlood)?"
+    range 0 1
+    default 0
+    help
+        Enable AB to forward downstream sync-flood message to system
+        controller.
+        1: Forward error to system
+        0: Hide downstream errors
+
+#---------------------- DMA Write size  ---------------------
+
+config FCH_DMA_SIZE
+    int "Allow DMA sizes of 32 and 64 bytes?"
+    range 0 1
+    default 1
+    help
+        Sets the permitted DMA transaction sizes on the AB bus
+        0: DMA uses only 16 byte write requests
+        1: DMA may use 32 byte and 64 byte writes
+
+#---------------------- AB Mem Pwr Saving ---------------------
+
+config FCH_MEM_PWR_SAVING
+    int "Enable power saving during memory idle times?"
+    range 0 1
+    default 1
+    help
+        Memory Shutdown feature
+
+#---------------------- SDP Power Saving ---------------------
+
+config FCH_SDP_PWR_SAVING
+    int "Enable SDP power savings?"
+    range 0 1
+    default 1
+    help
+        Scalable Data Port (SDP) can detect idle conditions and save power
+        by doing a 'shutdown' on select interfaces.
+
+#---------------------- SDP Clock Gating ---------------------
+
+config FCH_SDP_CLK_GATING
+    int "Enable SDP Clock Gating?"
+    range 0 1
+    default 1
+    help
+        Scalable Data Port (SDP) can reduce power by gating clocks when idle.
+
+#---------------------- xDMA Size ---------------------
+
+config FCH_XDMA_LIMIT_SIZE
+    int "Limit xDMA sizes to 16 bytes?"
+    range 0 1
+    default 0
+    help
+        Sets the permitted xDMA transaction sizes through the AXI Ctlr
+        0: xDMA may use 32 byte and 64 byte writes
+        1: xDMA uses only 16 byte write requests
+
+#---------------------- xDMA Power Saving ---------------------
+
+config FCH_XDMA_PWR_SAVING
+    int "Enable xDMA power savings?"
+    range 0 1
+    default 0
+    help
+        xDMA AXI Ctlr can detect idle conditions and save power
+        by doing a 'shutdown' on select interfaces.
+
+#---------------------- xDMA NPR Threshold ---------------------
+
+config FCH_XDMA_NPR_COUNT
+    int "Count of xDMA non-Posted Requests"
+    range 0 31
+    default 0
+    help
+        This is a performance control that can limit the number of non-Posted
+        Requests (NPRs) to be outstanding at one time.
+        0 = allow max of 32 RPRs
+        1..31 = sets a lower limit
+
+#---------------------- xDMA Ordering  ---------------------
+
+config FCH_XDMA_ORDER_DIS
+    int "Should the ordering rule for xDMA downstream writes be disabled?"
+    range 0 1
+    default 0
+    help
+        The ordering rule of 'downstream Non-posted requests
+        completion to flush upstream DMA write' can be disabled.
+        0: Rule is enforced
+        1: Rule is disabled
+
+#---------------------- SDP Host Bypass ---------------------
+
+config FCH_SDP_BYPASS_PACK
+    int "Let SDP Bypass Data Bus packing?"
+    range 0 1
+    default 0
+    help
+         Scalable Data Port (SDP) normally pack the data bus to 256 bits.
+         This control allows the packing stage to be bypassed.
+         0: packing enabled
+         1: bypass the packing stage.
+
+#---------------------- SDP NPM WR Interleaving ---------------------
+
+config FCH_SDP_INTERLEAVING
+    int "Disable SDP Interleaving protection?"
+    range 0 1
+    default 0
+    help
+        Scalable Data Port (SDP) downstream writes are ordered; but that
+        can be disabled and allow interleaved writes.
+        0: Ordering is enforced
+        1: Interleaving is allowed.
+
+
+#---------------------- next_item ---------------------
+
+
+endmenu # Sys Bus I/F for FCH

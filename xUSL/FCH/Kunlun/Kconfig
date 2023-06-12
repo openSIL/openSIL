@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+#
+# Config for  xUSL/FCH/Kunlun
+#
+
+if HAVE_FCH_KUNLUN
+
+ # nothing at this level at this time
+
+    source "xUSL/FCH/Kunlun/FchCore/*/Kconfig"
+endif

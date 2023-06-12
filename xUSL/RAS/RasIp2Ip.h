@@ -1,0 +1,129 @@
+/* SPDX-License-Identifier: MIT */
+/**
+ * Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+ *
+ */
+/**
+ * @file    RasIp2Ip.h
+ * @details This file contains the definition of the RAS Ip 2 Ip API.
+ *          This API provides other openSIL IPs with any SMU functionality or data
+ *          they require while also abstracting revision specific differences.
+ */
+
+#pragma once
+#include <xSIM-api.h>
+#include <RAS/Common/RasClass-api.h>
+
+/**
+ * IP-to-IP APIs
+ *
+ * This structure contains an API for inter IP communication.
+ *
+ * IP specific code should populate this structure of function pointers with
+ * the appropriate API function versions.
+ *
+ */
+typedef void (*RETRIEVE_REGS) (
+  uint32_t      PkgNo,
+  uint32_t      mpuno,
+  uint32_t      umcno,
+  uint32_t      umcchno,
+  uint32_t      BusNumberBase,
+  SIL_ADDR_DATA *AddrData
+  );
+
+typedef uint32_t (*GET_UMC_HARVEST_FUSE) (
+  size_t    BusNumberBase
+  );
+
+typedef SIL_STATUS (*UPDATE_FRU_TEXT_TO_UMC) (
+  uint32_t              IohcBus,
+  SIL_FRUTEXT_ENTRY *AmdFruTextSEntry
+  );
+
+typedef void (*UPDATE_MCA_FRU_TEXT) (
+  SIL_CPU_INFO      *RasCpuMap
+  );
+
+typedef void (*TRANS_NORM_TO_DRAM_ADDR) (
+  uint64_t      ChannelAddr,
+  uint8_t       PkgNo,
+  uint8_t       MpuNo,
+  uint8_t       UmcInstNum,
+  uint8_t       UmcChanNum,
+  uint8_t       *CsNum,
+  uint8_t       *Bank,
+  uint32_t      *Row,
+  uint16_t      *Col,
+  uint8_t       *RankMul,
+  uint8_t       *SubChan,
+  SIL_ADDR_DATA *AddrData
+  );
+
+typedef void (*TRANS_NORM_TO_DPA) (
+  uint64_t      ChannelAddr,
+  uint8_t       PkgNo,
+  uint8_t       MpuNo,
+  uint8_t       UmcInstNum,
+  uint8_t       UmcChanNum,
+  uint8_t       CsNum,
+  uint8_t       Bank,
+  uint32_t      Row,
+  uint16_t      Col,
+  uint8_t       RankMul,
+  uint64_t      *Dpa,
+  SIL_ADDR_DATA *AddrData
+  );
+typedef void (*CALC_NORM_ADDR) (
+  uint64_t                SysAddr,
+  SIL_NORMALIZED_ADDRESS  *NormalizedAddress
+  );
+
+typedef uint64_t (*CALC_SYS_ADDR) (
+  uint64_t      NormAddr,
+  uint32_t      AddrSocketNum,
+  uint32_t      AddrDieNum,
+  uint32_t      UmcPhysChannelNum
+  );
+
+typedef void (*SET_IP_MCA_CTL_MASK) (
+  uint16_t          HardwareId,
+  uint16_t          McaType,
+  SIL_IP_RAS_POLICY *IpMcaPolicyCfg
+  );
+
+typedef void (*PROG_CORE_MCA_IPID_INST) (
+  SIL_CPU_INFO *RasCpuInfo
+  );
+
+typedef void (*PROG_CORE_MCA_CFG_UMC) (
+  bool  EnableFruText
+  );
+
+typedef SIL_STATUS (*COLLECT_DIMM_MAP) (
+  SIL_ADDR_DATA *DimmMap
+  );
+
+typedef void (*COLLECT_MCA_ERROR_INFO) (
+  SIL_RAS_MCA_ERROR_INFO_V2 *RasMcaErrorInfo
+  );
+
+typedef struct {
+  SIL_DATA_BLOCK_ID IpId;       ///< Block Id for this ip
+  uint8_t           Version;
+} RAS_IP2IP_API_HEADER;
+
+typedef struct {
+  RAS_IP2IP_API_HEADER    Header;
+  RETRIEVE_REGS           RetrieveRegs;
+  GET_UMC_HARVEST_FUSE    GetUmcHarvestFuse;
+  UPDATE_FRU_TEXT_TO_UMC  UpdateFruTextToUmc;
+  UPDATE_MCA_FRU_TEXT     UpdateMcaFruText;
+  CALC_SYS_ADDR           CalcSysAddr;
+  CALC_NORM_ADDR          CalcNormAddr;
+  SET_IP_MCA_CTL_MASK     SetIpMcaCtlMask;
+  PROG_CORE_MCA_IPID_INST ProgramCoreMcaIpIdInstanceId;
+  PROG_CORE_MCA_CFG_UMC   ProgramCoreMcaConfigUmc;
+  COLLECT_DIMM_MAP        CollectDimmMap;
+  COLLECT_MCA_ERROR_INFO  CollectMcaErrorInfo;
+} RAS_IP2IP_API;

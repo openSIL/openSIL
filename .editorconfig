@@ -1,0 +1,29 @@
+# Copyright (C) 2024 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+# EditorConfig: https://editorconfig.org
+# SPDX-License-Identifier: MIT
+
+# top-most EditorConfig file
+root = true
+
+# Windows-style newlines with a newline ending every file and no trailing
+# whitespace
+[*]
+charset = utf-8
+end_of_line = crlf
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Source code gets a maximum line length of 120 characters
+[*.{c,h}]
+max_line_length = 120
+
+# shell scripts get unix newlines with a newline ending the file
+[*.sh]
+end_of_line = lf
+
+# Tab indentation (no size specified)
+[Makefile]
+indent_style = tab
+tab_width = 8

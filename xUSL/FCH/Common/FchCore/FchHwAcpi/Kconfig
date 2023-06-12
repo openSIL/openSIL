@@ -1,0 +1,159 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+# Config for  xUSL/FCH/Common/FchCore/FchHwAci
+#
+#
+
+menu "FCH-ACPI, Power and Misc controls"
+comment "                                                               "
+comment " The HwAcpi component provides controls for ACPI related items,"
+comment " System power options and various platform controls.           "
+comment "                                                               "
+
+#---------------------- Spread Spectrum ---------------------
+config SPREAD_SPECTRUM
+    int "Enable Spread Spectrum"
+    range 0 1
+    default 1
+    help
+        'Spread Spectrum' is a technique used to reduce RF emissions
+
+#---------------------- Power Fail ---------------------
+choice CHOICE_POWER_FAIL_OPTIONS
+    prompt "After a power failure, what state does the unit go?"
+    default CHOICE_PWR_STAY_OFF
+    help
+        When a power failure occurs the state of the unit is noted.
+        Once the local power returns, the unit state can set per this option.
+
+config CHOICE_PWR_STAY_OFF
+    bool "Leave the power off"
+    help
+       Power will remain off. No attempt will be made to restart the unit.
+
+config CHOICE_PWR_ON_UNIT
+    bool "Restart the unit."
+    help
+       After local power is available, simulate a power button press to
+       return the unit to full operation.
+
+config CHOICE_PWR_RESTORE
+    bool "Restore power to its state prior to the fail."
+    help
+      If the unit was operational before the power failed, the unit
+      will be restarted when local power is available.
+      If the unit was inactive, it will remain off.
+
+endchoice
+
+##  define the system variable that is used in the code
+config POWER_FAIL_RETURN_STATE
+    int
+    default 0   if CHOICE_PWR_STAY_OFF
+    default 1   if CHOICE_PWR_ON_UNIT
+    default 3   if CHOICE_PWR_RESTORE
+
+
+#---------------------- Stress Reset Mode ---------------------
+choice CHOICE_STRESS_RESET_METHOD
+    prompt "TBD - Choose method of reset"
+    default CHOICE_STRESS_DISABLE
+    help
+        When the unit is stressed, how should it be reset?
+
+config CHOICE_STRESS_DISABLE
+    bool "Disable any reset action."
+
+config CHOICE_USE_KBD_RESET
+    bool "Initiate a KBD reset action"
+    help
+       A value of 0xFE will be sent to the KBD port (IO 0x64)
+
+config CHOICE_SOFT_RESET
+    bool "Use a 'soft' reset"
+    help
+        A value of 0x06 will be sent to the PCI reset port (IO 0x0CF9)
+
+config CHOICE_HARD_RESET
+    bool "Use a 'hard' reset"
+    help
+        A value of 0x0E will be sent to the PCI reset port (IO 0x0CF9)
+
+endchoice
+
+##  define the system variable that is used in the code
+config STRESS_RESET_MODE
+    int
+    default 0   if CHOICE_STRESS_DISABLE
+    default 1   if CHOICE_USE_KBD_RESET
+    default 2   if CHOICE_SOFT_RESET
+    default 3   if CHOICE_HARD_RESET
+
+#---------------------- Clear Thrm status ---------------------
+config CLEAR_THRMTRIP_STATUS
+    int "Don't clear the Thermal status on boot? [0/1]"
+    range 0 1
+    default 0
+    help
+        Caution: This item employs Double Negative logic
+        (@todo noted in code)
+        Value of false (0) will cause the status bit to be cleared.
+
+#---------------------- Boot Timer ---------------------
+config ENABLE_BOOT_TIMER
+    int "Enable the system Boot Timer? [0/1]"
+    range 0 1
+    default 1
+    help
+        Choose to activate the Boot Timer. When active, an expired timer will
+        cause a system reset.
+
+config BOOT_TIMER_RESET
+    int "Choose the Reset Type (0-warm, 1-cold)"
+    range 0 1
+    default 0
+    help
+        IF the Boot Timer is enabled, then this item controls the type of reset
+        to be use when the timer expires.
+        value =0 (false) the reset will be a 'warm reset'
+        value =1 (true) the reset will be a 'cold reset'
+
+#---------------------- Toggle AllPwrGood on CF9 ---------------------
+config TOGGLE_ALL_PWRGOOD
+    int "On CF9 reset, use all reset signals"
+    range 0 1
+    default 0
+    help
+        When a 0x0CF9 IO register write is used to reset the system,
+        most or all of the reset signals are toggled.
+        Value =0 (false) most of the resets are toggled
+        Value =1 (true) all of the resets are toggled.
+
+#---------------------- Release SPD to BMC ---------------------
+config RELEASE_SPD_CTL_BMC
+    int "Give SPD control to BMC? [0/1]"
+    range 0 1
+    default 1
+    #caution default may be platform specific usually only servers have BMCs
+    help
+        For systems that contain a BMC, AND have the SPD devices behind the BMC;
+        then this control tells the system to 'release' control to the BMC for
+        monitoring the DIMMs.
+        Value =0 (false) Use the internal SMU to monitor the DIMMs
+        Value =1 (true) Give control to the external BMC device.
+        (see also 'Monitor DIMM Telemetry')
+
+#---------------------- Monitor DIMM Telemetry ---------------------
+config DIMM_TELEMETRY
+    int "Enable DIMM monitoring? [0/1]"
+    range 0 1
+    default 0
+    help
+        Some DIMMs provide telemetry to track thermal status, or other measurements.
+        Value =0 (false) No monitoring is performed
+        Value =1 (true) The SMU is instructed to perform DIMM monitoring.
+        (see also  'Give SPD control to BMC')
+
+#---------------------- next_item ---------------------
+
+endmenu #  FCH ACPI, Power, Misc

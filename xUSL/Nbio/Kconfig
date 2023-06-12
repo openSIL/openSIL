@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+# Config for  xUSL/Nbio
+#
+#
+
+# Kconfig vars used for display control. One for each version.
+# These are used in the \konfig.ip file for selecting IP versions.
+config HAVE_NBIO_BRH   # Turin IOD
+    bool
+
+# conditional all elements since this IP device may or may not be included
+if (HAVE_NBIO_BRH)
+  menu "Northbridge IO (NBIO) Device     "
+        comment "                                                           "
+        comment " The NBIO device comprises multiple IPs that are related to"
+        comment " high-speed IO resource, primarily the PCI Express         "
+        comment " and internal graphics subsystems                          "
+        comment "                                                           "
+      source "xUSL/Nbio/Brh/Kconfig"
+  endmenu
+endif

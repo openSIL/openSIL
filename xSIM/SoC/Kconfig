@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+# Config for  xSIM\SoC
+#
+#
+
+
+# List all the  AMD SoCs supported by openSIL.
+source "F19M10"
+source "F1AM00"
+source "F19M70"
+source "F1AM50"

@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+# Config for  xSIM/SoC/F1AM00
+#
+#
+
+config HAVE_SOC_F1AM00
+    bool
+#    select ????
+
+
+if HAVE_SOC_F1AM00
+comment "** selected: SoC F1AM00  a.k.a. 'Breithorn' **"
+config SOC_F1AM00_FEAT_VAR
+    int
+    default 2
+    help
+        This is an SoC descriptor variable. These are loaded to the xSIM
+        SoC descriptors memory buffer for use by the IP blocks.
+
+endif

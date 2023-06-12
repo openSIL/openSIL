@@ -1,0 +1,200 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+# Config for  xUSL/FCH/Common/FchCore/FchIsa
+#
+#
+
+menu "FCH-ISA Bus interface for FCH"
+comment "                                                      "
+comment " The ISA bus is a legacy system bus for devices       "
+comment " such as: LPC, SPI, TPM.                              "
+comment "                                                      "
+
+menu "LPC Bus Configurations"
+#---------------------- next_item ---------------------
+
+config LPC_BUS_ENABLE
+    int "Activate the LPC Bus?"
+    range 0 1
+    default 1
+    help
+        The Low-Pin-Count (LPC) bus is a legacy bus used for
+        devices like the SPI flash ROM, and TPM.
+
+endmenu
+
+# *****************************************************
+menu "SPI Bus Configurations"
+#---------------------- Standard SPEED ---------------------
+
+choice CHOICE_SPI_STD_SPEED
+    prompt "SPI bus Speed for standard accesses"
+    default CHOICE_33MHZ_STD
+    help
+        For SPI bus accesses directed to the STD device,
+        this is the transaction speed to be used.
+
+config CHOICE_IGNORE_STDSPEED
+    bool "Don't touch. Use value set by the HW/FW"
+    help
+        The speed was set by either hardware power-on default
+        or the embedded firmware. Do not change the setting.
+
+config CHOICE_66MHZ_STD
+    bool "66MHz standard speed"
+    help
+        Set the bus speed for using a 66MHz clock.
+
+config CHOICE_50MHZ_STD
+    bool "50MHz standard speed"
+
+config CHOICE_33MHZ_STD
+    bool "33MHz standard speed"
+
+config CHOICE_22MHZ_STD
+    bool "22MHz standard speed"
+
+config CHOICE_16_5MHZ_STD
+    bool "16.5MHz standard speed"
+
+config CHOICE_4MHZ_STD
+    bool "4MHz standard speed"
+
+config CHOICE_800KHZ_STD
+    bool "800Khz standard speed"
+
+config CHOICE_100KHZ_STD
+    bool "100KHz standard speed"
+
+endchoice
+
+##  define the system variable that is used in the code
+config SPI_STD_SPEED
+    int
+    default 0   if CHOICE_IGNORE_STDSPEED
+    default 1   if CHOICE_66MHZ_STD
+    default 2   if CHOICE_33MHZ_STD
+    default 3   if CHOICE_22MHZ_STD
+    default 4   if CHOICE_16_5MHZ_STD
+    default 5   if CHOICE_100KHZ_STD
+    default 6   if CHOICE_800KHZ_STD
+    default 7   if CHOICE_50MHZ_STD
+    default 8   if CHOICE_4MHZ_STD
+
+#---------------------- Write SPEED ---------------------
+
+choice CHOICE_SPI_WRT_SPEED
+    prompt "SPI bus Speed for standard accesses"
+    default CHOICE_IGNORE_WRTSPEED
+    help
+        For SPI bus accesses directed to the WRT device,
+        this is the transaction speed to be used.
+
+config CHOICE_IGNORE_WRTSPEED
+    bool "Don't touch. Use value set by the HW/FW"
+    help
+        The speed was set by either hardware power-on default
+        or the embedded firmware. Do not change the setting.
+
+config CHOICE_66MHZ_WRT
+    bool "66MHz standard speed"
+    help
+        Set the bus speed for using a 66MHz clock.
+
+config CHOICE_50MHZ_WRT
+    bool "50MHz standard speed"
+
+config CHOICE_33MHZ_WRT
+    bool "33MHz standard speed"
+
+config CHOICE_22MHZ_WRT
+    bool "22MHz standard speed"
+
+config CHOICE_16_5MHZ_WRT
+    bool "16.5MHz standard speed"
+
+config CHOICE_4MHZ_WRT
+    bool "4MHz standard speed"
+
+config CHOICE_800KHZ_WRT
+    bool "800Khz standard speed"
+
+config CHOICE_100KHZ_WRT
+    bool "100KHz standard speed"
+
+endchoice
+
+##  define the system variable that is used in the code
+config SPI_WRT_SPEED
+    int
+    default 0   if CHOICE_IGNORE_WRTSPEED
+    default 1   if CHOICE_66MHZ_WRT
+    default 2   if CHOICE_33MHZ_WRT
+    default 3   if CHOICE_22MHZ_WRT
+    default 4   if CHOICE_16_5MHZ_WRT
+    default 5   if CHOICE_100KHZ_WRT
+    default 6   if CHOICE_800KHZ_WRT
+    default 7   if CHOICE_50MHZ_WRT
+    default 8   if CHOICE_4MHZ_WRT
+
+#---------------------- TPM SPEED ---------------------
+
+choice CHOICE_SPI_TPM_SPEED
+    prompt "SPI bus Speed for TPM accesses"
+    default CHOICE_IGNORE_TPMSPEED
+    help
+        For SPI bus accesses directed to the TPM device,
+        this is the transaction speed to be used.
+
+config CHOICE_IGNORE_TPMSPEED
+    bool "Don't touch. Use value set by the HW/FW"
+    help
+        The speed was set by either hardware power-on default
+        or the embedded firmware. Do not change the setting.
+
+config CHOICE_66MHZ_TPM
+    bool "66MHz TPM speed"
+    help
+        Set the bus speed for using a 66MHz clock.
+
+config CHOICE_50MHZ_TPM
+    bool "50MHz TPM speed"
+
+config CHOICE_33MHZ_TPM
+    bool "33MHz TPM speed"
+
+config CHOICE_22MHZ_TPM
+    bool "22MHz TPM speed"
+
+config CHOICE_16_5MHZ_TPM
+    bool "16.5MHz TPM speed"
+
+config CHOICE_4MHZ_TPM
+    bool "4MHz TPM speed"
+
+config CHOICE_800KHZ_TPM
+    bool "800Khz TPM speed"
+
+config CHOICE_100KHZ_TPM
+    bool "100KHz TPM speed"
+
+endchoice
+
+##  define the system variable that is used in the code
+config SPI_TPM_SPEED
+    int
+    default 0   if CHOICE_IGNORE_TPMSPEED
+    default 1   if CHOICE_66MHZ_TPM
+    default 2   if CHOICE_33MHZ_TPM
+    default 3   if CHOICE_22MHZ_TPM
+    default 4   if CHOICE_16_5MHZ_TPM
+    default 5   if CHOICE_100KHZ_TPM
+    default 6   if CHOICE_800KHZ_TPM
+    default 7   if CHOICE_50MHZ_TPM
+    default 8   if CHOICE_4MHZ_TPM
+
+endmenu  # SPI bus
+#---------------------- next_item ---------------------
+
+
+endmenu # ISA Bus (LPC & SPI) for FCH

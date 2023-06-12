@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+# Config for  openSIL
+#
+#  top level - selecting the SoC(s) to be included
+# Nomenclature:
+# * All config elements will be prefixed with "CONFIG_" by Kconfig
+# * Elements with names that start with "HAVE_" are code inclusion control
+#   elements. These will be used in the Meson build files to select which
+#   code modules will be included.
+# * Elements with names that start with "PLAT_" are platform description
+#   elements.
+#
+
+menu "AMD Silicon Feature Settings"
+comment "                                                               "
+comment " The available silicon devices and features are dependent upon "
+comment " which AMD processor(s) have been selected for inclusion into  "
+comment " the platform build.                                           "
+comment "                                                               "
+
+source "xUSL/XMP/Kconfig"
+source "xUSL/CCX/Kconfig"
+source "xUSL/Nbio/Kconfig"
+source "xUSL/Mpio/Kconfig"
+source "xUSL/Sdxi/Kconfig"
+source "xUSL/FCH/Kconfig"
+#source "xUSL/DF/Kconfig"
+#source "xUSL/SMU/Kconfig"
+#source "xUSL/RAS/Kconfig"
+#source "xUSL/MEM/Kconfig"
+
+endmenu
