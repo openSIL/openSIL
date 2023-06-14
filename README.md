@@ -46,7 +46,7 @@ The AMD blog "[Empowering The Industry with Open System Firmware - AMD openSIL](
    Specific versions being used today (June 2023) are:
      *  GCC - v10.2.0
      *  llvm/clang - v10.0
-     *  MSVC v19.00.24210  (Visual Studio 2015)<br>
+     *  MSVC v19.00.24210  (Visual Studio 2019)<br>
 
 5. Integrate with Host Firmware:
 
@@ -64,6 +64,7 @@ The AMD blog "[Empowering The Industry with Open System Firmware - AMD openSIL](
 ## Forthcoming items:
    * Formal documentation to be published to this repository.
    * Continuous integration (CI) tools will be implemented as a pre-requisite to merging pull requests.
+   * Fix for meson build errors (current version tested with Visual Studio 2019).
 
 ## License:
 
