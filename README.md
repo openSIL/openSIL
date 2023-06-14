@@ -62,7 +62,7 @@ The AMD blog "[Empowering The Industry with Open System Firmware - AMD openSIL](
      | Server              | F19M10                           | UEFI     | Onyx                          |
 
 ## Forthcoming items:
-   * Formal documentation to be publishd to this repository.
+   * Formal documentation to be published to this repository.
    * Continuous integration (CI) tools will be implemented as a pre-requisite to merging pull requests.
 
 ## License:
