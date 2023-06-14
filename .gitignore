@@ -5,15 +5,3 @@ Documentation/ApiSpec/build/
 Build
 */Build
 util/kconfig/lib/__pycache__/
-cscope.files
-cscope.in.out
-cscope.out
-cscope.po.out
-tags
-*.swp
-flist-SilCfg-AllYes.txt
-reserved.txt
-xUSL/NBIO/FLI/NbioPcieStraps.h.MOVETORESRV
-xUSL/NBIO/FLI/NbioPcieStraps.h.BAK
-xUSL/Mpio/Rs/MpioPcieStrapsRs.h.BAK
-xUSL/Mpio/Rs/MpioPcieStrapsRs.h.MOVETORESRV
