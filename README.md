@@ -67,4 +67,4 @@ The AMD blog "[Empowering The Industry with Open System Firmware - AMD openSIL](
 
 ## License:
 
-The MIT License (MIT): https://rem.mit-license.org
+The MIT License (MIT): https://opensource.org/license/mit/
