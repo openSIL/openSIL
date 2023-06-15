@@ -6,6 +6,9 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
+#include <stdint.h>
+#include <stdbool.h>
+#include <FCH/Common/FchCommonCfg.h>
 #include <FCH/Common/FchCore/FchHwAcpi/FchHwAcpiReg.h>
 
 /**********************************************************************************************************************

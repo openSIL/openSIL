@@ -22,6 +22,7 @@
 #include <FCH/9004/FchCore/FchSata/FchSataSn.h>
 #include <RAS/Genoa/RasGenoa.h>
 #include <DF/DfX/DfX.h>
+#include <NBIO/IOD/NbioIod.h>
 
 /**
  * Declare the IP Block list
@@ -48,6 +49,13 @@ const SOC_IP_TABLE SocIpTblF19M10Tp2 = {
       NULL,
       NULL,
       InitializeSmuApiV13
+    },
+    {
+      SilId_NbioClass,
+      0,
+      NULL,
+      NULL,
+      InitializeApiNbioIod
     },
     {
       SilId_CcxClass,
