@@ -10,6 +10,8 @@
 #define SMU_ARGUMENT_SIZE              24
 #define MAX_CAC_WEIGHT_NUM             23
 
+#define INVALID_SMC_MESSAGE            0xFF
+
 /// SMU Response Codes
 typedef enum {
   SMC_Result_Fatal              = -4,
@@ -46,7 +48,7 @@ typedef enum {
   SMC_MSG_SetCPPCTableAddr                    = 0x16,
   SMC_MSG_GetCPPCSupportedRegisters           = 0x17,
   SMC_MSG_EnableHotplug                       = 0x18,
-  SMC_MSG_DisableHotPlug                      = 0xFF,
+  SMC_MSG_DisableHotPlug                      = INVALID_SMC_MESSAGE, // 0x19
   SMC_MSG_SetI2CBusSwitchBaseAddress          = 0x1A,
   SMC_MSG_SetEMBlinkInterval                  = 0x1B,
   SMC_MSG_SetHotplugPollInterval              = 0x1C,
