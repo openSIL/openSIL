@@ -6,6 +6,11 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include <Sil-api.h>
+
 #pragma pack (push, 1)
 
 

@@ -158,6 +158,7 @@ typedef enum {
 #define CPUID_BASE_FAMILY_OFFSET               8
 #define CPUID_EXT_MODEL_OFFSET                 16
 #define CPUID_EXT_FAMILY_OFFSET                20
+#define RAW_FAMILY_ID_MASK ((uint32_t) (CPUID_EXT_FAMILY_MASK | CPUID_EXT_MODEL_MASK | CPUID_BASE_FAMILY_MASK))
 
 #define LAPIC_BASE_ADDR_MASK                   0x0000FFFFFFFFF000ull
 #define APIC_EXT_BRDCST_MASK                   0x000E0000ul
