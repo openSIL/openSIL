@@ -10,6 +10,8 @@
 #pragma once
 #include <Utils.h>
 
+#pragma pack(push, 1)
+
 /**********************************************************************************************************************
  * Module data structure
  *
@@ -66,3 +68,5 @@ typedef union {
  *
  */
 bool LoadMicrocodePatch (uint64_t *UcodePatchAddr);
+
+#pragma pack (pop)
