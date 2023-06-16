@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <SilCommon.h>
 #include <xSIM-api.h>
 #include <RAS/Common/RasClass-api.h>
 
