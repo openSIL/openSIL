@@ -1,5 +1,5 @@
 /**
- * @file  SmuDefs.h.h
+ * @file  SmuDefs.h
  * This file contains enums for SMU command and response types.
  */
 /* Copyright 2023 Advanced Micro Devices, Inc. All rights reserved.    */
