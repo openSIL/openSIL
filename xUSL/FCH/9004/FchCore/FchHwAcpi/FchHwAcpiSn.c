@@ -17,14 +17,6 @@
 #include <FCH/Common/Fch.h>
 #include <Utils.h>
 
-/*
- * Compiler will generate warnings for unused formal parameters in function
- * declarations.  This is expected as some API function may not be implemented
- * for all versions of an IP.  Additionally, some version may have differing
- * implementations.  Suppress the warning here.
- */
-#pragma warning(disable:4100)
-
 static FCH_HWACPI_XFER_TABLE mFchHwAcpiXferSn = {
   .Header = {
     .Version    = 1   // Version 1 = 9004 FCH

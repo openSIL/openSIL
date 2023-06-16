@@ -18,14 +18,6 @@
 #include <Utils.h>
 #include <SMU/SmuIp2Ip.h>
 
-/*
- * Compiler will generate warnings for unused formal parameters in function
- * declarations.  This is expected as some API function may not be implemented
- * for all versions of an IP.  Additionally, some version may have differing
- * implementations.  Suppress the warning here.
- */
-#pragma warning(disable:4100)
-
 static FCH_XHCI_XFER_TABLE mFchXhciXferSn = {
   .Header = {
     .Version                     = 1   // Version 1 = 9004 FCH

@@ -18,11 +18,6 @@
 
 #pragma pack(push,1)
 
-// @todo: Warning 4100 'unreferenced formal parameter' shows on underdeveloped functions where input  argument is not
-// used in the function. Remove the following #pragma when the code is mature and all arguments in all MPIO-DXIO
-// functions are effectively used.
-#pragma warning( disable : 4100 )
-
 #define MPIOTEMP_MAX_SIZE_OVERRIDE_TABLE 256
 #define PCIE_PORT_PARAMETER_COUNT  64
 
