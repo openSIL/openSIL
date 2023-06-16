@@ -5,14 +5,6 @@
 /* Copyright 2021-2023 Advanced Micro Devices, Inc. All rights reserved.    */
 // SPDX-License-Identifier: MIT
 
-/*
-  MS compiler generates warning for "Criteria" in several functions below is not referenced;
-  Criteria can not be removed from the prototype since these functions belong to the function table.
-  Current solution: warning is suppressed.
-*/
-#pragma warning(push)
-#pragma warning(disable:4100)
-
 #include <SilCommon.h>
 #include <string.h>
 #include "AmdTable.h"

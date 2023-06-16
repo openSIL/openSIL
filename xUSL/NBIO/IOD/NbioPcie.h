@@ -11,11 +11,6 @@
 #include <xSIM.h>
 #include <SilPcie.h>
 
-// @todo Warning 4100 'unreferenced formal parameter' shows on underdeveloped functions where input  argument is not
-// used in the function. Remove the following #pragma when the code is mature and all arguments in all NBIO functions
-// are effectively used.
-#pragma warning( disable : 4100 )
-
 /**********************************************************************************************************************
  * Declare macros here
  *
