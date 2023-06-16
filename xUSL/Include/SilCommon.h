@@ -14,7 +14,6 @@
 #include <stdint.h>   // needed for declarations later in this file
 #include <stdbool.h>
 
-#include <Sil-api.h>
 #include <xSIM-api.h>
 
 /* Declare references for the module-global variables */

@@ -7,7 +7,6 @@
  *
  */
 
-#include <SilCommon.h>
 #include <xSIM-api.h>
 #include <FCH/Common/Fch.h>
 #include <FCH/Common/FCHClass-api.h>

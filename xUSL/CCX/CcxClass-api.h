@@ -34,7 +34,7 @@
 #include <stddef.h>
 #include <stdint.h>   // needed for declarations later in this file
 #include <stdbool.h>
-#include <xSIM-api.h>  // ?? needed ??
+#include <xSIM-api.h>
 
 
 #pragma pack (push, 1)

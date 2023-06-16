@@ -5,7 +5,7 @@
 /* Copyright 2021-2023 Advanced Micro Devices, Inc. All rights reserved.    */
 // SPDX-License-Identifier: MIT
 
-#include <xSIM-api.h> // SIL_DATA_BLOCK_ID enum def.  Or the value can be case as uint16_t
+#include <xSIM-api.h>
 #include <SilCommon.h>
 
 /**

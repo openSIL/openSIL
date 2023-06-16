@@ -6,7 +6,6 @@
  *
  */
 
-#include <SilCommon.h>
 #include <xSIM-api.h>
 #include <FCH/FchIp2Ip.h>
 #include <FCH/Common/Fch.h>
