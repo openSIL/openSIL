@@ -621,7 +621,6 @@ CxlDevListGenerate (
 {
   GNB_HANDLE        *GnbHandle;
   uint32_t          MpioArg[6];
-  uint32_t          Response;
   SIL_STATUS        Status;
   MPIO_IP2IP_API    *MpioApi;
   NBIO_IP2IP_API    *NbioIp2Ip;
@@ -658,7 +657,7 @@ CxlDevListGenerate (
     memset (MpioArg, 0x00, sizeof(MpioArg));
     MpioArg[1] = (uint32_t) ((uintptr_t)&CxlInfo->CxlInfoS0);
     MpioArg[2] = CxlInfo->CxlPortCountS0;
-    Response = MpioApi->MpioServiceRequest (NbioIp2Ip->GetHostPciAddress (GnbHandle),
+    MpioApi->MpioServiceRequest (NbioIp2Ip->GetHostPciAddress (GnbHandle),
                                             MPIO_MSG_CXL_INITIALIZE,
                                             MpioArg,
                                             0);
@@ -677,7 +676,7 @@ CxlDevListGenerate (
     memset (MpioArg, 0x00, sizeof(MpioArg));
     MpioArg[1] = (uint32_t) ((uintptr_t)&CxlInfo->CxlInfoS1);
     MpioArg[2] = CxlInfo->CxlPortCountS1;
-    Response = MpioApi->MpioServiceRequest (NbioIp2Ip->GetHostPciAddress (GnbHandle),
+    MpioApi->MpioServiceRequest (NbioIp2Ip->GetHostPciAddress (GnbHandle),
                                             MPIO_MSG_CXL_INITIALIZE,
                                             MpioArg,
                                             0);

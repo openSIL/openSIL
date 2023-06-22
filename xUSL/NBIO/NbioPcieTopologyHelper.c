@@ -509,10 +509,8 @@ PcieInputParserGetEngineDescriptor (
   size_t                           Index
   )
 {
-  size_t PcieListlength;
 
   assert (Index < (PcieInputParserGetNumberOfEngines (Complex)));
-  PcieListlength = PcieInputParserGetLengthOfPcieEnginesList (Complex);
 
   return (PCIe_ENGINE_DESCRIPTOR*) &((Complex->PciePortList)[Index]);
 }

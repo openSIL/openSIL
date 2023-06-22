@@ -266,11 +266,7 @@ void ProgramFchAcpiMmioTbl (ACPI_REG_WRITE *AcpiTbl)
  */
 static void ProgramResetRtcExt (void)
 {
-  uint8_t                  RtcExtData;
 
-  //check if RTCext data lost
-  xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PMIOA_REG5E), 0, 0x01);
-  RtcExtData = xUSLMemRead8 ((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PMIOA_REG5F));
 }
 
 /**

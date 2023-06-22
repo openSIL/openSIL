@@ -276,59 +276,6 @@ MpioCfgBeforeDxioInit (
  * Timepoint after DXIO firmware initialization completes
  *=========================================================================================
  */
-
-/**-------------------------------------------------------------------
- *
- * MpioClearBer
- *
- * @brief tbd
- *
- * @details tbd
- *
- * @param[in] GnbHandle
- *
- * @returns Nothing
- * @retval Nothing
- **/
-//#pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wunused-function"
-static
-void
-MpioClearBer (
-  GNB_HANDLE       *GnbHandle
-  )
-{
-  uint32_t      Value;
-  uint32_t      SmuArg[SMU_ARGUMENT_SIZE/sizeof(uint32_t)];
-  uint32_t      CcdBitfield;
-  SMU_IP2IP_API *SmuApi;
-  SIL_STATUS    Status;
-  MPIO_COMMON_2_REV_XFER_BLOCK    *MpioXferTable;
-
-  Status = SilGetIp2IpApi (SilId_SmuClass, (void **)&SmuApi);
-  if (Status != SilPass) {
-    MPIO_TRACEPOINT (SIL_TRACE_ERROR, "Smu API not found!\n");
-    assert (false);
-    return;
-  }
-
-  if (SilGetCommon2RevXferTable (SilId_MpioClass, (void **)(&MpioXferTable)) != SilPass) {
-    return;
-  }
-  CcdBitfield = 0;
-  MpioXferTable->GetCcdInfo (&CcdBitfield);
-
-  xUSLPciRead (MAKE_SBDFO (0, 0, 0x18, 1, 0x330), AccessWidth32, &Value);
-
-  memset (SmuArg, 0, SMU_ARGUMENT_SIZE);
-  SmuArg[1] = 0x22;
-  SmuArg[2] = 0;
-  SmuArg[3] = ((Value & 0x1F) << 16) | CcdBitfield | (CcdBitfield << 8);
-  SmuArg[4] = 1;
-
-  SmuApi->SmuServiceRequest (GnbHandle->Address, 58, SmuArg, 0);
-}
-//#pragma GCC diagnostic pop
  /**-------------------------------------------------------------------
  *
  * PcieCommonEngineGetDeliInfoCallback

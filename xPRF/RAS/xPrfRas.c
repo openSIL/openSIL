@@ -46,7 +46,6 @@ xPrfCollectDimmMap (
   uint32_t      DieId;
   uint32_t      ChannelId;
   uint32_t      SmuFuse;
-  SIL_ADDR_DATA *AddrData;
   RAS_IP2IP_API *RasApi;
   DF_IP2IP_API  *DfApi;
   uint8_t       UmcPerDie;
@@ -63,8 +62,6 @@ xPrfCollectDimmMap (
   }
 
   UmcPerDie = RasApi->GetUmcPerDie ();
-
-  AddrData = DimmMap;
 
   NumberOfInstalledProcessors = 0;
   TotalNumberOfDie = 0;
