@@ -172,6 +172,10 @@ typedef union {
  *
  */
 #define ACPI_MMIO_BASE            0xFED80000ul
+#define FCH_LPC_BUS               0
+#define FCH_LPC_DEV               20
+#define FCH_LPC_FUNC              3
+
 #define SIL_RESERVED_29           0x44
 #define SIL_RESERVED_30           0x78
 #define IOMUX_BASE                0xD00 // BYTE
