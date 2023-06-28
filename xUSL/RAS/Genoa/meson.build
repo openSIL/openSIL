@@ -2,10 +2,9 @@
 # SPDX-License-Identifier: MIT
 
 xusl += files([
-  'DfAddressTranslationLib.c',
-  'RasCmn2.c',
-  'Ras.c',
-  'SocLib.c'
+  'RasCmn2Genoa.c',
+  'RasGenoa.c',
+  'SocLibGenoa.c'
   ])
 
 incdir += include_directories( '.' )

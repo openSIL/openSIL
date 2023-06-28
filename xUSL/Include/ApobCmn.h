@@ -564,7 +564,7 @@ ApobGetPhysCoreNumber (
 );
 
 //CcdIndex will be ignored in Pre Family 17h Model 30h
-uint32_t
+SIL_STATUS
 ApobGetIsThreadEnabled (
   uint32_t ApobInstanceId,
   uint32_t CcdIndex,
@@ -658,7 +658,7 @@ ApobGetBoardMask (
   uint16_t *BoardMask
   );
 
-uint32_t
+SIL_STATUS
 ApobGetSubProgram (
   uint32_t *SubProgram
   );
