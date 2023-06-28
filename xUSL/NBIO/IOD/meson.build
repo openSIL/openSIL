@@ -9,7 +9,7 @@ xusl += files([
                 'NbioIoApic.c',
                 'NbioIommu.c',
                 'NbioPcie.c',
-                'NbioPcieComplexDataGenoa.c',
+                'NbioPcieComplexData.c',
                 'NbioSmnTable.c',
                 'NbioSmnTables.c',
                 'NbioHidePcieCore.c',

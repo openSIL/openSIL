@@ -1,4 +1,5 @@
 option('coverity', type: 'boolean', value: 'false', description: 'Whether or not to do a coverity build')
 option('unit_test', type: 'boolean', value: 'false', description: 'CI should use this to enable/build the unit test executables.')
+option('PlatKcfg', type: 'string', value: 'Onyx_SilCfg', description: 'Filename of the platform specific Kconfig file.')
 option('PlatKcfgDir', type: 'string', value: 'configs', description: 'Dir of the platform specific Kconfig file.')
 

@@ -7,7 +7,6 @@ xsim += files([ 'xSIM.c'
 
 incdir += include_directories( '.' )
 
-subdir('Common/SoC')
 subdir('SoC')
 
 # Use the library to cause source compilation
