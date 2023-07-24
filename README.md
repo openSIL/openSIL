@@ -54,7 +54,7 @@ The AMD blog "[Empowering The Industry with Open System Firmware - AMD openSIL](
 
 6. Test Host Firmware on reference platform
 
-   * All AMD openSIL testing has been performed on AMD an AMD reference platform (Onyx CRB).
+   * All AMD openSIL testing has been performed on an AMD reference platform (Onyx CRB).
    * Present list of supported reference platforms is shown in the following table.
 
      | Market<br>Segment | AMD Processor<br>Family Model | Firmware | Reference Platform<br>Name |
