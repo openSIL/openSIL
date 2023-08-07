@@ -52,12 +52,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Common/SocSe
 File: opensil/xUSL/CCX/Common/SocServices.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Common/CcxApLaunch32.c
 File: opensil/xUSL/CCX/Common/CcxApLaunch32.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen3/Zen3.c
-File: opensil/xUSL/CCX/Zen3/Zen3.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen3/Zen3DownCoreInit.c
-File: opensil/xUSL/CCX/Zen3/Zen3DownCoreInit.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen3/CcxCmn2Zen3.c
-File: opensil/xUSL/CCX/Zen3/CcxCmn2Zen3.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen4/Zen4.c
 File: opensil/xUSL/CCX/Zen4/Zen4.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen4/Zen4DownCoreInit.c
@@ -232,8 +226,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/NBIO/IOD/PkgType
 File: opensil/xUSL/NBIO/IOD/PkgTypeFixups.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Common/Ras.c
 File: opensil/xUSL/RAS/Common/Ras.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
-File: opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/RasCmn2.c
 File: opensil/xUSL/RAS/Genoa/RasCmn2.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/Ras.c
@@ -336,12 +328,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Common/SocSe
 File: opensil/xUSL/CCX/Common/SocServices.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Common/CcxApLaunch32.c
 File: opensil/xUSL/CCX/Common/CcxApLaunch32.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen3/Zen3.c
-File: opensil/xUSL/CCX/Zen3/Zen3.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen3/Zen3DownCoreInit.c
-File: opensil/xUSL/CCX/Zen3/Zen3DownCoreInit.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen3/CcxCmn2Zen3.c
-File: opensil/xUSL/CCX/Zen3/CcxCmn2Zen3.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen4/Zen4.c
 File: opensil/xUSL/CCX/Zen4/Zen4.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen4/Zen4DownCoreInit.c
@@ -516,8 +502,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/NBIO/IOD/PkgType
 File: opensil/xUSL/NBIO/IOD/PkgTypeFixups.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Common/Ras.c
 File: opensil/xUSL/RAS/Common/Ras.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
-File: opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/RasCmn2.c
 File: opensil/xUSL/RAS/Genoa/RasCmn2.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/Ras.c
@@ -620,12 +604,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Common/SocSe
 File: opensil/xUSL/CCX/Common/SocServices.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Common/CcxApLaunch32.c
 File: opensil/xUSL/CCX/Common/CcxApLaunch32.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen3/Zen3.c
-File: opensil/xUSL/CCX/Zen3/Zen3.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen3/Zen3DownCoreInit.c
-File: opensil/xUSL/CCX/Zen3/Zen3DownCoreInit.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen3/CcxCmn2Zen3.c
-File: opensil/xUSL/CCX/Zen3/CcxCmn2Zen3.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen4/Zen4.c
 File: opensil/xUSL/CCX/Zen4/Zen4.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/CCX/Zen4/Zen4DownCoreInit.c
@@ -800,8 +778,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/NBIO/IOD/PkgType
 File: opensil/xUSL/NBIO/IOD/PkgTypeFixups.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Common/Ras.c
 File: opensil/xUSL/RAS/Common/Ras.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
-File: opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/RasCmn2.c
 File: opensil/xUSL/RAS/Genoa/RasCmn2.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/Ras.c
@@ -1080,8 +1056,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/NBIO/NbioPcieTop
 File: opensil/xUSL/NBIO/NbioPcieTopologyHelper.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Common/Ras.c
 File: opensil/xUSL/RAS/Common/Ras.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
-File: opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/RasCmn2.c
 File: opensil/xUSL/RAS/Genoa/RasCmn2.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/Ras.c
@@ -1356,8 +1330,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/NBIO/NbioPcieTop
 File: opensil/xUSL/NBIO/NbioPcieTopologyHelper.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Common/Ras.c
 File: opensil/xUSL/RAS/Common/Ras.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
-File: opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/RasCmn2.c
 File: opensil/xUSL/RAS/Genoa/RasCmn2.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/Ras.c
@@ -1632,8 +1604,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/NBIO/NbioPcieTop
 File: opensil/xUSL/NBIO/NbioPcieTopologyHelper.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Common/Ras.c
 File: opensil/xUSL/RAS/Common/Ras.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
-File: opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/RasCmn2.c
 File: opensil/xUSL/RAS/Genoa/RasCmn2.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/Ras.c
@@ -1908,8 +1878,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/NBIO/NbioPcieTop
 File: opensil/xUSL/NBIO/NbioPcieTopologyHelper.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Common/Ras.c
 File: opensil/xUSL/RAS/Common/Ras.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
-File: opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/RasCmn2.c
 File: opensil/xUSL/RAS/Genoa/RasCmn2.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/Ras.c
@@ -2184,8 +2152,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/NBIO/NbioPcieTop
 File: opensil/xUSL/NBIO/NbioPcieTopologyHelper.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Common/Ras.c
 File: opensil/xUSL/RAS/Common/Ras.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
-File: opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/RasCmn2.c
 File: opensil/xUSL/RAS/Genoa/RasCmn2.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/Ras.c
@@ -2460,8 +2426,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/NBIO/NbioPcieTop
 File: opensil/xUSL/NBIO/NbioPcieTopologyHelper.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Common/Ras.c
 File: opensil/xUSL/RAS/Common/Ras.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
-File: opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/RasCmn2.c
 File: opensil/xUSL/RAS/Genoa/RasCmn2.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/Ras.c
@@ -2736,8 +2700,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/NBIO/NbioPcieTop
 File: opensil/xUSL/NBIO/NbioPcieTopologyHelper.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Common/Ras.c
 File: opensil/xUSL/RAS/Common/Ras.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
-File: opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/RasCmn2.c
 File: opensil/xUSL/RAS/Genoa/RasCmn2.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/Ras.c
@@ -3012,8 +2974,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/NBIO/NbioPcieTop
 File: opensil/xUSL/NBIO/NbioPcieTopologyHelper.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Common/Ras.c
 File: opensil/xUSL/RAS/Common/Ras.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
-File: opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/RasCmn2.c
 File: opensil/xUSL/RAS/Genoa/RasCmn2.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/Ras.c
@@ -3288,8 +3248,6 @@ parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/NBIO/NbioPcieTop
 File: opensil/xUSL/NBIO/NbioPcieTopologyHelper.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Common/Ras.c
 File: opensil/xUSL/RAS/Common/Ras.c
-parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
-File: opensil/xUSL/RAS/Genoa/DfAddressTranslationLib.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/RasCmn2.c
 File: opensil/xUSL/RAS/Genoa/RasCmn2.c
 parm:  /home/nabla/workspace/coreboot-amd/3rdparty/opensil/xUSL/RAS/Genoa/Ras.c

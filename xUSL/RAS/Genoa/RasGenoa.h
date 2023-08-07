@@ -651,9 +651,6 @@ InitializeApiRasGenoa (void);
 SIL_STATUS
 InitializeRasGenoa (void);
 
-/*******************************************************************************
- * DfAddressTranslationLib API functions
- */
 void
 RetrieveRegsGenoa (
   uint32_t      PkgNo,

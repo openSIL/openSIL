@@ -106,11 +106,9 @@ InitializeSmuApiV13 (void);
                                (SIL_RESERVED_816 + ((CCD - 8) << 25)))
 
 #define SIL_RESERVED_818(CCD)            (SIL_RESERVED_814(CCD) + 0x4D0)
-#define RSDN_MP5_SMT_ENABLE_ADDR(CCD)    (SIL_RESERVED_814(CCD) + 0x33C)
 #define MP5_SMT_ENABLE_BIT               BIT_32(8)
 #define CORE_FUSE_ADDR(FAMILY, CCD)      (SIL_RESERVED_814(CCD) + 0x4D0)
 #define SIL_RESERVED_813(Ccd)            (SIL_RESERVED_814(Ccd) + 0x4D0)
-#define RSDN_MP5_CORE_DISABLE_ADDR(Ccd)  (SIL_RESERVED_814(Ccd) + 0x33C)
 #define MP5_CORE_DISABLE_OFFSET          0
 #define SIL_RESERVED_808                 0xFF
 #define MP5_CORE_DISABLE_CCX1_OFFSET     17
