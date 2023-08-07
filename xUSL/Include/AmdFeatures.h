@@ -26,7 +26,7 @@
 typedef union {
   uint32_t            PlatformValue;              ///< Describe Platform Features in uint32_t
   struct {
-    uint32_t          :3;                         ///< BIT_0 - BIT_3 Reserved
+    uint32_t          :4;                         ///< BIT_0 - BIT_3 Reserved
     uint32_t          PlatformX2Apic:1;           ///< BIT_4 x2APIC mode desired
     uint32_t          PlatformApic:1;             ///< BIT_5 APIC mode desired
     uint32_t          PlatformDisIbrs:1;          ///< BIT_6 IBRS (Indirect Branch Prediction Speculation) should be disabled
