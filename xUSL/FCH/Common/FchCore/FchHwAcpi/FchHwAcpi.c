@@ -1214,7 +1214,7 @@ static void FchInitHwAcpiWaFeature (FCHCLASS_INPUT_BLK *FchDataPtr)
   }
 
   //
-  // Disable ASF slave
+  // Disable secondary ASF
   //
   if (FchDataPtr->FchAsfCfg.DisableSecondary) {
     xUSLMemReadModifyWrite8 ((void *)(size_t)(ACPI_MMIO_BASE + ASF_BASE + 0x15), 0xEF, BIT_32(4));

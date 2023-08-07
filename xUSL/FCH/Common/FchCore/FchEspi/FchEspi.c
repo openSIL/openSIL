@@ -406,7 +406,7 @@ static void FchinitHSEspiEc0 (void)
   //  13 Set eSPI Bus Master Enable.
 
   //  eSPIx00[5:4, SecondaryNSelect] = 00b - Secondary 0 selected.
-  //  Make sure the following operation is for slave 0
+  //  Make sure the following operation is for secondary 0
   xUSLMemReadModifyWrite32 ((void *)(size_t)(EspiBase + 0x00), ~(BIT_32(4) + BIT_32(5)), 0);                // Select Secondary0
 
   FchinitHSEspiTimer (EspiBase);                                                            // 1 - 2
