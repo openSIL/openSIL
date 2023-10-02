@@ -72,25 +72,6 @@ typedef uint64_t (*CALC_SYS_ADDR) (
   uint32_t      UmcPhysChannelNum
 );
 
-typedef void (*SET_SMI_TRIG_IO_CYCLE) (
-  uint8_t   IoData,
-  uint16_t  IoPortAddress
-  );
-
-typedef void (*RAS_SMM_EXIT_TYPE) (
-  uint8_t SmiExitType
-  );
-
-typedef SIL_STATUS (*SET_CORE_MCA_THRESH) (
-  uint32_t      McaBankNumber,
-  bool          AllBanks,
-  bool          ThresholdControl,
-  uint16_t      ThresholdCount,
-  uint8_t       ThresholdIntType,
-  bool          OvrflwChk,
-  uint8_t       ErrCounterEn
-  );
-
 typedef void (*SET_IP_MCA_CTL_MASK) (
   uint16_t          HardwareId,
   uint16_t          McaType,

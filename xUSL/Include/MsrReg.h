@@ -444,14 +444,6 @@ typedef union {
 #define MSR_MCEXCEPREDIR                (0xC0010022UL)
 
 /**
- * @brief SMI Trigger IO Cycle register
- *
- * @details The SMI Trigger IO Cycle register (Core::X86::Msr::SmiTrigIoCycle)
- *          is located in MSR address 0xC001_0056.
- */
-#define MSR_SMITRIGIOCYCLE              (0xC0010056UL)
-
-/**
  * @brief MMIO Configuration Base Address register
  *
  * @details The MMIO Configuration Base Address register (Core::X86::Msr::MmioCfgBaseAddr)

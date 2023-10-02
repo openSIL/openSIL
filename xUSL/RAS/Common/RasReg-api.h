@@ -176,16 +176,3 @@ typedef union {
   } Field;
   uint64_t  Value;
 } SIL_MCA_CONFIG_MSR;
-
-/// SMI Trigger IO Cycle configuration MSR (Core::X86::Msr::SmiTrigIoCycle)
-typedef union {
-  struct {
-    uint64_t  IoPortAddress:16;   ///<
-    uint64_t  IoData:8 ;          ///<
-    uint64_t  Reserved_24_24:1 ;  ///<
-    uint64_t  IoCycleEn:1 ;       ///<
-    uint64_t  IoRd:1 ;            ///<
-    uint64_t  Reserved_63_27:37;  ///<
-  } Field;
-  uint64_t Value;
-} SIL_SMI_TRIG_IO_CYCLE_STRUCT;
