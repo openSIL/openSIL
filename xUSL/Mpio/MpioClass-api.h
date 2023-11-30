@@ -28,6 +28,8 @@
 
 #include <Mpio/Common/MpioInitLib.h>
 
+#pragma pack(push, 1)
+
 ///  MPIO openSIL Input Block
 typedef struct {
   MPIO_COMPLEX_DESCRIPTOR PlatformData[MAX_SOCKETS_SUPPORTED];
@@ -110,6 +112,8 @@ typedef struct {
   PCIe_DPC_STATUS_DATA    DpcStatusData;  ///< DPC status
   PCIe_PLATFORM_TOPOLOGY  PcieTopologyData; ///< PCIe Platform topology
 } MPIOCLASS_INPUT_BLK;
+
+#pragma pack(pop)
 
 // Create a MPIO internal data block that does not get exposed to the host
 // Change the instance number, so that the host can still get the data block (so that it will be allocated in the memory)

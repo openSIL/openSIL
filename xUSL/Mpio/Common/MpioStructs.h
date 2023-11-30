@@ -413,14 +413,15 @@ typedef struct  {
                                                               *  @li @b 1b = Enabled
                                                               */
   uint8_t                   Reserved2           :1;   ///< Reserved
+  uint8_t                   Reserved3           :1;   ///< Reserved
   uint8_t                   SetGen3FixedPreset  :1;   ///< Gen3 Fixed Preset Set
   uint8_t                   SetGen4FixedPreset  :1;   ///< Gen4 Fixed Preset Set
   uint8_t                   SetGen5FixedPreset  :1;   ///< Gen5 Fixed Preset Set
-  uint8_t                   Reserved3           :5;   ///< Reserved
+  uint8_t                   Reserved4           :5;   ///< Reserved
   uint8_t                   Gen3FixedPreset     :4;   ///< Gen3 Fixed Preset
   uint8_t                   Gen4FixedPreset     :4;   ///< Gen4 Fixed Preset
   uint8_t                   Gen5FixedPreset     :4;   ///< Gen5 Fixed Preset
-  uint8_t                   Reserved4           :4;   ///< Reserved
+  uint8_t                   Reserved5           :4;   ///< Reserved
   uint16_t                  PsppPolicyDC        ;     ///< Pspp DC control
   uint16_t                  PsppPolicyAC        ;     ///< PSPP AC control
   uint8_t                   PsppDeviceType      ;     ///< Pspp Device Type
@@ -472,15 +473,15 @@ typedef struct  {
   uint8_t                   SrisSkpIntervalSel  :2;   ///< Controls SRIS SKIP Interval Selection Mode
   uint8_t                   SrisAutodetectFactor:2;   ///< Controls the multiplier for SKP ordered set interval when generated based on elasticity buffer pointer slip feedback from PCS
   uint8_t                   IsBmcLocation       :1;   ///< IsBmcLocation
-  uint8_t                   Reserved5           :3;   ///< Unused bits
+  uint8_t                   Reserved6           :3;   ///< Unused bits
   uint8_t                   I2CMuxInfo          :6;   ///< Legacy I2c switch
-  uint8_t                   Reserved6           :2;   ///< Unused bits
+  uint8_t                   Reserved7           :2;   ///< Unused bits
   uint16_t                  NpemEnable          :12;  ///< Controls NPEM Enable
-  uint16_t                  Reserved7           :4;   ///< Unused bits
-  uint16_t                  NpemCapability      :12;  ///< Controls NPEM Capability
   uint16_t                  Reserved8           :4;   ///< Unused bits
+  uint16_t                  NpemCapability      :12;  ///< Controls NPEM Capability
+  uint16_t                  Reserved9           :4;   ///< Unused bits
   uint16_t                  MpioAncDataIdx      ;     ///< Reserved for internal use only
-  uint8_t                   Reserved9           ;     ///< Reserved bits
+  uint8_t                   Reserved10          ;     ///< Reserved bits
 } MPIO_PORT_DATA;
 
 

@@ -32,6 +32,9 @@
 #pragma once
 
 #include <xSIM.h>
+
+#pragma pack(push, 1)
+
 /**
  * NBIO_CONFIG_DATA
  *
@@ -180,3 +183,5 @@ typedef struct {
   // This would point to the host memory for NBIO Input block
   NBIOCLASS_INPUT_BLK NbioInputBlk;
 } NBIOCLASS_DATA_BLOCK;
+
+#pragma pack(pop)

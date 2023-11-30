@@ -30,7 +30,7 @@
  */
 
 #pragma once
-
+#pragma pack(push,1)
 
 /**
  * @cond FullCode_Doc
@@ -59,3 +59,6 @@ typedef struct {
       bool      AmdFabricPeriodicDirRinse;
 
 } DFCLASS_INPUT_BLK;
+
+#pragma pack (pop)
+

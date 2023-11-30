@@ -19,6 +19,9 @@
 #define   MPIO_MAX_ANCILLARY_DATA_SIZE  6076
 
 #define MAX_NUMBER_DPCSTATUS      128
+
+#pragma pack(push, 1)
+
 /// PCIE_DPC_STATUS
 typedef struct {
   uint8_t                           SocketId;                       ///< Socket ID
@@ -36,6 +39,7 @@ typedef struct {
   PCIe_DPC_STATUS_RECORD            DpcStatusArray[MAX_NUMBER_DPCSTATUS]; ///< PCIe DPC status Array
 } PCIe_DPC_STATUS_DATA;
 
+#pragma pack(pop)
 
 /**--------------------------------------------------------------------
  * @defgroup DXIO_MBOX Values for dxio mailbox
@@ -442,6 +446,7 @@ typedef struct {
 	 */
     uint32_t    gen5EqSearchMode   :2; ///< tbd
     uint32_t    gen5EqSearchModeEn :2; ///< tbd
+    uint32_t    gen5EqSearchReserve:4; ///< Byte9 padding
 
     /*
      * Byte 10
