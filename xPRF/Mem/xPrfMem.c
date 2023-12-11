@@ -366,7 +366,7 @@ GetPhysicalDimmInfoD5 (
   uint8_t                   Socket;
   uint8_t                   Channel;
   uint8_t                   Dimm;
-  uint8_t                   DimmSpd[SPD_BUFFER_SIZE];
+  uint8_t                   DimmSpd[SPD_BUFFER_SIZE] = {0,};
   SIL_STATUS                SilStatus;
   uint8_t                   IoWidth;
   uint16_t                  BusWidth;
