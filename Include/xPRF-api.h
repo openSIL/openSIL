@@ -403,10 +403,10 @@ typedef struct {
  * These Max values are used to define array sizes and associated loop
  * counts in the code.
  */
-#define SIL_MAX_SOCKETS_SUPPORTED    2    /// Max number of sockets supported
-#define SIL_MAX_CHANNELS_PER_SOCKET  12   /// Max Channels per sockets supported
-#define SIL_MAX_DIMMS_PER_CHANNEL    2    /// Max DIMMs on a memory channel supported
-#define SIL_MAX_T19_REGION_SUPPORTED  3   /// Max SMBIOS T19 Memory Region count
+#define SIL_MAX_SOCKETS_SUPPORTED    2   /// Max number of sockets supported
+#define SIL_MAX_CHANNELS_PER_SOCKET  12  /// Max Channels per sockets supported
+#define SIL_MAX_DIMMS_PER_CHANNEL    1   /// Max DIMMs on a memory channel supported
+#define SIL_MAX_T19_REGION_SUPPORTED 3   /// Max SMBIOS T19 Memory Region count
 
 /// Collection of pointers to the DMI records
 typedef struct {

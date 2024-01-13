@@ -12,7 +12,7 @@
 
 #define ABL_APOB_MAX_SOCKETS_SUPPORTED   2   ///< Max number of sockets in system
 #define ABL_APOB_MAX_CHANNELS_PER_SOCKET 12  ///< Max Channels per sockets
-#define ABL_APOB_MAX_DIMMS_PER_CHANNEL   2   ///< Max dimms per die
+#define ABL_APOB_MAX_DIMMS_PER_CHANNEL   1   ///< Max dimms per die
 #define ABL_APOB_MAX_CHANNELS_PER_DIE    8   ///< Max channels per die
 
 /** @cond API_Doc

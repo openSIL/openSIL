@@ -16,7 +16,7 @@
 #define MAX_DIES_PER_SOCKET     4   ///< Max number of dies per socket
 #define MAX_CHANNELS_PER_DIE    2   ///< Max Channels per die
 #define MAX_CHANNELS_PER_SOCKET 12  ///< Max Channels per sockets
-#define MAX_DIMMS_PER_CHANNEL   2   ///< Max DIMMs on a memory channel (independent of platform)
+#define MAX_DIMMS_PER_CHANNEL   1   ///< Max DIMMs on a memory channel (independent of platform)
 #define MAX_RBS_PER_SOCKET      12  ///< Max number of root bridges per socket
 
 #define MAX_THREADS_PER_CORE    2
@@ -26,7 +26,7 @@
 #define ABL_APOB_MAX_DIES_PER_SOCKET     1   ///< Max dies per socket
 #define ABL_APOB_MAX_CHANNELS_PER_SOCKET 12  ///< Max Channels per sockets
 #define ABL_APOB_MAX_CHANNELS_PER_DIE    12  ///< Max channels per die
-#define ABL_APOB_MAX_DIMMS_PER_CHANNEL   2   ///< Max dimms per die
+#define ABL_APOB_MAX_DIMMS_PER_CHANNEL   1   ///< Max dimms per die
 #define ABL_APOB_MAX_CS_PER_CHANNEL      4   ///< Max CS per channel
 #define MAX_PMU_SMB_SIZE  0x400   ///< Max PMU SMB size
 

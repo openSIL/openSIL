@@ -52,7 +52,7 @@
 #endif
 #if      (PROJ_MAX_DIMMS_PER_CHANNEL    < 2)
   #undef  PROJ_MAX_DIMMS_PER_CHANNEL
-  #define PROJ_MAX_DIMMS_PER_CHANNEL      2
+  #define PROJ_MAX_DIMMS_PER_CHANNEL      1
 #endif
 
 /* IO Hub sub-system constants */
