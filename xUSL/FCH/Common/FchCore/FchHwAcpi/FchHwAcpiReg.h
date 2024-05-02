@@ -17,6 +17,7 @@ typedef struct _ACPI_REG_WRITE {
 } ACPI_REG_WRITE;
 
 #define FCH_IOAPIC_INDEX               0xFEC00000
+#define FCH_IOAPIC_DATA                0xFEC00010
 #define FCH_IOAPIC_ID_REG              0x00
 
 #define FCH_SMI_GEVENT1                0x41 // SCIMAP1
