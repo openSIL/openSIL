@@ -2,7 +2,7 @@
  * @file  SilSocLogicalId.h
  * @brief OpenSIL SoC logical ID definitions
  */
-/* Copyright 2021-2023 Advanced Micro Devices, Inc. All rights reserved.    */
+/* Copyright 2021-2024 Advanced Micro Devices, Inc. All rights reserved.    */
 // SPDX-License-Identifier: MIT
 
 #pragma once
@@ -66,8 +66,9 @@ bool SocFamilyIdCheck (uint32_t SocFamilyId);
 // -------------------------------------
 
 // Family 19h GENOA equates
-#define AMD_FAMILY_19_10  0x00001000ul
-#define AMD_FAMILY_GENOA     (AMD_FAMILY_19_10)
+#define AMD_FAMILY_19_10         0x00001000ul
+#define AMD_FAMILY_GENOA         (AMD_FAMILY_19_10)
+#define AMD_F19_GENOA_RAW_ID     0x00AA0F00ul
 
   // Family 19h GENOA steppings
 #define AMD_REV_F19_GENOA_A0    0x0001u

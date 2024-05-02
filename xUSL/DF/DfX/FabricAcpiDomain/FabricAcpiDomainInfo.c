@@ -3,7 +3,7 @@
  * @brief OpenSIL Fabric ACPI Domain information for SRAT, CRAT, SLIT, CDIT, and MSCT.
  *
  */
-/* Copyright 2021-2023 Advanced Micro Devices, Inc. All rights reserved.    */
+/* Copyright 2021-2024 Advanced Micro Devices, Inc. All rights reserved.    */
 // SPDX-License-Identifier: MIT
 
 #include <SilCommon.h>
@@ -232,10 +232,10 @@ DfXBuildDomainInfo (
   NumberOfCpus = (uint32_t)DfXGetNumberOfProcessorsPresent();
   CcxAsNuma = FabricRcMgrData->DFXRcmgrOutputBlock.AmdFabricCcxAsNumaDomain;
 
-    // Fill module global CCD data
+  // Fill module global CCD data
   BuildCcdInfo ((uint32_t) NumberOfCpus);
   NumberOfPhysicalDomains = 0;
-  MaxCcxPerCcd = MAX_CCX_PER_CCD;
+  MaxCcxPerCcd = ((xUslGetRawIdOnExecutingCore() & RAW_FAMILY_ID_MASK) == AMD_F19_GENOA_RAW_ID) ? MAX_CCX_PER_CCD : MAX_CCX_PER_CCD_GENOA;
 
   memset((void *) FabricRcMgrData->DFXRcmgrOutputBlock.ReportedDomainCcxMap,
          0x00, sizeof (FabricRcMgrData->DFXRcmgrOutputBlock.ReportedDomainCcxMap));

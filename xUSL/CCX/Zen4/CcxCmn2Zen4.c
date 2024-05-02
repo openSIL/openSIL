@@ -1,4 +1,4 @@
-/* Copyright 2022-2023 Advanced Micro Devices, Inc. All rights reserved.    */
+/* Copyright 2022-2024 Advanced Micro Devices, Inc. All rights reserved.    */
 // SPDX-License-Identifier: MIT
 /**
  * @file Zen4.h
@@ -153,7 +153,7 @@ Zen4CalcLocalApic (
                                        & (0x1 << (CoreIdx % 32))) == 0); CoreIdx++);
   assert(CoreIdx < ZEN4_MAX_CORES_PER_SKT);
 
-  MaxCcxPerCcd   = MAX_CCX_PER_CCD;
+  MaxCcxPerCcd   = ((xUslGetRawIdOnExecutingCore() & RAW_FAMILY_ID_MASK) == AMD_F19_GENOA_RAW_ID) ? MAX_CCX_PER_CCD : MAX_CCX_PER_CCD_GENOA;
   CcxIdx         = CoreIdx / ZEN4_MAX_CORES_PER_CCD;
   CoreIdx        = CoreIdx % ZEN4_MAX_CORES_PER_CCD;
   CcdIdx         = CcxIdx / MaxCcxPerCcd;
