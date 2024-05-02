@@ -2,7 +2,7 @@
  * @file  FchHwAcpiReg.h
  * @brief FCH HW ACPI registers definition
  */
-/* Copyright 2021-2023 Advanced Micro Devices, Inc. All rights reserved.    */
+/* Copyright 2021-2024 Advanced Micro Devices, Inc. All rights reserved.    */
 // SPDX-License-Identifier: MIT
 
 
@@ -78,6 +78,7 @@ typedef struct _ACPI_REG_WRITE {
 #define FCH_HS_IRQ_UART3 0x79 // UART3
 #define FCH_IOAPIC_ID_REG 0x00
 #define FCH_IOAPIC_INDEX 0xFEC00000
+#define FCH_IOAPIC_DATA  0xFEC00010
 #define FCH_IOMAP_REG70 0x070 // Nmi_Enable
 #define FCH_IOMAP_REG71 0x071 // RtcDataPort
 #define FCH_IOMAP_REGC00 0x0C00 // Pci_Intr_Index

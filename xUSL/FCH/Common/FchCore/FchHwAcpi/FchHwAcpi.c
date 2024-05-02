@@ -3,7 +3,7 @@
  * @brief FCH HW ACPI data and functions
  *
  */
-/* Copyright 2021-2023 Advanced Micro Devices, Inc. All rights reserved.    */
+/* Copyright 2021-2024 Advanced Micro Devices, Inc. All rights reserved.    */
 // SPDX-License-Identifier: MIT
 
 #include <SilCommon.h>
@@ -1231,7 +1231,7 @@ static void FchInitHwAcpiWaFeature (FCHCLASS_INPUT_BLK *FchDataPtr)
     ApicIndexBackup = xUSLMemRead32 ((void *)(size_t)(FCH_IOAPIC_INDEX));
     //Program IOAPIC Index to IOAPIC ID REG
     xUSLMemWrite32 ((void *)(size_t)(FCH_IOAPIC_INDEX), ApicReg);
-    xUSLMemWrite32 ((void *)(size_t)(FCH_IOAPIC_INDEX), ApicIdValue);
+    xUSLMemWrite32 ((void *)(size_t)(FCH_IOAPIC_DATA), ApicIdValue);
     xUSLMemWrite32 ((void *)(size_t)(FCH_IOAPIC_INDEX), ApicIndexBackup);
 
     FCH_TRACEPOINT(SIL_TRACE_INFO, "FchIoapicValue Value 0x%x\n", ApicIdValue);
