@@ -86,4 +86,4 @@
         SMN_ENTRY_RMW(SIL_RESERVED_1712, \
   SIL_RESERVED_1724, \
   0x1 << SIL_RESERVED_1725 \
-  ), \
+  ),
