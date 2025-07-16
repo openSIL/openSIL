@@ -540,6 +540,32 @@ SilFindStructure (
   return xUslFindStructure(structureID, InstanceNum);
 };
 
+/*--------------------------------------------------------------------
+ * SilDebugSetup
+ *  This is a host API function, so you can find the
+ *  prototype, text description and Doxygen text in xSim-api.h
+ */
+SIL_STATUS
+SilDebugSetup (
+  HOST_DEBUG_SERVICE HostDbgService
+  )
+{
+  if (mHostDebugService != NULL) {
+    return SilAborted;  // Host debug service is initialized already
+  }
+  if (HostDbgService == NULL) {
+    return SilInvalidParameter;
+  } else {
+    // Set the host debug service
+    mHostDebugService = HostDbgService;
+    XSIM_TRACEPOINT(SIL_TRACE_INFO,
+      "Host debug service successfully initialized for openSIL.\n");
+  }
+
+  return SilPass;
+}
+
+
 /**
  * SetDeferredResetType
  *

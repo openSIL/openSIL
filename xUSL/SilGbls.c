@@ -12,3 +12,6 @@
 #include <SilCommon.h>
 
 SIL_BLOCK_VARIABLES *mSilMemoryBase = NULL; ///> 'global' var to hold memory block pointer
+
+// Global Variable to hold pointer to host debug service routine
+HOST_DEBUG_SERVICE mHostDebugService = NULL;

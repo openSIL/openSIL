@@ -10,7 +10,7 @@ config HAVE_SDXI_BRH
     bool
 
 # conditional all elements since this IP device may or may not be included
-if HAVE_SDXI_HAVE_SDXI_BRH
+if HAVE_SDXI_BRH
     menu "Cacheable Direct Memory Access (SDXI)"
         comment "                                                              "
         comment " The SDXI IP adds the capability to                           "

@@ -13,7 +13,7 @@ config HAVE_MPIO_BRH
     bool
 
 # conditional all elements since this IP device may or may not be included
-if HAVE_MPIO_HAVE_MPIO_BRH
+if HAVE_MPIO_BRH
     menu "MultiPath Input Output (MPIO)"
         comment "                                                  "
         comment "The MPIO IP controls the microprocessor for NBIO  "

@@ -19,7 +19,7 @@ comment " which AMD processor(s) have been selected for inclusion into  "
 comment " the platform build.                                           "
 comment "                                                               "
 
-source "xUSL/XMP/Kconfig"
+# source "xUSL/XMP/Kconfig"
 source "xUSL/CCX/Kconfig"
 source "xUSL/Nbio/Kconfig"
 source "xUSL/Mpio/Kconfig"

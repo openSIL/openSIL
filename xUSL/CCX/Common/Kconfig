@@ -316,6 +316,15 @@ config CCX_SMEE_ENABLE
         Secure Memory Encryption (SMEE) is used to improve data security.
         This is an optional feature mostly used by high security environments.
 
+# ------------------------------ HMKEE --------------------------
+config CCX_HMKEE_ENABLE
+    int  "Host Multi-Key Encryption enabled [1/0]"
+    default 0
+    range 0 1
+    help
+        Host Multi-Key Encryption (HMKEE) is used to improve data security.
+        This is an optional feature mostly used by high security environments.
+
 # ------------------------------ SVME --------------------------
 config CCX_SVM_ENABLE
     int  "SVME Enable [1/0]"

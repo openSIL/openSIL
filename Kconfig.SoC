@@ -18,7 +18,7 @@ comment " select the Socket and processor designed into your motherboard.  "
 comment "                                                                  "
 
 source "Kconfig.Skt"
-source "Kconfig.AllYes"
+# source "Kconfig.AllYes"
 
 # This is where the SoC(s) are determined for the build
 # The select statements define which IP-Version are used in each SoC
