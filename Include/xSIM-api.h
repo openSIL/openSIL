@@ -311,6 +311,30 @@ SilFindStructure (
   uint16_t InstanceNum
   );
 
+/**--------------------------------------------------------------------
+ * SilDebugSetup
+ *
+ *  @anchor HostSIL_Debug
+ * @brief  Record pointer to host debug service routine
+ * @details The Host provides all debug output services. The openSIL code
+ * uses macros to implement tracing functions and call the Host service
+ * routine.
+ *
+ * The routine provided by the host must fit the prototype
+ * defined here: @ref xUslTracePoint .
+ * This is the fuction definition called by the macros.
+ *
+ * @param HostDbgService        Pointer to the host debug service routine
+ *
+ * @returns SilPass             The process completed successfully
+ * @returns SilInvalidParameter The HostDbgService pointer was invalid
+ **/
+SIL_STATUS
+SilDebugSetup (
+  HOST_DEBUG_SERVICE HostDbgService
+  );
+
+
 /**
  * InitializeAMDSiTp1
  *

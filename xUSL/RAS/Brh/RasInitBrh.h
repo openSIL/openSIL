@@ -128,3 +128,8 @@ uint8_t
 GetCoreMcaSmnAddrByteBrh (
   uint16_t    McaType
   );
+
+SIL_STATUS
+CollectDimmMapBrh (
+  SIL_ADDR_DATA *DimmMap
+  );

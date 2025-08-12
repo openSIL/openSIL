@@ -114,9 +114,10 @@ bool SocFamilyIdCheck (uint32_t SocFamilyId);
 #define AMD_REV_F1A_BRH_B0   0x0004u
 #define AMD_REV_F1A_BRH_B1   0x0008u
 #define AMD_REV_F1A_BRH_C0   0x0010u
+#define AMD_REV_F1A_BRH_C1   0x0020u
 
 #define AMD_REV_F1A_BRH_BX   (AMD_REV_F1A_BRH_B0 | AMD_REV_F1A_BRH_B1)
-#define AMD_REV_F1A_BRH_CX   (AMD_REV_F1A_BRH_C0)
+#define AMD_REV_F1A_BRH_CX   (AMD_REV_F1A_BRH_C0 | AMD_REV_F1A_BRH_C1)
 #define AMD_REV_F1A_BRH_ALL  (AMD_REV_F1A_BRH_BX | AMD_REV_F1A_BRH_CX)
 
 // --------------------------------------------------------------------------
@@ -136,6 +137,7 @@ bool SocFamilyIdCheck (uint32_t SocFamilyId);
 #define AMD_CORE_F1A_ZEN5_B0   0x0010u
 #define AMD_CORE_F1A_ZEN5_B1   0x0020u
 #define AMD_CORE_F1A_ZEN5_C0   0x0100u
+#define AMD_CORE_F1A_ZEN5_C1   0x0200u
 
 
 #pragma pack (pop)

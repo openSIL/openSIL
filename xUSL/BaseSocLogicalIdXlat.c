@@ -12,6 +12,7 @@
 static const SOC_LOGICAL_REVISION_XLAT SocBrhLogicalRevisionTable[] =
 {
   // NOTE: the highest supported stepping should be the first one
+  {0x2, 0x1, AMD_REV_F1A_BRH_C1, AMD_CORE_F1A_ZEN5_C1},
   {0x2, 0x0, AMD_REV_F1A_BRH_C0, AMD_CORE_F1A_ZEN5_C0},
   {0x1, 0x1, AMD_REV_F1A_BRH_B1, AMD_CORE_F1A_ZEN5_B0},
   SOC_LOGICAL_REVISION_XLAT_TERMINATOR

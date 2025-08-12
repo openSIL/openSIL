@@ -58,6 +58,12 @@
 #if !SIL_DEBUG_ENABLE
     #define NDEBUG
 #endif
+
+// Workaround stc_c missing asm when gnuc is included externally
+#ifndef asm
+    #define asm              __asm
+#endif
+
 #include <assert.h>
 
 /* Debug output filtering by topic
@@ -96,6 +102,7 @@
           SIL_RESERVED_0388 | \
           DEBUG_FILTER_RCMGR )
 #endif
+extern HOST_DEBUG_SERVICE mHostDebugService;
 /* The modules can here, or elsewhere, implement module-topic based debug output
  *  macros, for example:
  #
@@ -128,26 +135,26 @@ SilTracePoint (
  *
  */
 #define XSIM_TRACEPOINT(MsgLevel, Message, ...) \
-        do { \
-          if (SIL_DEBUG_ENABLE) { \
-            ((HOST_DEBUG_SERVICE)SilTracePoint) (MsgLevel, "SIL:xSIM:", \
-            Message, __FUNCTION__, __LINE__, ## __VA_ARGS__); \
-          } \
-        } while (false)
+  do { \
+    if (SIL_DEBUG_ENABLE && mHostDebugService != NULL) { \
+      ((HOST_DEBUG_SERVICE)mHostDebugService) (MsgLevel, "openSIL:xSIM:", \
+      Message, __FUNCTION__, __LINE__, ##__VA_ARGS__); \
+    } \
+  } while (false)
 #define XUSL_TRACEPOINT(MsgLevel, Message, ...) \
-        do { \
-          if (SIL_DEBUG_ENABLE) { \
-            ((HOST_DEBUG_SERVICE)SilTracePoint) (MsgLevel, "SIL:xUSL:", \
-            Message, __FUNCTION__, __LINE__, ## __VA_ARGS__); \
-          } \
-        } while (false)
+  do { \
+    if (SIL_DEBUG_ENABLE && mHostDebugService != NULL) {			\
+      ((HOST_DEBUG_SERVICE)mHostDebugService) (MsgLevel, "openSIL:xUSL:", \
+      Message, __FUNCTION__, __LINE__, ##__VA_ARGS__); \
+    } \
+  } while (false)
 #define XPRF_TRACEPOINT(MsgLevel, Message, ...) \
-        do { \
-          if (SIL_DEBUG_ENABLE) { \
-            ((HOST_DEBUG_SERVICE)SilTracePoint) (MsgLevel, "SIL:xPRF:", \
-            Message, __FUNCTION__, __LINE__, ## __VA_ARGS__); \
-          } \
-        } while (false)
+  do { \
+    if (SIL_DEBUG_ENABLE && mHostDebugService != NULL) { \
+      ((HOST_DEBUG_SERVICE)mHostDebugService) (MsgLevel, "openSIL:xPRF:", \
+      Message, __FUNCTION__, __LINE__, ##__VA_ARGS__); \
+    } \
+  } while (false)
 
 /**
  * SIL Common Data structures
