@@ -19,7 +19,7 @@ The AMD blog "[Empowering The Industry with Open System Firmware - AMD openSIL](
    2. Phase II  - AMD openSIL POC open-sourced for evaluation on AMD 4th Gen EPYC&trade; based CRB. (Complete)
    3. Phase III - AMD openSIL POC open-sourced, for evaluation on AMD 5th Gen EPYC&trade; based CRB. (Complete)
    ### Production Phase:
-   4. Phase IV: - AMD openSIL POR with UEFI Host FW trending EOY 2026 or early 2027.<br><br>
+   4. Phase IV: - AMD openSIL POR with UEFI Host FW trending 2026.<br><br>
 
 
 ## Getting Started:
