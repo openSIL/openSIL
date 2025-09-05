@@ -130,21 +130,13 @@ xPrfGetLowUsableDramAddress (
   MEMORY_HOLE_DESCRIPTOR              *HoleMapPtr;
   uint8_t                             MemRangeIndex;
   uint64_t                            TopofLowUsableDRAM;
-  APOB_IP2IP_API                      *ApobIp2IpApi;
-
-  Status = SilGetIp2IpApi(SilId_ApobClass, (void **) &ApobIp2IpApi);
-  if (Status != SilPass) {
-    XPRF_TRACEPOINT(SIL_TRACE_INFO, "Error : not found APOB IP2IP API\n");
-    assert(false);
-    return 0;
-  }
 
   //
   // The Caller can pass the APOB base address as a parameter but
   // This will not set the address beyond this Time Point. If the APOB address
   // has been initialized in this time point then this argument will not be used
   //
-  Status = ApobIp2IpApi->ApobAmdGetApobEntryInstance(APOB_FABRIC,
+  Status = AmdGetApobEntryInstance(APOB_FABRIC,
     APOB_SYS_MAP_INFO_TYPE,
     0,
     ApobBaseAddress,
