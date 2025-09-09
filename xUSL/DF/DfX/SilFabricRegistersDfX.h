@@ -239,6 +239,22 @@ typedef union {
   uint32_t  Value;
 } MMIO_LIMIT_ADDRESS_REGISTER;
 
+/* MMIO Limit Address Register */
+#define MMIOADDRESSEXTENSION_0_FUNC 0x0
+#define MMIOADDRESSEXTENSION_0_REG  0xD8C
+
+#define MMIOADDRESSEXTENSION_1_REG  0xD9C
+
+typedef union {
+  struct {
+    uint32_t MmioBaseAddrExt:8;                ///< MMIO Base address[55:48].
+    uint32_t :8;
+    uint32_t MmioLimitAddrExt:8;               ///< MMIO Limit address[55:48].
+    uint32_t :8;
+  } Field;
+  uint32_t  Value;
+} MMIO_ADDRESS_EXTENSION_REGISTER;
+
 /* Hardware Assert Status Low Register */
 #define HARDWAREASSERTSTATUSLOW_FUNC 0x3
 #define HARDWAREASSERTSTATUSLOW_REG  0x8F0
