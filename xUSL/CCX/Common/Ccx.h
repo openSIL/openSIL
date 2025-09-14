@@ -135,7 +135,7 @@ typedef struct {
   // as offset to this element is used in ApAsm nasm file.
   volatile uint32_t          ApSyncCount;                      ///< Do NOT change the offset of this variable
   // as offset to this element is used in ApAsm nasm file.
-  uint32_t                   AllowToLaunchNextThreadLocation; ///< Do NOT change the offset of this variable
+  volatile uint32_t          AllowToLaunchNextThreadLocation; ///< Do NOT change the offset of this variable
   // as offset to this element is used in ApAsm nasm file.
   uint32_t                   ApStackBasePtr;                  ///< Do NOT change the offset of this variable
   // as offset to this element is used in ApAsm nasm file.
