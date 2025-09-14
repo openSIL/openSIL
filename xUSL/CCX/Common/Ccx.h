@@ -171,7 +171,8 @@ SIL_STATUS InitializeCcx (
 void CcxSetMca (void);
 void CcxInitializeC6 (CCXCLASS_INPUT_BLK *CcxInputBlock);
 void ApAsmCode (void);
-void RegSettingBeforeLaunchingNextThread (volatile AMD_CCX_AP_LAUNCH_GLOBAL_DATA *);
+NASM_ABI void RegSettingBeforeLaunchingNextThread (
+  volatile AMD_CCX_AP_LAUNCH_GLOBAL_DATA *ApLaunchGlobalData);
 NASM_ABI void ApEntryPointInC (
   volatile AMD_CCX_AP_LAUNCH_GLOBAL_DATA *ApLaunchGlobalData);
 void CcxSetMiscMsrs (

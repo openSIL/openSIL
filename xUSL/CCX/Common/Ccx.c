@@ -680,6 +680,7 @@ SIL_STATUS CcxClassSetInputBlk (void)
  * @brief Necessary register setting before launching next thread
  *
  */
+NASM_ABI
 void
 RegSettingBeforeLaunchingNextThread (
   volatile AMD_CCX_AP_LAUNCH_GLOBAL_DATA *ApLaunchGlobalData
