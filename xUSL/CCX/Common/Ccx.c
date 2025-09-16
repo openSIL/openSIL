@@ -197,7 +197,7 @@ InitializeCcxAndLaunchAps (
   uint8_t            ApicMode;
   uint32_t           ApicId;
   uint32_t           ApNumBfLaunch = 0x0;
-  volatile uint16_t  *ApSyncFlag = NULL;
+  volatile uint32_t  *ApSyncFlag = NULL;
   uint8_t            i = 0;
   SMU_IP2IP_API      *SmuApi;
   DF_IP2IP_API       *DfApi;
@@ -489,7 +489,7 @@ InitializeCcxAndLaunchAps (
       &MemoryContentCopySize,
       CcxConfigData
       );
-    ApSyncFlag = (volatile uint16_t *)(uintptr_t) ApLaunchGlobalData.AllowToLaunchNextThreadLocation;
+    ApSyncFlag = (volatile uint32_t *)(uintptr_t) ApLaunchGlobalData.AllowToLaunchNextThreadLocation;
   }
 
   CCX_TRACEPOINT(SIL_TRACE_INFO, "Launching APs\n");
@@ -680,6 +680,7 @@ SIL_STATUS CcxClassSetInputBlk (void)
  * @brief Necessary register setting before launching next thread
  *
  */
+NASM_ABI
 void
 RegSettingBeforeLaunchingNextThread (
   volatile AMD_CCX_AP_LAUNCH_GLOBAL_DATA *ApLaunchGlobalData
