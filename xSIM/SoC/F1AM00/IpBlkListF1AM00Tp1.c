@@ -25,6 +25,7 @@
 #include <FCH/Common/FchCore/FchSata/FchSata.h>
 #include <FCH/Common/FchCore/FchSata/FchSataBlk.h>
 #include <FCH/Kunlun/FchCore/FchAb/FchAbKl.h>
+#include <FCH/Kunlun/FchCore/FchSata/FchSataKl.h>
 #include <FCH/Kunlun/FchCore/FchXhci/FchXhciKl.h>
 #include <FCH/Kunlun/FchCore/FchHwAcpi/FchHwAcpiKl.h>
 #include <FCH/Kunlun/FchCore/FchIsa/FchIsaKl.h>
@@ -130,6 +131,13 @@ SOC_IP_TABLE SocIpTblF1AM00Tp1 = {
       FchUsbSetInputBlkKl,
       InitializeFchUsbKlTp1,
       InitializeApiFchUsbKl
+    },
+    {
+      SilId_FchSata,
+      SATA_CONTROLLER_NUM * sizeof(FCHSATA_INPUT_BLK),
+      FchSataSetInputBlk,
+      InitializeFchSataKlTp1,
+      InitializeApiFchSataKl
     },
     {
       SilId_MultiFchClass,

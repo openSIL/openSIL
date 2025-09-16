@@ -1503,15 +1503,15 @@ FchSataInitEnv (
       FchSataEnableWriteAccess(0, SataController);
       FchSataInitEnvProgram(0, SataController, FchSata);
       // Call Sub-function for each Sata mode
-      if ((FchSata[SataController].SataClass == SataAhci7804) ||
-        (FchSata[SataController].SataClass == SataAhci)) {
-        FchSataXfer->FchSataInitEnvAhci(0, SataController, FchSata);
-      }
-      if (FchSata[SataController].SataClass == SataRaid) {
-        FchSataXfer->FchSataInitEnvRaid(0, SataController, FchSata);
-      }
+      // if ((FchSata[SataController].SataClass == SataAhci7804) ||
+      //   (FchSata[SataController].SataClass == SataAhci)) {
+      //   FchSataXfer->FchSataInitEnvAhci(0, SataController, FchSata);
+      // }
+      // if (FchSata[SataController].SataClass == SataRaid) {
+      //   FchSataXfer->FchSataInitEnvRaid(0, SataController, FchSata);
+      // }
       FchSataDisableWriteAccess(0, SataController);
-      FchSataXfer->FchSataAutoShutdown(0, SataController, FchSata);
+      // FchSataXfer->FchSataAutoShutdown(0, SataController, FchSata);
     }
   }
 

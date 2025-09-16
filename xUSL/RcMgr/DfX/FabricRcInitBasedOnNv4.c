@@ -1562,10 +1562,11 @@ SilSetMmioReg4 (
   uint64_t                      Length
   )
 {
-  uint32_t            DiePerSkt;
-  SIL_STATUS          Status;
-  APOB_SOC_DIE_INFO   SocMaxDieInfo;
-  APOB_IP2IP_API      *ApobIp2IpApi;
+  uint32_t                         DiePerSkt;
+  SIL_STATUS                       Status;
+  APOB_SOC_DIE_INFO                SocMaxDieInfo;
+  APOB_IP2IP_API                   *ApobIp2IpApi;
+  MMIO_ADDRESS_EXTENSION_REGISTER  MmioExt;
 
   Status = SilGetIp2IpApi(SilId_ApobClass, (void **) &ApobIp2IpApi);
   if ((Status != SilPass) || (ApobIp2IpApi == NULL)) {
@@ -1579,6 +1580,10 @@ SilSetMmioReg4 (
     if (DiePerSkt <= SocMaxDieInfo.MaxSocDiesPerSocketValue) {
       for (uint32_t i = 0; i < TotalSocket; i++) {
         for (uint32_t j = 0; j < DiePerSkt; j++) {
+          MmioExt.Value = 0;
+          MmioExt.Field.MmioBaseAddrExt = (BaseAddress >> 48) & 0xFF;
+          MmioExt.Field.MmioLimitAddrExt = ((BaseAddress + Length - 1) >> 48) & 0xFF;
+
           DfIp2IpApi->DfFabricRegisterAccWrite(i,
             j,
             MMIOBASEADDRESS_0_FUNC,
@@ -1592,6 +1597,13 @@ SilSetMmioReg4 (
             (MMIOLIMITADDRESS_0_REG + MmioPairIndex * (MMIOLIMITADDRESS_1_REG - MMIOLIMITADDRESS_0_REG)),
             FABRIC_REG_ACC_BC,
             (uint32_t) ((BaseAddress + Length - 1) >> 16)
+            );
+          DfIp2IpApi->DfFabricRegisterAccWrite(i,
+            j,
+            MMIOADDRESSEXTENSION_0_FUNC,
+            (MMIOADDRESSEXTENSION_0_REG + MmioPairIndex * (MMIOADDRESSEXTENSION_1_REG - MMIOADDRESSEXTENSION_0_REG)),
+            FABRIC_REG_ACC_BC,
+            MmioExt.Value
             );
 
           // Writing to Abstract MMIO Address Register
