@@ -18,6 +18,7 @@
 #include <RcMgr/DfX/BRH/RcMgrBrh.h>
 #include <DF/DfX/BRH/DfBrh.h>
 #include <CCX/Zen5/BRH/CcxBrh.h>
+#include <Sdxi/Brh/SdxiBrh.h>
 #include <Cxl/Brh/CxlBrh.h>
 #include <RAS/Brh/RasBrh.h>
 #include <MEM/Brh/MemBrh.h>
@@ -152,6 +153,13 @@ SOC_IP_TABLE SocIpTblF1AM00Tp1 = {
       MpioClassSetInputBlock,
       InitializeMpioBrhTp1,
       SetMpioApiBrh
+    },
+    {
+      SilId_SdxiClass,
+      sizeof (SDXICLASS_INPUT_BLK),
+      SdxiClassSetInputBlock,
+      InitializeSdxiBrhTp1,
+      SetSdxiApiBrh
     },
     {
       SilId_CxlClass,
