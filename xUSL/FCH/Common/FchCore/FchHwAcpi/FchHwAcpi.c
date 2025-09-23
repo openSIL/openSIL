@@ -620,7 +620,7 @@ void FchHwAcpiInitWaFeature (
   ApicIndexBackup = xUSLMemRead32((void *)(size_t)(FCH_IOAPIC_INDEX));
   //Program IOAPIC Index to IOAPIC ID REG
   xUSLMemWrite32((void *)(size_t)(FCH_IOAPIC_INDEX), ApicReg);
-  xUSLMemWrite32((void *)(size_t)(FCH_IOAPIC_INDEX), ApicIdValue);
+  xUSLMemWrite32((void *)(size_t)(FCH_IOAPIC_DATA), ApicIdValue);
   xUSLMemWrite32((void *)(size_t)(FCH_IOAPIC_INDEX), ApicIndexBackup);
   FCH_TRACEPOINT(SIL_TRACE_INFO, "FchIoapicValue Value 0x%x\n", ApicIdValue);
   FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
