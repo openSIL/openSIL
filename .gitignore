@@ -1,0 +1,7 @@
+docs/Code-html/
+docs/API-html/
+Documentation/CodeSpec/build/
+Documentation/ApiSpec/build/
+Build
+*/Build
+util/kconfig/lib/__pycache__/
