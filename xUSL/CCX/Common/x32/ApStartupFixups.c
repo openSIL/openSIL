@@ -1,0 +1,46 @@
+/* SPDX-License-Identifier: MIT */
+/* Copyright (C) 2024 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/**
+ * @file  ApStartupFixups.c
+ * @brief AMD CCX Startup code fixups
+ *
+ */
+
+#include "../Ccx.h"
+
+extern ASSEMBLY_PATCH_LABEL  gApStartupCode;
+extern ASSEMBLY_PATCH_LABEL  gPatchProtectedModeJump;
+extern ASSEMBLY_PATCH_LABEL  gPatchApEntryInCOffset;
+extern ASSEMBLY_PATCH_LABEL  gPatchApLaunchGlobalData;
+extern ASSEMBLY_PATCH_LABEL  gApStartupCodeEnd;
+
+/*
+ *  Fix up startup assembly code to new location location
+ *
+ * @param[in] ApStartupMemoryMap  Structure to location of Startup Assembly code, GDT, etc.
+ * @param[in] ApLaunchGlobalData  Pointer to Global Data used by AP Startup code.
+ *
+ */
+
+void ApStartupFixups (AP_STARTUP_MEMORY_MAP *ApStartupMemoryMap, void *ApLaunchGlobalData)
+{
+  uint32_t  ApStartupCodeBase = ApStartupMemoryMap->ApStartupCodeBase;
+  uint32_t PatchProtModeJumpOffset = (uint32_t)((uintptr_t)gPatchProtectedModeJump - (uintptr_t)gApStartupCode);
+  uint32_t PatchApEntryOffset = (uint32_t)((uintptr_t)gPatchApEntryInCOffset - (uintptr_t)gApStartupCode);
+  uint32_t PatchApLaunchGlobalDataOffset = (uint32_t)((uintptr_t)gPatchApLaunchGlobalData - (uintptr_t)gApStartupCode);
+  uint32_t ApEntryInCOffset = (uint32_t)(uintptr_t)ApAsmCode;
+  uint32_t ProtModeFarJmpOffset = (uint32_t)ApStartupCodeBase + PatchProtModeJumpOffset;
+
+  PatchAssemblyInstruction((ASSEMBLY_PATCH_LABEL *)(uintptr_t)(ApStartupCodeBase + PatchProtModeJumpOffset - 2),
+    ProtModeFarJmpOffset,
+    sizeof (uint32_t)
+    );
+  PatchAssemblyInstruction((ASSEMBLY_PATCH_LABEL *)(uintptr_t)(ApStartupCodeBase + PatchApEntryOffset),
+    ApEntryInCOffset,
+    sizeof (uint32_t)
+    );
+  PatchAssemblyInstruction((ASSEMBLY_PATCH_LABEL *)(uintptr_t)(ApStartupCodeBase + PatchApLaunchGlobalDataOffset),
+    (uint32_t)(uintptr_t)ApLaunchGlobalData,
+    sizeof (uint32_t)
+    );
+}

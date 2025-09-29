@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: MIT
+# Config for  xUSL/CCX
+# Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+
+  menu "Compute Core Complex (CCX) Device"
+    comment "The CCX device controls the quantity and operation of the"
+    comment "compute core in the system"
+
+    source "xUSL/CCX/Common/Kconfig"
+
+  endmenu

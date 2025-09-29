@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MIT
+#
+# Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+
+source "xUSL/CCX/Kconfig"
+source "xUSL/Nbio/Kconfig"
+source "xUSL/Mpio/Kconfig"
+source "xUSL/FCH/Kconfig"

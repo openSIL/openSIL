@@ -1,0 +1,44 @@
+/* SPDX-License-Identifier: MIT */
+/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/**
+ * @file IpHandler.h
+ * This file declares the private xSIM functions, variables and
+ * macros used to handle the IP classes and Instances.
+ */
+
+#pragma once
+
+typedef SIL_STATUS (*FCN_SET_INPUT) (SIL_CONTEXT  *SilContext);
+typedef SIL_STATUS (*FCN_IP_INIT)   (SIL_CONTEXT  *SilContext);
+typedef SIL_STATUS (*SIL_API_INIT)  (SIL_CONTEXT  *SilContext);
+
+/* *********************************************************************************************************************
+ * Common Variables
+ */
+
+/** IP Record
+ * @details This record is unique for each IP  (device). It provided the details
+ *    about the IP that the xSIM infrastructure needs to invoke the IP
+ *    support
+ */
+typedef struct {
+  SIL_DATA_BLOCK_ID  IpID;           ///< Identifier of the IP
+  uint32_t           BlkRequestSize; ///< Size to request for Input/Output Blocks
+  FCN_SET_INPUT      SetInput;       ///< pointer to IP function to establish its Input Block
+  FCN_IP_INIT        Initialize;     ///< pointer to IP function to initialize silicon
+  SIL_API_INIT       ApiInit;        ///< pointer to the IP function to initialize internal IP API and the Ip-to-Ip
+                                     ///< API structure pointer.
+} IP_RECORD;
+
+/**
+ * This data element identifies the SoC and the IP blocks contained
+ * therein. These IP blocks may be shared with other SoCs.
+ * The xSim common vars are SoC descriptors used by the openSIL code
+ * which provide information about the SoC silicon (e.g. Number of
+ * instances of CCX blocks )
+ */
+typedef struct {
+  uint32_t            SocLogicalId;         ///< bitmapped, see SilSocLogicalId.h
+  ACTIVE_SOC_DATA     XsimVars;             ///< SoC version of xSim common Vars
+  IP_RECORD           IpList[];             ///< Array of IPs contained in this SoC
+} SOC_IP_TABLE;

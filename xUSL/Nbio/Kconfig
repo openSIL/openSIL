@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: MIT
+# Config for  xUSL/Nbio
+# Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+
+menu "Northbridge IO (NBIO) Device"
+    comment "The NBIO device comprises multiple IPs that are related to"
+    comment "high-speed IO resource, primarily the PCI Express"
+    comment "and internal graphics subsystems"
+
+    source "xUSL/Nbio/Phx/Kconfig"
+endmenu

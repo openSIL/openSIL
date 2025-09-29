@@ -1,0 +1,47 @@
+/* SPDX-License-Identifier: MIT */
+/* Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/**
+ * @file  Gnb.h
+ * @brief This file contains Misc common definition
+ *
+ */
+
+#pragma once
+
+//Table properties
+
+#define TABLE_PROPERTY_DEFAULT                     0x00000000ul
+#define TABLE_PROPERTY_IGFX_DISABLED               0x00000001ul
+#define TABLE_PROPERTY_IOMMU_DISABLED              0x00000002ul
+#define TABLE_PROPERTY_SST_CLOCK_GATING_DISABLED   0x00000004ul
+#define TABLE_PROPERTY_ORB_CLK_GATING              0x00000008ul
+#define TABLE_PROPERTY_IOC_LCLK_CLOCK_GATING       0x00000010ul
+#define TABLE_PROPERTY_IOC_SCLK_CLOCK_GATING       0x00000020ul
+#define TABLE_PROPERTY_IOMMU_L1_CLOCK_GATING       0x00000040ul
+#define TABLE_PROPERTY_IOMMU_L2_CLOCK_GATING       0x00000080ul
+#define TABLE_PROPERTY_BAPM                        0x00000100ul
+#define TABLE_PROPERTY_SECONDARY_GNB               0x00000200ul
+#define TABLE_PROPERTY_NMI_SYNCFLOOD               0x00000400ul
+#define TABLE_PROPERTY_PACKAGE_SP3                 0x00000800ul
+#define TABLE_PROPERTY_LOADLINE_ENABLE             0x00001000ul
+#define TABLE_PROPERTY_SMU_SCLK_CLOCK_GATING       0x00002000ul
+#define TABLE_PROPERTY_CHUB_CLOCK_GATING           0x00004000ul
+#define TABLE_PROPERTY_HYBRID_BOOST                0x00008000ul
+#define TABLE_PROPERTY_LHTC                        0x00010000ul
+#define TABLE_PROPERTY_SVI2                        0x00020000ul
+#define TABLE_PROPERTY_TDC                         0x00040000ul
+#define TABLE_PROPERTY_PKG_POWER_TRACKING          0x00080000ul
+#define TABLE_PROPERTY_DGFX_DISABLED               0x00100000ul
+#define TABLE_PROPERTY_ACP_CLOCK_GATING_DISABLED   0x00200000ul
+#define TABLE_PROPERTY_ACP_POWER_GATING_ENABLED    0x00400000ul
+#define TABLE_PROPERTY_ACP_POWER_GATING_DISABLED   0x00800000ul
+#define TABLE_PROPERTY_IOMMU_L2_DEBUG_3_31         0x01000000ul
+#define TABLE_PROPERTY_AXG_DISABLE                 0x02000000ul
+#define TABLE_PROPERTY_SPG_CLOCK_GATING            0x04000000ul
+#define TABLE_PROPERTY_ACG_AZ_CLOCK_GATING         0x08000000ul
+#define TABLE_PROPERTY_IOMMU_L1_SST_CLOCK_GATING   0x10000000ul
+#define TABLE_PROPERTY_IOHC_Clock_GATING           0x20000000ul
+#define TABLE_PROPERTY_POISON_ACTION_CONTROL       0x40000000ul
+
+//Register access flags Flags
+#define GNB_REG_ACC_FLAG_S3SAVE                    0x00000001ul

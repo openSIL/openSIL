@@ -1,0 +1,111 @@
+/* SPDX-License-Identifier: MIT */
+/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/**
+ * @file MpioClassDflts.c
+ * @brief This file holds the platform default values for the MPIO Input Block
+ */
+
+
+#include <xSIM.h>
+#include <Mpio/MpioClass-api.h>
+
+const MPIOCLASS_COMMON_INPUT_BLK mMpioClassDflts = {
+  /*
+   * Input block vars/values shared with the Host.
+   * This becomes part of the IP API for the Host.
+   */
+  .CfgDxioClockGating = CONFIG_MPIO_CLOCKGATING_ENABLE,
+  .PcieDxioTimingControlEnable = CONFIG_MPIO_TIMINGCTRL_ENABLE,
+  .PCIELinkReceiverDetectionPolling = CONFIG_PCIE_LINK_RECEIVER_DETECT_TIMEOUT,
+  .PCIELinkResetToTrainingTime = CONFIG_PCIE_LINK_RESET_TO_TRAINING_TIMEOUT,
+  .PCIELinkL0Polling = CONFIG_PCIE_LINK_L0_STATE_TIMEOUT,
+  .PCIeExactMatchEnable = CONFIG_MPIO_EXACT_MATCH_ENABLE,
+  .DxioPhyValid = CONFIG_MPIO_PHY_VALID,
+  .DxioPhyProgramming = CONFIG_MPIO_PHY_PROGRAMMING,
+  .CfgSkipPspMessage = CONFIG_MPIO_SKIP_PSP_MSG,
+  .DxioSaveRestoreModes = CONFIG_MPIO_SAVE_RESTORE_MODE,
+  .AmdAllowCompliance = CONFIG_MPIO_ALLOW_PCIE_POLLING,
+  .AmdHotPlugHandlingMode = 0xFF, // Auto
+  .SrisEnableMode = CONFIG_MPIO_PCIE_SRIS_CONTROL,
+  .SrisSkipInterval = CONFIG_MPIO_PCIE_SRIS_SKIP_INTERVAL,
+  .SrisSkpIntervalSel = CONFIG_MPIO_SRIS_SKIP_INTERVAL_SELECT,
+  .SrisCfgType = CONFIG_MPIO_SRIS_CONFIG_TYPE,
+  .SrisAutoDetectMode = CONFIG_MPIO_SRIS_AUTO_DETECT_MODE,
+  .SrisAutodetectFactor = CONFIG_MPIO_SRIS_AUTODETECT_FACTOR,
+  .SrisLowerSkpOsGenSup = CONFIG_MPIO_PCIE_SRIS_SKP_TRANSMISSION_CONTROL,
+  .SrisLowerSkpOsRcvSup = CONFIG_MPIO_PCIE_SRIS_SKP_RECEPTION_CONTROL,
+  .AmdCxlOnAllPorts = CONFIG_MPIO_CXL_PORT_CONTROL,
+  .CxlCorrectableErrorLogging = CONFIG_MPIO_CXL_CORRECTABLE_ERROR_LOGGING,
+  .CxlUnCorrectableErrorLogging = CONFIG_MPIO_CXL_UNCORRECTABLE_ERROR_LOGGING,
+  .CfgAEREnable = CONFIG_MPIO_ADVANCED_ERROR_REPORTING_ENABLE,
+  .CfgMcCapEnable = CONFIG_MPIO_PCIE_MULTICAST_ENABLE,
+  .CfgRcvErrEnable = CONFIG_MPIO_RECEIVE_ERROR_ENABLE,
+  .EarlyBmcLinkTraining = 0,
+  .EarlyBmcLinkSocket = 0xFF, // Unsupported
+  .EarlyBmcLinkLaneNum = 0,
+  .EarlyBmcLinkDie = 0xFF, // Unsupported
+  .SurpriseDownFeature = CONFIG_MPIO_SURPRISE_DOWN_ENABLE,
+  .LcMultAutoSpdChgOnLastRateEnable = CONFIG_MPIO_PCIE_LINK_TRAINING_SPEED,
+  .AmdRxMarginEnabled = CONFIG_MPIO_RX_MARGIN_ENABLE,
+  .CfgPcieCVTestWA = CONFIG_MPIO_PCIE_CV_TEST_CONFIG,
+  .CfgPcieAriSupport = CONFIG_MPIO_PCIE_ARI_SUPPORT,
+  .CfgNbioCTOtoSC = CONFIG_MPIO_TOGGLE_NBIO_TO_SC,
+  .CfgNbioCTOIgnoreError = CONFIG_MPIO_TOGGLE_NBIO_IGNORE_CTO_ERROR,
+  .CfgNbioSsid = CONFIG_NBIO_CONTROLLER_SSID,
+  .CfgIommuSsid = CONFIG_IOMMU_CONTROLLER_SSID,
+  .CfgPspccpSsid = CONFIG_PSP_CCP_CONTROLLER_SSID,
+  .CfgNtbccpSsid = CONFIG_NTB_CCP_CONTROLLER_SSID,
+  .CfgNbifF0Ssid = CONFIG_NBIF0_CONTROLLER_SSID,
+  .CfgNtbSsid = CONFIG_NTB_CONTROLLER_SSID,
+  .AmdPcieSubsystemDeviceID = CONFIG_PCIE_SUBSYSTEM_DEVICE_ID,
+  .AmdPcieSubsystemVendorID = CONFIG_PCIE_SUBSYSTEM_VENDOR_ID,
+  .GppAtomicOps = CONFIG_MPIO_GPP_ATOMIC_OPS,
+  .GfxAtomicOps = CONFIG_MPIO_GPFXATOMIC_OPS,
+  .AmdNbioReportEdbErrors = CONFIG_MPIO_EDB_ERROR_REPORTING_ENABLE,
+  .OpnSpare = CONFIG_MPIO_OPN_SPARE,
+  .AmdPreSilCtrl0 = CONFIG_AMD_PRE_SIL_CONTROL0,
+  .AmdPreSilCtrl1 = CONFIG_AMD_PRE_SIL_CONTROL1,
+  .MPIOAncDataSupport = CONFIG_MPIO_ANCILLARY_DATA_SUPPORT_ENABLE,
+  .AfterResetDelay = CONFIG_MPIO_AFTER_RESET_DELAY,
+  .CfgEarlyLink = CONFIG_MPIO_EARLY_LINK_TRAINING_ENABLE,
+  .AmdCfgExposeUnusedPciePorts = CONFIG_MPIO_EXPOSE_UNUSED_PCIE_PORTS,
+  .CfgForcePcieGenSpeed = CONFIG_MPIO_MAX_PCIE_LINK_SPEED,
+  .PcieLinkComplianceModeAllPorts = CONFIG_PCIE_LINK_COMPLIANCE_MODE_ENABLE,
+  .AmdMCTPEnable = CONFIG_MPIO_MCTP_SUPPORT_ENABLE,
+  .SbrBrokenLaneAvoidanceSup = CONFIG_SBR_BROKEN_LANE_AVOIDANCE_ENABLE,
+  .AutoFullMarginSup = CONFIG_AUTO_FULL_MARGINING_SUPPORT_ENABLE,
+  .AmdPciePresetMask8GtAllPort = CONFIG_GEN3_PCIE_PRESET_MASK,
+  .AmdPciePresetMask16GtAllPort = CONFIG_GEN4_PCIE_PRESET_MASK,
+  .AmdPciePresetMask32GtAllPort = CONFIG_GEN5_PCIE_PRESET_MASK,
+  .PcieLinkAspmAllPort = CONFIG_PCIE_LINK_ACTIVE_STATE_PWR_MGMT,
+  .AmdMCTPMasterSeg = CONFIG_MCTP_MASTER_PCI_ADDR_SEGMENT,
+  .AmdMCTPMasterID = CONFIG_MCTP_MASTER_PCI_ADDR,
+  .AmdPresenceDetectSelectMode = CONFIG_MPIO_HOT_PLUG_PRESENCE_DETECTION_MODE,
+  .AmdHotPlugNvmeDefaultMaxPayload = CONFIG_PCIE_HOTPLUG_PORT_MAX_PAYLOAD_SIZE,
+  .CfgHotplugUMBSupport = CONFIG_MPIO_HOTPLUG_UMB_SUPPORT_ENABLE,
+  .LinkDisableAtPowerOffDelay = CONFIG_LINK_DISABLE_AT_POWER_OFF_DELAY,
+  .Enable2SpcGen4 = CONFIG_MPIO_ENABLE_2SPC_GEN4,
+  .PcieNonPcieCompliantTrainingFailureSupport = CONFIG_MPIO_NON_PEIE_COMPLIANT_SUPPORT,
+  .ActiveSltMode = CONFIG_MPIO_SLT_MODE_ENABLE,
+  .CfgDxioTxFIFORdPtrOffset = CONFIG_MPIO_FIFO_RD_PTR_OFFSET,
+  .DataObjectExchange = CONFIG_MPIO_DATA_OBJ_EXCHANGE_ENABLE,
+  .AmdHotPlugForceSFIStrap = CONFIG_MPIO_SFI_FEATURES_ENABLE,
+  .PcieGen3LaneEqUsTxPreset = CONFIG_MPIO_GEN3_UPSTREAM_PRESET,
+  .PcieGen3LaneEqDsTxPreset = CONFIG_MPIO_GEN3_DOWNSTREAM_PRESET,
+  .PcieLaneEqPresetMask8GtConfig = CONFIG_MPIO_GEN3_PRESET_MASK_CONFIG,
+  .PcieLaneEqPresetMask8Gt = CONFIG_MPIO_GEN3_PCIE_LC_MASK_CONTROL_DEFAULT,
+  .PcieGen4LaneEqUsTxPreset = CONFIG_MPIO_GEN4_UPSTREAM_PRESET,
+  .PcieGen4LaneEqDsTxPreset = CONFIG_MPIO_GEN4_DOWNSTREAM_PRESET,
+  .PcieLaneEqPresetMask16GtConfig = CONFIG_MPIO_GEN3_PRESET_MASK_CONFIG,
+  .PcieLaneEqPresetMask16Gt = CONFIG_MPIO_GEN3_PCIE_LC_MASK_CONTROL_DEFAULT,
+  .PcieGen5LaneEqUsTxPreset = CONFIG_MPIO_GEN5_UPSTREAM_PRESET,
+  .PcieGen5LaneEqDsTxPreset = CONFIG_MPIO_GEN5_DOWNSTREAM_PRESET,
+  .PcieLaneEqPresetMask32GtConfig = CONFIG_MPIO_GEN5_PRESET_MASK_CONFIG,
+  .PcieLaneEqPresetMask32Gt = CONFIG_MPIO_GEN5_PCIE_LC_MASK_CONTROL_DEFAULT,
+  .AmdCXlEarlyLinkTraining = 0,
+  .CfgSevSnpSupport = true,
+  .CfgSevTioSupport = true,
+  .PcieIdeCapSup = true,
+  .SafeRecoveryBER = false,
+  .PeriodicCal = false
+};

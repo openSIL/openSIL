@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+# Config for  xUSL/MPIO
+
+menu "MicroProcessor Input Output (MPIO)"
+    comment "The MPIO IP controls the microprocessor for NBIO"
+    comment "firmware/management"
+
+    source "xUSL/Mpio/Common/Kconfig"
+    source "xUSL/Mpio/Phx/Kconfig"
+
+endmenu

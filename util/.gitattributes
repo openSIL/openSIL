@@ -1,0 +1,2 @@
+# Tell Git to use <lf> ( not <crlf>) for the unix Shell files
+*.sh eol=lf

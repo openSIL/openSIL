@@ -1,0 +1,174 @@
+# SPDX-License-Identifier: MIT
+# Config for  xUSL/Mpio/Phx
+# Copyright (C) 2024 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+#
+#
+
+# MPIO Phx variables:
+comment ""
+comment "IP MPIO Phx - Controls that are specific to Phx: MPIO"
+
+# ------------------------------ MPIO PSPP Configuration --------------------------
+choice
+    prompt  "Socket number for connecting the BMC link"
+    default CHOICE_PSPP_DISABLED
+    help
+        Define the initial PSPP configuration.
+        Ref: typedef enum{} MPIO_PSPP_MODE;
+
+config  CHOICE_PSPP_DISABLED
+    bool "PSPP is disabled"
+    help
+        PSPP is disabled in this mode.
+
+config  CHOICE_PERFORMANCE_MODE
+    bool "PSPP Performance Mode"
+    help
+        PSPP configured to use the Performance Mode.
+
+config  CHOICE_BALANCED_MODE
+    bool "PSPP Balanced Mode"
+    help
+        PSPP configured to use the Balanced Mode
+
+config  CHOICE_POWER_SAVING_MODE
+    bool "PSPP Power Saving Mode"
+    help
+        PSPP configured to use the Power Saving Mode
+
+endchoice
+
+##  define the system variable that is used in the code
+config MPIO_PSPP_MODE
+    hex
+    default  0x00      if CHOICE_PSPP_DISABLED
+    default  0x01      if CHOICE_PERFORMANCE_MODE
+    default  0x02      if CHOICE_BALANCED_MODE
+    default  0x03      if CHOICE_POWER_SAVING_MODE
+
+# ------------------------------ Subsystem ID for Root Controllers --------------------------
+config NBIF_RC_SSID
+    hex  "Define the subsystem ID assigned to root controllers [0-FFFFFFFF]"
+    default 0x00000000
+    range 0 0xFFFFFFFF
+    help
+        This 32-bit value is used to define the subsystem ID
+        assigned to the root controllers. The default power-up
+        setting for NBIF RC SSID is 0.
+
+# ------------------------------ AmdCfgGnbIGPUSSID --------------------------
+config GNB_IGPU_SSID
+    hex  "Gnb IGPU SSID [0-FFFFFFFF]"
+    default 0x00000000
+    range 0 0xFFFFFFFF
+    help
+        This 32-bit value is used to define the Gnb iGPU SSID.
+        The default setting is 0.
+
+# ------------------------------ PCI Sub-System ID --------------------------
+config GNB_IGPU_AUDIO_SSID
+    hex  "Define the subsystem ID assigned to root controllers [0-FFFFFFFF]"
+    default 0x00000000
+    range 0 0xFFFFFFFF
+    help
+        This 32-bit value allows the host BIOS to set the PCI
+        subsystem ID reported by the iGPU audio controller.
+        This is nBIF Function 1 for Family 17h processors. A
+        value of zero indicates that the normal hardware fused
+        value should be used.
+
+# ------------------------------ Enable ACP Controller --------------------------
+config MPIO_ACP_CONTROLLER_ENABLE
+    int  "Enable ACP controller [1/0]"
+    default 1
+    range 0 1
+    help
+        This value enables or disables ACP controller
+        behind nbif.
+
+# ------------------------------ Enable Sensor Hub --------------------------
+config MPIO_SENSOR_HUB_ENABLE
+    int  "Enable Sensor Hub [1/0]"
+    default 1
+    range 0 1
+    help
+        This value enables or disables the nBIF device
+        for MP2.
+
+# ------------------------------ Enable NBIO HD Audio Device --------------------------
+config MPIO_HD_AUDIO_DEV_ENABLE
+    int  "Enable NBIO high definition audio device [1/0]"
+    default 1
+    range 0 1
+    help
+        This value selects whether or not the whether or not the
+        NBIO high definition audio device is active.
+
+# ------------------------------ ACP Sub-System ID --------------------------
+config MPIO_ACP_SSID
+    hex  "Assign the ACP SSID [0-FFFFFFFF]"
+    default 0x00000000
+    range 0 0xFFFFFFFF
+    help
+        This 32-bit value allows assignment of ACP SSID.
+
+# ------------------------------ Prevent Entering Loopback Mode --------------------------
+config MPIO_LOOPBACK_CONTROL
+    hex  "Disable root port from entering loopback mode [1/0]"
+    default 1
+    range 0 1
+    help
+        This configuration option enables a user to prevent
+        the root port from entering loopback mode. Setting
+        the value to 1 will allow the root port to enter
+        loopback mode. The default value of this configuration
+        is 1.
+
+# ------------------------------ MPIO Data Link Feature Enablement V2 --------------------------
+config MPIO_DLF_CAP_ENABLE_V2
+    int  "Enable Data Link Feature capability [1/0]"
+    default 15
+    range 0 255
+    help
+        Used to enable MPIO Data Link Feature capability
+        on all PCIe ports Gen4 or higher.
+
+# ------------------------------ MPIO Data Link Feature Exchange Enablement V2 --------------------------
+config MPIO_DLF_EX_ENABLE_V2
+    int  "Enable Data Link Feature Exchange capability [1/0]"
+    default 15
+    range 0 255
+    help
+        Used to enable MPIO Data Link Feature Exchange
+        capability on all PCIe ports Gen4 or higher.
+
+# ------------------------------ MPIO 10-bit Tag Support --------------------------
+config MPIO_PCIE_TBT_SUPPORT_ENABLE
+    int  "Enable 10-bit tag support [1/0]"
+    default 1
+    range 0 1
+    help
+        Used to enable 10-bit tag for devices that indicate
+        support.
+
+# ------------------------------ MPIO Access Control Services (ACS) Enablement --------------------------
+config MPIO_CFG_ACS_ENABLE
+    int  "Enable Access Control Services [1/0]"
+    default 1
+    range 0 1
+    help
+        Used to enable Access Control Services. Setting this
+        value to 1 will enable ACS.
+
+# ------------------------------ CfgPCIeLTREnable --------------------------
+config PCIE_LTR_ENABLE
+    int  "LTR enable [1/0]"
+    default 1
+    range 0 1
+
+# ------------------------------ PcieEcrcEnablement --------------------------
+config PCIE_ECRC_ENABLE
+    int  "ECRC enable [1/0]"
+    default 0
+    range 0 1
+

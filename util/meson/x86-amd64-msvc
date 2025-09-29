@@ -1,0 +1,27 @@
+[binaries]
+c = 'cl'
+ar = 'lib'
+nasm = 'nasm'
+strip = 'strip'
+
+[build_machine]
+system = 'windows'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+
+[host_machine]
+system = 'windows'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+
+[target_machine]
+system = 'windows'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+
+[properties]
+is32bit = false
+
