@@ -51,6 +51,9 @@ typedef union {
 #define SIL_RESERVED_0504  8
 #define SIL_RESERVED_0503  0x100
 
+#define SIL_RESERVED_1777  5
+#define SIL_RESERVED_1776  0x20
+
 #define SIL_RESERVED_0510  0x1a3400bcUL
 
 #define SIL_RESERVED_0483  0

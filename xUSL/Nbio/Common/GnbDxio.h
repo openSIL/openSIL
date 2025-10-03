@@ -462,6 +462,14 @@ typedef struct {
   uint8_t                   DisGen5EQPhase:1;             ///< Gen5 Bypass phase2/3 EQ
   uint8_t                   Gen5FixedPreset:4;            ///< Gen5 Fixed Preset value
 
+  uint8_t                   SetGen3ForcePreset:1;         ///< Gen3 Fixed Preset Set
+  uint8_t                   SetGen4ForcePreset:1;         ///< Gen4 Fixed Preset Set
+  uint8_t                   SetGen5ForcePreset:1;         ///< Gen5 Fixed Preset Set
+  uint8_t                   UNUSED6:1;                    ///< Currently unassigned - for alignment
+  uint8_t                   Gen3ForcePreset:4;            ///< Gen3 Fixed Preset value
+  uint8_t                   Gen4ForcePreset:4;            ///< Gen4 Fixed Preset value
+  uint8_t                   Gen5ForcePreset:4;            ///< Gen5 Fixed Preset value
+
   uint16_t                  PsppPolicyDC;                 ///< Pspp Policy DC
   uint16_t                  PsppPolicyAC;                 ///< Pspp Policy AC
   uint8_t                   PsppDeviceType;               ///< Pspp Device Type

@@ -16,6 +16,7 @@
 #include <Nbio/Brh/include/NbioBaseReg.h>
 #include <Nbio/Brh/include/Iommul1Reg.h>
 #include <Nbio/Brh/include/IommuMmioReg.h>
+#include <string.h>
 #include "GnbRegistersBrh.h"
 
 /*----------------------------------------------------------------------------------------
@@ -261,6 +262,21 @@ SMN_TABLE NbioIommuL1InitTbl [] = {
   SMN_ENTRY_RMW(SIL_RSVD_ADDR_14B0010C,
     L1_SDP_MAXCRED_0_L1_DYNAMIC_CRED_RELOCATION_EN_MASK,
     (0 << L1_SDP_MAXCRED_0_L1_DYNAMIC_CRED_RELOCATION_EN_OFFSET)
+    ),
+  SMN_ENTRY_RMW (
+    SIL_RSVD_ADDR_14704018,
+    SIL_RESERVED_1767,
+    (0x6 << SIL_RESERVED_1768)
+    ),
+  SMN_ENTRY_RMW (
+    SIL_RSVD_ADDR_14b04018,
+    SIL_RESERVED_1767,
+    (0x6 << SIL_RESERVED_1768)
+    ),
+  SMN_ENTRY_RMW (
+    SIL_RSVD_ADDR_15304018,
+    SIL_RESERVED_1767,
+    (0x6 << SIL_RESERVED_1768)
     ),
   SMN_ENTRY_TERMINATE
 };
@@ -553,6 +569,194 @@ SMN_TABLE_ENTRY GnbIommuEnvInitTable [] = {
   SMN_ENTRY_TERMINATE_TABLE
 };
 
+/**
+ * IommuVfNonPciBarInit
+ *
+ * @brief  This function assigns IOMMU VF MMIO.
+ *
+ * @param  GnbHandle       Silicon handle to assign
+ * @param  MmioBarLow      Address of low byte
+ * @param  MmioBarHigh     Address of high byte
+ * @param  MemorySize      Size of the allocated bar required
+ * @param  Enable          Set enable bit in BAR
+ * @param  LockSettings    If the allocated memory range should be locked or not
+ * @param  Above4G         If MMIO above the 4G boundary should be allocated
+ *
+ * @return  nothing
+ */
+static void
+IommuVfNonPciBarInit (
+  GNB_HANDLE   *GnbHandle,
+  uint32_t     MmioBarLow,
+  uint32_t     MmioBarHigh,
+  uint32_t     MemorySize,
+  bool         Enable,
+  bool         LockSettings,
+  bool         Above4G
+  )
+{
+  SIL_STATUS             Status;
+  FABRIC_TARGET          MmioTarget;
+  FABRIC_MMIO_ATTRIBUTE  Attributes;
+  uint64_t               MmioBase, Length;
+  uint32_t               BarLow, BarHigh;
+  RCMGR_IP2IP_API        *RcMgrIp2Ip;
+  uint32_t               PciAddress;
+
+  PciAddress = MAKE_SBDFO (
+                 GnbHandle->Address.Address.Segment,
+                 GnbHandle->Address.Address.Bus,
+                 0x00,
+                 0x2,
+                 0
+                 );
+
+  BarLow = 0;
+  BarHigh = 0;
+  NBIO_TRACEPOINT(SIL_TRACE_INFO,
+    "Begin to allocate bars for IOMMU PCI low %x high %x, size %x\n",
+    MmioBarLow,
+    MmioBarHigh,
+    MemorySize
+    );
+
+  ///
+  /// See if the given BAR have already been assigned
+  ///
+  BarLow = xUSLPciRead32(PciAddress | MmioBarLow);
+  BarHigh = xUSLPciRead32(PciAddress | MmioBarHigh);
+
+  if (BarLow == 0 && BarHigh == 0) {
+    NBIO_TRACEPOINT(SIL_TRACE_INFO, "Bars have not been assigned, attempting to allocate MMIO \n");
+    ///
+    /// Assign bars:
+    /// Allocate a chunk of MMIO first
+    ///
+    memset(&Attributes, 0, sizeof (Attributes));
+    memset(&MmioTarget, 0, sizeof (MmioTarget));
+    Length = MemorySize;
+    MmioTarget.TgtType = TARGET_PCI_BUS;
+    MmioTarget.SocketNum = GnbHandle->SocketId;
+    MmioTarget.PciBusNum = (uint16_t) GnbHandle->Address.Address.Bus;
+    MmioTarget.PciSegNum = (uint16_t) GnbHandle->Address.Address.Segment;
+    MmioTarget.RbNum = GnbHandle->RBIndex;
+    Attributes.ReadEnable = 1;
+    Attributes.WriteEnable = 1;
+    Attributes.NonPosted = 0;
+    MmioBase = 0;
+    if (Above4G) {
+      Attributes.MmioType = NON_PCI_DEVICE_ABOVE_4G;
+    } else {
+      Attributes.MmioType = NON_PCI_DEVICE_BELOW_4G;
+    }
+
+    NBIO_TRACEPOINT(SIL_TRACE_INFO,
+      "FabricAllocateMmio : Socket %d , RB # %d\n",
+      MmioTarget.SocketNum,
+      MmioTarget.RbNum
+      );
+
+    if (SilGetIp2IpApi(SilId_RcManager, (void **)(&RcMgrIp2Ip)) != SilPass) {
+      NBIO_TRACEPOINT(SIL_TRACE_ERROR, " MMIO allocator API is not found.\n");
+      return;
+    }
+
+    Status = RcMgrIp2Ip->FabricReserveMmio(&MmioBase, &Length, MemorySize - 1, MmioTarget, &Attributes);
+
+    if (Status != SilPass) {
+      NBIO_TRACEPOINT(SIL_TRACE_INFO, "Allocate MMIO Fail\n");
+      return;
+    }
+    NBIO_TRACEPOINT(SIL_TRACE_INFO, "Allocate MMIO @0x%llx\n", MmioBase);
+  } else {
+    NBIO_TRACEPOINT(SIL_TRACE_INFO, "Bars have already been assigned!\n");
+    NBIO_TRACEPOINT(SIL_TRACE_INFO, "End\n");
+    return;
+  }
+
+  ///
+  /// Write the assigned memory address registers to PCI
+  ///
+  BarLow = (uint32_t) MmioBase;
+  BarHigh = (uint32_t) (MmioBase >> 32);
+
+  xUSLPciWrite32(PciAddress | MmioBarLow, BarLow);
+  xUSLPciWrite32(PciAddress | MmioBarHigh, BarHigh);
+
+  NBIO_TRACEPOINT(SIL_TRACE_INFO, "BarLow = %x , BarHigh %x\n", BarLow, BarHigh);
+
+  // Set enable bit separate from other bits
+  if (Enable) {
+    BarLow = BarLow | BIT_32(0); /// Set enable bit
+    xUSLPciWrite32(PciAddress | MmioBarLow, BarLow);
+    xUSLPciWrite32(PciAddress | MmioBarLow, BarHigh);
+  }
+
+  // Set lock bit separate from other bits
+  if (LockSettings) {
+    BarLow = BarLow | BIT_32(1); /// Set lock bit
+    xUSLPciWrite32(PciAddress | MmioBarLow, BarLow);
+    xUSLPciWrite32(PciAddress | MmioBarLow, BarHigh);
+  }
+  NBIO_TRACEPOINT(SIL_TRACE_INFO, "End\n");
+}
+
+/*----------------------------------------------------------------------------------------*/
+/**
+ * SMI Filter Config Initial
+ *
+ * @param[in]  GnbHandle    Pointer to GNB_HANDLE for this NBIO instance
+ *
+ * @retval     SIL_STATUS
+ */
+static void
+SmiFilterConfig (
+  GNB_HANDLE        *GnbHandle
+  ) 
+{
+  IOMMU_MMIO_EFR_0_STRUCT            IommuMmioEFR0;
+
+  IommuMmioEFR0.Value = xUSLSmnRead(
+    GnbHandle->Address.Address.Segment,
+    GnbHandle->Address.Address.Bus,
+    NBIO_SPACE (GnbHandle, SMN_IOMMU_MMIO_EFR_0_ADDRESS)
+    );
+
+  if (!(IommuMmioEFR0.Field.SMIF_SUP == 1 && IommuMmioEFR0.Field.SMIF_RC == 2)) {
+    return;
+  }
+
+  xUSLSmnReadModifyWrite (
+    GnbHandle->Address.Address.Segment,
+    GnbHandle->Address.Address.Bus,
+    NBIO_SPACE (GnbHandle, SMN_SMI_FILTER_REGISTER_0_0_ADDRESS),
+    (uint32_t)~(SMI_FILTER_REGISTER_0_0_SmiDID_0_MASK |
+                SMI_FILTER_REGISTER_0_0_SmiDV_0_MASK),
+    ((0x00A0 << SMI_FILTER_REGISTER_0_0_SmiDID_0_OFFSET) |
+          (1 << SMI_FILTER_REGISTER_0_0_SmiDV_0_OFFSET))
+    );
+
+  xUSLSmnReadModifyWrite (
+    GnbHandle->Address.Address.Segment,
+    GnbHandle->Address.Address.Bus,
+    NBIO_SPACE (GnbHandle, SMN_SMI_FILTER_REGISTER_0_0_ADDRESS),
+    (uint32_t)~(SMI_FILTER_REGISTER_0_0_SmiFLock_0_MASK),
+    1 << SMI_FILTER_REGISTER_0_0_SmiFLock_0_OFFSET
+    );
+  
+  xUSLSmnReadModifyWrite (
+    GnbHandle->Address.Address.Segment,
+    GnbHandle->Address.Address.Bus,
+    NBIO_SPACE (GnbHandle, SMN_IOMMU_MMIO_CNTRL_0_ADDRESS),
+    (uint32_t)~(IOMMU_MMIO_CNTRL_0_SMIF_EN_MASK |
+              IOMMU_MMIO_CNTRL_0_SMIF_LOG_EN_MASK),
+    ((1 << IOMMU_MMIO_CNTRL_0_SMIF_EN_OFFSET) |
+     (1 << IOMMU_MMIO_CNTRL_0_SMIF_LOG_EN_OFFSET))
+    );
+
+}
+
+
 /*----------------------------------------------------------------------------------------*/
 /**
  * NbioIommuInit
@@ -585,7 +789,7 @@ NbioIommuInit (
   uint32_t                           Value;
   bool                               ReserveIommuBar;
   uint32_t                           Property;
-  SIL_RESERVED_UNION_0022       MmioControl0;
+  SIL_RESERVED_UNION_0022            MmioControl0;
   SECURE_ENCRYPTION_EAX              SecureEncryptionEax;
   bool                               SnpSupported;
   RCMGR_IP2IP_API                    *RcMgrIp2Ip;
@@ -681,7 +885,63 @@ NbioIommuInit (
         IommuPciAddress = NbioGetHostPciAddress(GnbHandle);
         IommuPciAddress.Address.Function = 0x2;
         xUSLPciWrite32(IommuPciAddress.AddressValue | SIL_RESERVED_0791, Value);
+
+        //
+        // Allocate non PCIe VF MMIO BARs
+        //
+        if (NbioIpBlockData->NbioConfigData.IohcNonPCIBarInitIommuVf) {
+          IommuVfNonPciBarInit(
+            GnbHandle,
+            SIL_RESERVED_1763,
+            SIL_RESERVED_1764,
+            NONPCI_BARSIZE_1MB * 256,
+            false,
+            false,
+            true
+            );
+        }
+
+        if (NbioIpBlockData->NbioConfigData.IohcNonPCIBarInitIommuVfCntl) {
+          IommuVfNonPciBarInit(
+            GnbHandle,
+            SIL_RESERVED_1765,
+            SIL_RESERVED_1766,
+            NONPCI_BARSIZE_1MB * 4,
+            false,
+            false,
+            true
+            );
+          }
+
       }
+
+      if (NbioIpBlockData->NbioConfigData.CfgIommuErrReportingWA) {
+        xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+          GnbHandle->Address.Address.Bus,
+          NBIO_SPACE (GnbHandle, SIL_REG_ADDR_157000c4),
+          0,
+          0x2000000
+          );
+        xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+          GnbHandle->Address.Address.Bus,
+          NBIO_SPACE (GnbHandle, SIL_REG_ADDR_157000c8),
+          0,
+          0x00000100
+          );
+        xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+          GnbHandle->Address.Address.Bus,
+          NBIO_SPACE (GnbHandle, SIL_REG_ADDR_1570011c),
+          0,
+          0x0001000
+          );
+      }
+
+      if (NbioIpBlockData->NbioConfigData.IommuSupport &&
+          NbioIpBlockData->NbioConfigData.CfgSMIFiltering) {
+        // SMI Filter Feature config
+        SmiFilterConfig (GnbHandle);
+      }
+
 
       // Program up IOMMU NBIO Tables
       ProgramNbioSmnTable(GnbHandle, (SMN_TABLE *)GnbIommuEnvInitTable, NBIO_SPACE(GnbHandle, 0), Property);
@@ -761,6 +1021,15 @@ NbioIommuInit (
           MmioControl0.Value
           );
       }
+
+      // IOMMU configuration for SEV-TIO enabled
+      xUSLSmnReadModifyWrite (
+        GnbHandle->Address.Address.Segment,
+        GnbHandle->Address.Address.Bus,
+        NBIO_SPACE (GnbHandle, SIL_RSVD_ADDR_SMN_IOMMU_MMIO_CONTROL1_W_ADDRESS),
+        (uint32_t)~(SIL_RESERVED_1770),
+        (uint32_t)((NbioIpBlockData->NbioConfigData.CfgSevTioSupport ? 1 : 0) << SIL_RESERVED_1769)
+        );
 
       // IOMMU configuration for SEV-SNP enabled
       if (NbioIpBlockData->NbioConfigData.SevSnpSupport == true) {
@@ -876,8 +1145,10 @@ NbioIommuInit (
       xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
         GnbHandle->Address.Address.Bus,
         NBIO_SPACE(GnbHandle, SMN_IOMMU_MMIO_CONTROL0_W_ADDRESS),
-        (uint32_t) ~(IOMMU_MMIO_CONTROL0_W_GAM_SUP_W_MASK),
-        (1 << IOMMU_MMIO_CONTROL0_W_GAM_SUP_W_OFFSET)
+        (uint32_t) ~(IOMMU_MMIO_CONTROL0_W_GAM_SUP_W_MASK |
+                     SIL_RESERVED_0776),
+        (1 << IOMMU_MMIO_CONTROL0_W_GAM_SUP_W_OFFSET) |
+        (1 << SIL_RESERVED_0777)
         );
       // IOMMU configuration for ATS enabled
       xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,

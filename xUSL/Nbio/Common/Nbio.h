@@ -90,7 +90,7 @@ NonPciBarInit (
   uint32_t       MemorySize,
   bool           Enable,
   bool           LockSettings,
-  bool            Above4G
+  bool           Above4G
   );
 
 void

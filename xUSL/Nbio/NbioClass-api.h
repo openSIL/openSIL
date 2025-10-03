@@ -50,6 +50,8 @@ typedef struct {
   bool IohcNonPCIBarInitFastReg;        ///< Configure non pci device bar for FastReg
   bool IohcNonPCIBarInitFastRegCtl;     ///< Configure non pci device bar for FastRegCtl
   bool IommuMMIOAddressReservedEnable;  ///< 1: Enable Iommu MMIO reserved from GNB driver. 0:Disable
+  bool IohcNonPCIBarInitIommuVf;        ///< 1: Enable Iommu VF MMIO reserved from GNB driver. 0:Disable
+  bool IohcNonPCIBarInitIommuVfCntl;    ///< 1: Enable Iommu VF CNTL MMIO reserved from GNB driver. 0:Disable
   /* Apic Mode
    * 0xFF (auto),
    * 0x00 (CompatibilityMode) - threads below 255 run in xAPIC with xAPIC ACPI structures and threads 255 & above run in
@@ -64,6 +66,7 @@ typedef struct {
   bool IOHCPgEnable;
   uint8_t NbioGlobalCgOverride;
   bool IommuSupport;
+  bool CfgSMIFiltering;
 
   bool CfgACSEnable;
   bool CfgPCIeLTREnable;
@@ -96,6 +99,7 @@ typedef struct {
   bool AcsP2PEgressStrap5;
   bool AcsDirectTranslatedStrap5;
   bool AcsSsidEnStrap5;
+  bool AcsAtomicRoutingEnStrap5;
   bool DlfEnStrap1;
   bool Phy16gtStrap1;
   bool MarginEnStrap1;
@@ -149,6 +153,8 @@ typedef struct {
   bool CfgIommuSocket1Nbio1Enable;
   bool CfgIommuSocket1Nbio2Enable;
   bool CfgIommuSocket1Nbio3Enable;
+  bool CfgIommuErrReportingWA;
+  bool CfgSevTioSupport;
   bool AmdCxlOnAllPorts;    ///< Toggle Cxl on all ports
 } NBIO_CONFIG_DATA;
 

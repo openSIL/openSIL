@@ -671,6 +671,18 @@ SMN_TABLE NbioIohcP2pTbl [] = {
     ),
   SMN_ENTRY_TERMINATE
 };
+
+SMN_TABLE SmallNbioIohcP2pTbl [] = {
+  SMN_ENTRY_RMW(SIL_RSVD_ADDR_1D410118,
+    IOHC_FEATURE_CNTL_P2P_mode_OFFSET,
+    (0x1 << IOHC_FEATURE_CNTL_P2P_mode_OFFSET)
+    ),
+  SMN_ENTRY_RMW(SIL_RSVD_ADDR_1D410230,
+    PCIE_VDM_CNTL2_VdmP2pMode_MASK,
+    (0x1 << PCIE_VDM_CNTL2_VdmP2pMode_OFFSET)
+    ),
+  SMN_ENTRY_TERMINATE
+};
 // End of NbioIohcP2pTbl
 
 // --------------------------------------------------
@@ -2148,6 +2160,7 @@ SMN_TABLE_ENTRY GnbEarlyInitTableCommon [] = {
 
 // Version 1.00.0
 SMN_TABLE_ENTRY  GnbEarlyInitTableCommonSmallIohc [] = {
+  SMN_ENTRY_TABLE_64(SmallNbioIohcP2pTbl),            // Enabling Peer-to-Peer
   SMN_ENTRY_TABLE_64(SmallNbioIohcClockGatingTbl),    // IOHC Clock Gating
   SMN_ENTRY_TABLE_64(SmallNbioIohcArbitrationTbl),    // IOHC Arbitration Control
   SMN_ENTRY_TABLE_64(SmallNbioIoapicClockGatingTbl),  // IOAPIC Clock Gating and Power Management

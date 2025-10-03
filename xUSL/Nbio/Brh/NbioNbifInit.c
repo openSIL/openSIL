@@ -54,15 +54,31 @@
 // --------------------------------------------------
 // 15.6.7.1 nBIF Configurations
 // --------------------------------------------------
+// NBIF0:
+    // NBIF1: DEV0
+    // NBIF1: DEV1
+    // NBIF1: DEV2
+    // NBIF2: DEV0
+    // Device enables
+//rb0
+/*NBIF0 IOHC0-BOTTOM LEFT
+    Port0-F0: dummy
+    Port0-F1: MPDMATF
+    Port0-F2: Primary NTB/vNTB
+    Port0-F3: Secondary vNTB
+    Port0-F4: USB(enablement handled in ABL-FCH)
+    Port0-F5: PSP/CCP
+    Port1-F0: SATA0
+    Port1-F1: SATA1*/
 SMN_TABLE  NbioNbif0Iohc0DeviceEnTbl [] = {
   SMN_ENTRY_RMW(SIL_RESERVED_1106,
     SIL_RESERVED_0917,
     (0x1 << SIL_RESERVED_0918)
     ),
-  SMN_ENTRY_RMW(SIL_RESERVED_1109,
-    SIL_RESERVED_0933,
-    (0x1 << SIL_RESERVED_0934)
-    ),
+  // SMN_ENTRY_RMW(SIL_RESERVED_1109,
+  //   SIL_RESERVED_0933,
+  //   (0x1 << SIL_RESERVED_0934)
+  //   ),
   SMN_ENTRY_RMW(SIL_RESERVED_1117,
     SIL_RESERVED_0981,
     (0x0 << SIL_RESERVED_0982)
@@ -118,10 +134,10 @@ SMN_TABLE  NbioNbif1Iohc2DeviceEnTbl [] = {
     SIL_RESERVED_0917,
     (0x1 << SIL_RESERVED_0918)
     ),
-  SMN_ENTRY_RMW(SIL_RESERVED_1109,
-    SIL_RESERVED_0933,
-    (0x1 << SIL_RESERVED_0934)
-    ),
+  // SMN_ENTRY_RMW(SIL_RESERVED_1109,
+  //   SIL_RESERVED_0933,
+  //   (0x1 << SIL_RESERVED_0934)
+  //   ),
   SMN_ENTRY_RMW(SIL_RESERVED_1117,
     SIL_RESERVED_0981,
     (0x0 << SIL_RESERVED_0982)
@@ -168,10 +184,10 @@ SMN_TABLE  NbioNbifDeviceEnTbl [] = {
     SIL_RESERVED_0917,
     (0x1 << SIL_RESERVED_0918)
     ),
-  SMN_ENTRY_RMW(SIL_RESERVED_1109,
-    SIL_RESERVED_0933,
-    (0x1 << SIL_RESERVED_0934)
-    ),
+  // SMN_ENTRY_RMW(SIL_RESERVED_1109,
+  //   SIL_RESERVED_0933,
+  //   (0x1 << SIL_RESERVED_0934)
+  //   ),
   SMN_ENTRY_RMW(SIL_RESERVED_1117,
     SIL_RESERVED_0981,
     (0x0 << SIL_RESERVED_0982)
@@ -789,7 +805,7 @@ NbioNbifMpdmaCapability (
       );
     xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
       GnbHandle->Address.Address.Bus,
-      NBIO_SPACE(GnbHandle, SIL_RESERVED_1118 + (Index << 8)),
+      NBIO_SPACE(GnbHandle, SIL_RESERVED_1118 + ((Index * 2) << 8)),
       (uint32_t) ~(SIL_RESERVED_0983 |
       SIL_RESERVED_0985),
       (0x1 << SIL_RESERVED_0984) |

@@ -32,6 +32,8 @@ typedef union {
 
 #define SIL_RESERVED_1514           0
 #define SIL_RESERVED_1513           0x1
+#define SIL_RESERVED_1788           3
+#define SIL_RESERVED_1787           0x8
 
 #define SIL_RSVD_ADDR_1A383000      0x1a383000UL
 
