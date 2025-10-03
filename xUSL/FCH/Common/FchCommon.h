@@ -28,6 +28,9 @@
 #define GPIO_BANK3_BASE                   0x1800
 #define AOAC_BASE                         0x1E00
 
+//  FCH eMMC
+#define FCH_EMMC_CFG_BASE               0xFEDD5800ul
+#define FCH_EMMC_HC_BASE                0xFEDD5000ul
 
 // Remote GPIO
 #define SIL_RSVD_ADDR_02D02200          0x02D02200ul

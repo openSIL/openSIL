@@ -193,6 +193,54 @@ config SPI_TPM_SPEED
     default 7   if CHOICE_50MHZ_TPM
     default 8   if CHOICE_4MHZ_TPM
 
+#---------------------- Write SPEED ---------------------
+
+choice CHOICE_SPI_FAST_SPEED
+    prompt "SPI bus Speed for fast accesses"
+    default CHOICE_IGNORE_FASTSPEED
+    help
+        For SPI bus accesses directed to the device,
+        this is the transaction speed to be used.
+
+config CHOICE_IGNORE_FASTSPEED
+    bool "Don't touch. Use value set by the HW/FW"
+    help
+        The speed was set by either hardware power-on default
+        or the embedded firmware. Do not change the setting.
+
+config CHOICE_66MHZ_FAST
+    bool "66MHz fast speed"
+    help
+        Set the bus speed for using a 66MHz clock.
+
+config CHOICE_33MHZ_FAST
+    bool "33MHz fast speed"
+
+config CHOICE_22MHZ_FAST
+    bool "22MHz fast speed"
+
+config CHOICE_16_5MHZ_FAST
+    bool "16.5MHz fast speed"
+
+config CHOICE_100MHZ_FAST
+    bool "100MHz fast speed"
+
+config CHOICE_800KHZ_FAST
+    bool "800Khz fast speed"
+
+endchoice
+
+##  define the system variable that is used in the code
+config SPI_FAST_SPEED
+    int
+    default 0   if CHOICE_IGNORE_FASTSPEED
+    default 1   if CHOICE_66MHZ_FAST
+    default 2   if CHOICE_33MHZ_FAST
+    default 3   if CHOICE_22MHZ_FAST
+    default 4   if CHOICE_16_5MHZ_FAST
+    default 5   if CHOICE_100MHZ_FAST
+    default 6   if CHOICE_800KHZ_FAST
+
 endmenu  # SPI bus
 #---------------------- next_item ---------------------
 
