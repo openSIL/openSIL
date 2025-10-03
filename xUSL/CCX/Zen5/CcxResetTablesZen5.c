@@ -30,8 +30,8 @@ volatile AP_MSR_SYNC ApMsrSyncListZen5[] =
   { MSR_L2_PREFETCH_CFG,            0x0000000000000000, 0xFFFFFFFFFFFFFFFF          }, // CcxZen5Prefetcher
   { MSR_DC_PF_CFG,                  0x0000000000000000, 0xFFFFFFFFFFFFFFFF          }, // CcxZen5Prefetcher
   { MSR_SYS_CFG,                    0x0000000000000000, 0xFFFFFFFFFFFFFFFF          },
-  { SIL_RESERVED_0377,                 0x0000000000000000, 0xFFFFFFFFFFFFFFFF          },
-  { SIL_RESERVED_0378,                0x0000000000000000, 0xFFFFFFFFFFFFFFFF          },
+  { SIL_RESERVED_0377,              0x0000000000000000, 0xFFFFFFFFFFFFFFFF          },
+  { SIL_RESERVED_0378,              0x0000000000000000, 0xFFFFFFFFFFFFFFFF          },
   { MSR_CSTATE_ADDRESS,             0x0000000000000000, 0xFFFFFFFFFFFFFFFF          }, // CcxZen5InitializeC6
   { MSR_HWCR,                       0x0000000000000000, BIT_64(25)                  }, // CcxZen5InitializeCpb
   { MSR_DE_CFG,                     0x0000000000000000, 0xFFFFFFFFFFFFFFFF          }, // Zen5InitializePrefetchMode
@@ -39,17 +39,27 @@ volatile AP_MSR_SYNC ApMsrSyncListZen5[] =
   { MSR_LS_CFG,                     0x0000000000000000, BIT_64(28)                  }, // AmdIbsHardwareEn
   { MSR_EXTENDED_FEATURE_EDX0_ECX0, 0x0000000000000000, BIT_64(36)                  }, // AmdEnableFSRM
   { MSR_CPUID_FN_00000007_FEATURES, 0x0000000000000000, BIT_64(9)                   }, // AmdEnableERMS
-  { SIL_RESERVED_0385,          0x0000000000000000, BIT_64(15)                  },
+  { SIL_RESERVED_0385,              0x0000000000000000, BIT_64(15)                  },
   { MSR_CPUID_FN_00000007_FEATURES, 0x0000000000000000, BIT_64(16) | BIT_64(17) |
                                                         BIT_64(21) | BIT_64(28) |
                                                         BIT_64(30) | BIT_64(31)     }, // AmdCcxEnableAvx512
   { MSR_SVM_REV_FEAT_ID,            0x0000000000000000, BIT_64(13)                  }, // AmdEnableSvmAVIC
   { MSR_SVM_REV_FEAT_ID,            0x0000000000000000, BIT_64(18)                  }, // AmdEnableSvmX2AVIC
   { MSR_HWCR,                       0x0000000000000000, BIT_64(9)                   }, // AmdMonMwaitDis
-  { MSR_LS_CFG2,                    0x0000000000000000, BIT_64(56)                  }, // AmdCcxDisFstStrErmsb}
+  { MSR_LS_CFG2,                    0x0000000000000000, BIT_64(4) | BIT_64(56)      }, // AmdCcxDisFstStrErmsb
+  { MSR_LS_CFG3,                    0x0000000000000000, BIT_64(19) | BIT_64(23) |
+                                                        BIT_64(26)                  },
+  { SIL_RESERVED_0384,              0x0000000000000000, BIT_64(0) | BIT_64(39)      },
+  { MSR_L2_CFG1,                    0x0000000000000000, BIT_64(30)                  },
+  { MSR_LS_CFG4,                    0x0000000000000000, BIT_64(7)                   },
   { MSR_LS_CFG,                     0x0000000000000000, BIT_64(53)                  }, // AmdWcSpecConfiguration
   { MSR_LS_CFG3,                    0x0000000000000000, BIT_64(30)                  }, // AmdWcSpecConfiguration
   { MSR_CPUID_FEATS,                0x0000000000000000, BIT_64(53)                  }, // PcdAmdApicMode
+  { 0xC00110DE,                     0x0000000000000000, BIT_64(15)                  },
+  { 0xC00110E3,                     0x0000000000000000, BIT_64(18) | BIT_64(19) |
+                                                        BIT_64(20) | BIT_64(21) |
+                                                        BIT_64(22) | BIT_64(23) |
+                                                        BIT_64(24) | BIT_64(25)     },
   { CPU_LIST_TERMINAL,              0x0000000000000000, 0x0000000000000000          }
 };
 
