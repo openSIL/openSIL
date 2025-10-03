@@ -18,6 +18,9 @@
 #include <RAS/Brh/RasBrh.h>
 #include <CCX/Zen5/BRH/CcxBrh.h>
 #include <APOB/BRH/ApobBrh.h>
+#include <FCH/Common/FchCore/FchSata/FchSata.h>
+#include <FCH/Common/FchCore/FchSata/FchSataBlk.h>
+#include <FCH/Kunlun/FchCore/FchSata/FchSataKl.h>
 
 SOC_IP_TABLE SocIpTblF1AM00Tp3 = {
   AMD_FAMILY_1A_BRH,
@@ -51,6 +54,13 @@ SOC_IP_TABLE SocIpTblF1AM00Tp3 = {
       NULL,
       NULL,
       InitializeApiZen5Brh
+    },
+    {
+      SilId_FchSata,
+      0,
+      NULL,
+      InitializeFchSataKlTp3,
+      InitializeApiFchSataKl
     },
     {
       SilId_RasClass,
