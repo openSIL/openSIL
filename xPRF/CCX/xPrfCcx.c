@@ -23,6 +23,9 @@
 #include <CcxIp2Ip.h>
 #include <DF/DfIp2Ip.h>
 #include <APOB/ApobIp2Ip.h>
+#include <SMU/Common/SmuCommon.h>
+#include <SMU/Common/SmuCmn2Rev.h>
+#include <Nbio/NbioIp2Ip.h>
 
 
 /**
@@ -888,6 +891,115 @@ xPrfCratCacheEntry (
       }
     }
   }
+
+  return SilPass;
+}
+
+
+/**
+ * xPrfGetCppcMinFrequency
+ *
+ * @brief   This Function is responsible for reading the minimal CPU frequency
+ *          from SMU for ACPI CPPC.
+ *
+ * @return  uint8_t Threads per Core values
+ */
+SIL_STATUS
+xPrfGetCppcMinFrequency (
+  uint32_t *MinFrequency
+  )
+{
+  uint32_t                     SmuArg[6];
+  uint32_t                     RequestId;
+  SMC_RESULT                   Result;
+  GNB_HANDLE                   *GnbHandle;
+  SMU_COMMON_2_REV_XFER_BLOCK  *SmuXfer;
+  NBIO_IP2IP_API               *NbioIp2Ip;
+
+
+  if (MinFrequency == NULL) {
+    return SilInvalidParameter;
+  }
+
+  if (SilGetCommon2RevXferTable(SilId_SmuClass, (void **)(&SmuXfer)) != SilPass) {
+    return SilNotFound;
+  }
+
+  if (SilGetIp2IpApi(SilId_NbioClass, (void **)(&NbioIp2Ip)) != SilPass) {
+    return SilNotFound;
+  }
+
+
+  GnbHandle = NbioIp2Ip->GetGnbHandle();
+
+  SmuServiceInitArgumentsCommon(SmuArg);
+  RequestId = 0x40;
+
+  Result = SmuXfer->SmuServiceRequest(GnbHandle->Address,
+             RequestId,
+             SmuArg,
+             0
+             );
+
+  if (Result != SMC_Result_OK) {
+    return SilDeviceError;
+  }
+
+  *MinFrequency = SmuArg[0];
+
+  return SilPass;
+}
+
+/**
+ * xPrfGetCppcMNomFrequency
+ *
+ * @brief   This Function is responsible for reading the nominal CPU frequency
+ *          from SMU for ACPI CPPC.
+ *
+ * @return  uint8_t Threads per Core values
+ */
+SIL_STATUS
+xPrfGetCppcNomFrequency (
+  uint32_t *NomFrequency
+  )
+{
+  uint32_t                     SmuArg[6];
+  uint32_t                     RequestId;
+  SMC_RESULT                   Result;
+  GNB_HANDLE                   *GnbHandle;
+  SMU_COMMON_2_REV_XFER_BLOCK  *SmuXfer;
+  NBIO_IP2IP_API               *NbioIp2Ip;
+
+
+  if (NomFrequency == NULL) {
+    return SilInvalidParameter;
+  }
+
+  if (SilGetCommon2RevXferTable(SilId_SmuClass, (void **)(&SmuXfer)) != SilPass) {
+    return SilNotFound;
+  }
+
+  if (SilGetIp2IpApi(SilId_NbioClass, (void **)(&NbioIp2Ip)) != SilPass) {
+    return SilNotFound;
+  }
+
+
+  GnbHandle = NbioIp2Ip->GetGnbHandle();
+
+  SmuServiceInitArgumentsCommon(SmuArg);
+  RequestId = 0x3A;
+
+  Result = SmuXfer->SmuServiceRequest(GnbHandle->Address,
+             RequestId,
+             SmuArg,
+             0
+             );
+
+  if (Result != SMC_Result_OK) {
+    return SilDeviceError;
+  }
+
+  *NomFrequency = SmuArg[0];
 
   return SilPass;
 }
