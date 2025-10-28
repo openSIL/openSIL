@@ -13,5 +13,6 @@
  * @details This is the internal common-2-Rev transfer table for BRH
  */
 CXL_IP2IP_API CxlBrhApi = {
-  .RemoveCxlLinksFromTopology = RemoveCxlLinksFromTopologyBrh
+  .RemoveCxlLinksFromTopology = RemoveCxlLinksFromTopologyBrh,
+  .GetCxlLinkSpeed = GetCxlLinkSpeedBrh
 };

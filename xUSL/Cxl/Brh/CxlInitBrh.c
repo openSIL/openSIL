@@ -21,6 +21,7 @@
 #include <Cxl/CxlIp2Ip.h>
 #include "CxlCmn2Rev.h"
 #include "CxlBrh.h"
+#include "CxlIp2IpBrh.h"
 #include "CxlRegBrh.h"
 
 typedef struct {
@@ -891,4 +892,77 @@ RemoveCxlLinksFromTopologyBrh (
     }
     ComplexDescriptor = PcieConfigGetNextDataDescriptor(ComplexDescriptor);
   }
+}
+
+/**
+ * Callback to get CXL Link Speed information
+ *
+ * @param[in]       Engine          Pointer to engine config descriptor
+ * @param[in, out]  Buffer          CXL_BUS_LIMITS pointer
+ * @param[in]       Pcie            Pointer to global PCIe configuration
+ *
+ */
+static void
+FindCxlLinkSpeedCallback (
+  PCIe_ENGINE_CONFIG    *Engine,
+  void                  *Buffer,
+  PCIe_PLATFORM_CONFIG  *Pcie
+  )
+{
+  CXL_LINK_SPEED_INFO      *CxlLinkSpeed;
+  PCIe_WRAPPER_CONFIG      *Wrapper;
+  GNB_HANDLE               *GnbHandle;
+  uint8_t                  LinkSpeed;
+  uint32_t                   Value32;
+
+  GnbHandle = (GNB_HANDLE *) PcieConfigGetParentSilicon (Engine);
+  if (GnbHandle == NULL) {
+    return;
+  }
+
+  Wrapper = PcieConfigGetParentWrapper(Engine);
+  CxlLinkSpeed = (CXL_LINK_SPEED_INFO  *) Buffer;
+
+  Value32 = xUSLSmnRead (
+              GnbHandle->Address.Address.Segment,
+              GnbHandle->Address.Address.Bus,
+              PORT_SPACE(GnbHandle, Wrapper, (Engine->Type.Port.PortId), SIL_RESERVED_1619)
+              );
+
+  LinkSpeed = (uint8_t) (Value32 >> 16 & 0xf);
+  CXL_TRACEPOINT (SIL_TRACE_INFO, "CXL Link Status, Segment = 0x%x Bus = 0x%x LinkStatus = 0x%x\n",
+                  GnbHandle->Address.Address.Segment, GnbHandle->Address.Address.Bus,
+                  LinkSpeed);
+
+  CxlLinkSpeed->CxlPresent = 1;
+  if (LinkSpeed == 5) {
+    CxlLinkSpeed->CxlSpeedGen5 = 1;
+  }
+
+  return;
+}
+
+void
+GetCxlLinkSpeedBrh (
+  PCIe_PLATFORM_CONFIG  *Pcie,
+  uint32_t              *CxlMsgBuffer
+  )
+{
+  NBIO_IP2IP_API    *NbioIp2Ip;
+
+  CXL_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+
+  if (SilGetIp2IpApi(SilId_NbioClass, (void **)(&NbioIp2Ip)) != SilPass) {
+    CXL_TRACEPOINT(SIL_TRACE_ERROR, " NBIO API is not found.\n");
+    return;
+  }
+
+  NbioIp2Ip->PcieConfigRunProcForAllEngines (
+      DESCRIPTOR_CXL_ENGINE,
+      FindCxlLinkSpeedCallback,
+      (void *) CxlMsgBuffer,
+      Pcie
+      );
+
+  return;
 }

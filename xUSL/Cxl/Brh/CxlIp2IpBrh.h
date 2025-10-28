@@ -15,3 +15,9 @@ RemoveCxlLinksFromTopologyBrh (
   MPIO_COMPLEX_DESCRIPTOR **CurrentComplexConfig,
   PCIe_PLATFORM_CONFIG    *Pcie
   );
+
+void
+GetCxlLinkSpeedBrh (
+  PCIe_PLATFORM_CONFIG  *Pcie,
+  uint32_t              *CxlMsgBuffer
+  );
