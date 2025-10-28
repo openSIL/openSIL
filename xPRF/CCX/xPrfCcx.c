@@ -9,6 +9,7 @@
 
 #include <SilCommon.h>
 #include "xPRF.h"
+#include "xPrfCcx.h"
 #include <string.h>
 #include <CommonLib/CpuLib.h>
 #include <Pstates.h>
@@ -16,13 +17,15 @@
 #include <APOB/Common/ApobCmn.h>
 #include <CCX/Common/CcxApic.h>
 #include <CCX/CcxIp2Ip.h>
-#include "xPrfCcx.h"
 #include <CCX/CcxClass-api.h>
 #include <CCX/Common/Ccx.h>
 #include <CcxCmn2Rev.h>
 #include <CcxIp2Ip.h>
 #include <DF/DfIp2Ip.h>
 #include <APOB/ApobIp2Ip.h>
+#include <SMU/Common/SmuCommon.h>
+#include <SMU/Common/SmuCmn2Rev.h>
+#include <Nbio/NbioIp2Ip.h>
 
 
 /**
@@ -1010,4 +1013,119 @@ xPrfGetCoreTopologyOnDieMax (
     MaxNumberOfCores,
     MaxNumberOfThreads
     );
+}
+
+/// SMU message ID for getting CPPC minimum frequency
+#define SMU_MSG_GET_CPPC_MIN_FREQUENCY  0x49
+/// SMU message ID for getting CPPC nominal frequency
+#define SMU_MSG_GET_CPPC_NOM_FREQUENCY  0x48
+
+/**
+ * xPrfGetCppcMinFrequency
+ *
+ * @brief   This Function is responsible for reading the minimal CPU frequency
+ *          from SMU for ACPI CPPC.
+ *
+ * @return  SIL_STATUS
+ */
+SIL_STATUS
+xPrfGetCppcMinFrequency (
+  SIL_CONTEXT *SilContext,
+  uint32_t *MinFrequency
+  )
+{
+  uint32_t                     SmuArg[6];
+  uint32_t                     RequestId;
+  SMC_RESULT                   Result;
+  GNB_HANDLE                   *GnbHandle;
+  SMU_COMMON_2_REV_XFER_BLOCK  *SmuXfer;
+  NBIO_IP2IP_API               *NbioIp2Ip;
+
+
+  if (MinFrequency == NULL) {
+    return SilInvalidParameter;
+  }
+
+  if (SilGetCommon2RevXferTable(SilContext, SilId_SmuClass, (void **)(&SmuXfer)) != SilPass) {
+    return SilNotFound;
+  }
+
+  if (SilGetIp2IpApi(SilContext, SilId_NbioClass, (void **)(&NbioIp2Ip)) != SilPass) {
+    return SilNotFound;
+  }
+
+
+  GnbHandle = NbioIp2Ip->GetGnbHandle(SilContext);
+
+  SmuServiceInitArgumentsCommon(SmuArg);
+  RequestId = SMU_MSG_GET_CPPC_MIN_FREQUENCY;
+
+  Result = SmuXfer->SmuServiceRequest(GnbHandle->Address,
+             RequestId,
+             SmuArg,
+             0
+             );
+
+  if (Result != SMC_Result_OK) {
+    return SilDeviceError;
+  }
+
+  *MinFrequency = SmuArg[0];
+
+  return SilPass;
+}
+
+/**
+ * xPrfGetCppcMNomFrequency
+ *
+ * @brief   This Function is responsible for reading the nominal CPU frequency
+ *          from SMU for ACPI CPPC.
+ *
+ * @return  SIL_STATUS
+ */
+SIL_STATUS
+xPrfGetCppcNomFrequency (
+  SIL_CONTEXT *SilContext,
+  uint32_t *NomFrequency
+  )
+{
+  uint32_t                     SmuArg[6];
+  uint32_t                     RequestId;
+  SMC_RESULT                   Result;
+  GNB_HANDLE                   *GnbHandle;
+  SMU_COMMON_2_REV_XFER_BLOCK  *SmuXfer;
+  NBIO_IP2IP_API               *NbioIp2Ip;
+
+
+  if (NomFrequency == NULL) {
+    return SilInvalidParameter;
+  }
+
+  if (SilGetCommon2RevXferTable(SilContext, SilId_SmuClass, (void **)(&SmuXfer)) != SilPass) {
+    return SilNotFound;
+  }
+
+  if (SilGetIp2IpApi(SilContext, SilId_NbioClass, (void **)(&NbioIp2Ip)) != SilPass) {
+    return SilNotFound;
+  }
+
+
+  GnbHandle = NbioIp2Ip->GetGnbHandle(SilContext);
+
+  SmuServiceInitArgumentsCommon(SmuArg);
+  RequestId = SMU_MSG_GET_CPPC_NOM_FREQUENCY;
+
+  Result = SmuXfer->SmuServiceRequest(GnbHandle->Address,
+             RequestId,
+             SmuArg,
+             0
+             );
+
+  if (Result != SMC_Result_OK) {
+    return SilDeviceError;
+  }
+
+  *NomFrequency = SmuArg[0];
+
+  return SilPass;
 }

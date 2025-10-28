@@ -1050,3 +1050,31 @@ xPrfGetResourceManagerTable (
   SIL_CONTEXT   *SilContext,
   uint32_t      RcMgrTableType
   );
+
+/**
+ * xPrfGetCppcMinFrequency
+ *
+ * @brief   This Function is responsible for reading the minimal CPU frequency
+ *          from SMU for ACPI CPPC.
+ *
+ * @return  SIL_STATUS
+ */
+SIL_STATUS
+xPrfGetCppcMinFrequency (
+  SIL_CONTEXT *SilContext,
+  uint32_t *MinFrequency
+  );
+
+/**
+ * xPrfGetCppcMNomFrequency
+ *
+ * @brief   This Function is responsible for reading the nominal CPU frequency
+ *          from SMU for ACPI CPPC.
+ *
+ * @return  SIL_STATUS
+ */
+SIL_STATUS
+xPrfGetCppcNomFrequency (
+  SIL_CONTEXT *SilContext,
+  uint32_t *NomFrequency
+  );
