@@ -8,5 +8,15 @@
 
 #pragma once
 
+#include <SMU/SmuClass-api.h>
+
 SIL_STATUS
 InitializeSmuApiBrh (void);
+SIL_STATUS
+SmuSetInputBlkBrh (void);
+SIL_STATUS
+InitializeSmuTp1Brh (void);
+SIL_STATUS
+InitializeSmuTp2Brh (void);
+SIL_STATUS
+InitializeSmuTp3Brh (void);

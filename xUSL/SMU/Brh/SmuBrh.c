@@ -10,6 +10,7 @@
 #include <SMU/SmuIp2Ip.h>
 #include <SMU/Common/SmuCmn2Rev.h>
 #include "SmuBrh.h"
+#include "SmuInitBrh.h"
 
 extern SMU_COMMON_2_REV_XFER_BLOCK mSmuXferBrh;
 extern SMU_IP2IP_API mSmuBrhApi;
@@ -36,4 +37,67 @@ InitializeSmuApiBrh (void)
 
   // Initialize SMU IP-to-IP API
   return SilInitIp2IpApi(SilId_SmuClass, (void *)&mSmuBrhApi);
+}
+
+/**
+ * InitializeSmuTp1Brh
+ *
+ * @brief   Initialize the SMU IP
+ *
+ * @details This function initializes the SMU silicon block.
+ *
+ * This is an IP private function, not visible to the Host
+ *
+ * @return SIL_STATUS
+ * @retval  SilPass - everything is OK
+ * @retval  SilAbort - Something went wrong
+ */
+SIL_STATUS
+InitializeSmuTp1Brh (void)
+{
+  return SilPass;
+}
+
+/**
+ * InitializeSmuTp2Brh
+ *
+ * @brief   Initialize the SMU IP
+ *
+ * @details This function initializes the SMU silicon block.
+ *
+ * This is an IP private function, not visible to the Host
+ *
+ * @return SIL_STATUS
+ * @retval  SilPass - everything is OK
+ * @retval  SilAbort - Something went wrong
+ */
+SIL_STATUS
+InitializeSmuTp2Brh (void)
+{
+  SIL_STATUS Status;
+  SMU_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+
+  Status = InitializeSmuBrh ();
+
+  SMU_TRACEPOINT(SIL_TRACE_EXIT, "\n");
+  return Status;
+}
+
+/**
+ * InitializeSmuTp3Brh
+ *
+ * @brief   Initialize the SMU IP
+ *
+ * @details This function initializes the SMU silicon block.
+ *
+ * This is an IP private function, not visible to the Host
+ *
+ * @return SIL_STATUS
+ * @retval  SilPass - everything is OK
+ * @retval  SilAbort - Something went wrong
+ */
+SIL_STATUS
+InitializeSmuTp3Brh (void)
+{
+  return SilPass;
 }

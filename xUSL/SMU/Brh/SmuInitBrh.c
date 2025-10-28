@@ -9,12 +9,17 @@
 #include <SilCommon.h>
 #include <SMU/Common/SmuCommon.h>
 #include <Utils.h>
+#include <CommonLib/CpuLib.h>
+#include <CommonLib/SmnAccess.h>
 #include <CpuLib.h>
 #include <string.h>
 #include <CoreTopologyService.h>
 #include <APOB/Common/ApobCmn.h>
 #include <APOB/ApobIp2Ip.h>
 #include <APOB/BRH/Apob-BRH.h>
+#include <Cxl/CxlIp2Ip.h>
+#include <Nbio/Common/NbioPcieTopologyHelper.h>
+#include <SMU/SmuClass-api.h>
 #include "SmuBrhReg.h"
 #include "SmuIp2IpBrh.h"
 #include "SmuInitBrh.h"
@@ -817,4 +822,419 @@ SmuReadCacWeightsBrh (
   UNUSED(ApmWeights);
 
   return SilUnsupported;
+}
+
+/**
+ *  SmuLclkDpmControl
+ *
+ *  @brief    Send SMU NBIO Lclk DPM Level
+ *
+ *  @param GnbHandle        Instance of GNB handle *
+ *
+ *
+ */
+static void
+SmuLclkDpmControl (
+  GNB_HANDLE                           *GnbHandle,
+  SMUCLASS_INPUT_BLK                   *SmuInputBlock
+) {
+  uint32_t        NbioLclkDpmLevel;
+  uint32_t        PcdLclkDpmLvl;
+  uint8_t         EnableLevel;
+  uint32_t        SmuArg[6];
+
+  NbioLclkDpmLevel = 0;
+
+  //# Lclk DPM Level: 0xF:Auto, 0:Level1, 2:Level2
+  //    - Socket0 (NBIO0[3:0], NBIO1[7:4], NBIO2[11:8] NBIO3[15:12])
+  //    - Socket1 (NBIO0[19:16], NBIO1[23:20], NBIO2[27:24] NBIO3[31:28])
+  PcdLclkDpmLvl = SmuInputBlock->AmdNbioLclkDpmLevel;
+  EnableLevel = (PcdLclkDpmLvl >> ((GnbHandle->SocketId * 16) + (GnbHandle->RBIndex * 4))) & 0xF;
+
+  if (EnableLevel != 0xF) {
+    //# NbioLclkDpmLevel
+    //    - [7:0]   - Minimum DPM Level 0, 1, 2
+    //    - [15:8]  - Maximum DPM Level 0, 1, 2
+    //    - [23:16] - NBIO instance 0, 1, 2, 3
+    NbioLclkDpmLevel = ((uint32_t)GnbHandle->RBIndex << 16);
+    NbioLclkDpmLevel |= (((uint32_t)(EnableLevel << 8)) | EnableLevel);
+
+    SMU_TRACEPOINT (SIL_TRACE_INFO, "  Socket:%d NBIO:%d DPM Level:0x%08x\n",
+                    GnbHandle->SocketId, GnbHandle->RBIndex, NbioLclkDpmLevel);
+    SmuArg[0] = NbioLclkDpmLevel;
+    SmuServiceRequestBrh(GnbHandle->Address,
+      SIL_SMU_RESERVED_0x34,
+      SmuArg,
+      0
+      );
+  }
+}
+
+static PPTable_t __attribute__ ((aligned (0x1000))) PPTable;
+static uint8_t __attribute__ ((aligned (0x1000))) AgmLog[0x4000];
+
+static void
+PopulatePPTable (
+  SMUCLASS_INPUT_BLK         *SmuInputBlock
+  )
+{
+  memset (&PPTable, 0, sizeof (PPTable_t));
+
+  //DEFAULT INFRASTRUCTURE LIMITS
+  PPTable.TDP = SmuInputBlock->AmdcTDP;
+  PPTable.PPT = SmuInputBlock->CfgPPT;
+  PPTable.TDC = SmuInputBlock->CfgTDC;
+
+  //PLATFORM INFRASTRUCTURE LIMITS
+  PPTable.TDP_PlatformLimit = SmuInputBlock->CfgPlatformTDP;
+  PPTable.PPT_PlatformLimit = SmuInputBlock->CfgPlatformPPT;
+  PPTable.TDC_PlatformLimit = SmuInputBlock->CfgPlatformTDC;
+  PPTable.EDC_PlatformLimit = SmuInputBlock->CfgPlatformEDC;
+
+  //Determinism Control
+  if (SmuInputBlock->AmdDeterminismMode == 0) {
+    PPTable.DeterminismControl = 0;
+  } else {
+    // Manual Mode-Power=0, Performance=1
+    if (SmuInputBlock->AmdDeterminismControl == 0) {
+      PPTable.DeterminismControl = 1;
+    } else {
+      PPTable.DeterminismControl = 2;
+    }
+  }
+
+  //xGMI Pstate Control-if manual set pstate support enable-1,else 0
+  if (SmuInputBlock->XgmiPstateControl == 1) {
+    PPTable.XgmiPstateRangeSupportEn = 1;
+    PPTable.XgmiPstateRangeMin = SmuInputBlock->XgmiPstateSelection;
+    PPTable.XgmiPstateRangeMax = SmuInputBlock->XgmiPstateSelection;
+  }
+  else{
+    PPTable.XgmiPstateRangeSupportEn = 0;
+  }
+
+  //XGMI CONFIG
+  PPTable.xGMIForceLinkWidthEn = SmuInputBlock->xGMIForceLinkWidthEn;
+  PPTable.xGMIForceLinkWidth = SmuInputBlock->xGMIForceLinkWidth;
+  PPTable.xGMIMaxLinkWidthEn = SmuInputBlock->xGMIMaxLinkWidthEn;
+  PPTable.xGMIMaxLinkWidth = SmuInputBlock->xGMIMaxLinkWidth;
+  PPTable.xGMIMinLinkWidth = SmuInputBlock->xGMIMinLinkWidth;
+
+  //APBDIS
+  PPTable.APBDIS = SmuInputBlock->CfgApbDis;
+  PPTable.APBDIS_DfPstate = SmuInputBlock->CfgFixedSocPstate;
+
+  //Power Profile Selection
+  PPTable.Policy = SmuInputBlock->PowerProfileSelect;
+
+  //DF PState Frequency Optimizer
+  PPTable.DFFO_Disable = SmuInputBlock->DFFODisable;
+
+  //SVI3 SVC Speed
+  PPTable.Svi3SvcSpeed = SmuInputBlock->AmdSvi3SvcSpeed;
+
+  //I3C Parameters
+  PPTable.I3cSdaHold[0] = SmuInputBlock->AmdFchI3c0SdaHold;
+  PPTable.I3cSdaHold[1] = SmuInputBlock->AmdFchI3c1SdaHold;
+  PPTable.I3cSdaHold[2] = SmuInputBlock->AmdFchI3c2SdaHold;
+  PPTable.I3cSdaHold[3] = SmuInputBlock->AmdFchI3c3SdaHold;
+  PPTable.I3cPpHcnt     = SmuInputBlock->FchI3cPPHcnt;
+  PPTable.I3cSpeed      = SmuInputBlock->FchI3cSpeed;
+
+  //DRAM PPR setting
+  PPTable.PprConfigInitiator = SmuInputBlock->AmdMemPostPackageRepairConfigInitiator;
+
+  //DfPstate Range Support
+  PPTable.DfPstateRangeSupportEn = SmuInputBlock->DfPstateRangeSupportEn;
+  PPTable.DfPstateRangeMax = SmuInputBlock->DfPstateRangeMax;
+  PPTable.DfPstateRangeMin = SmuInputBlock->DfPstateRangeMin;
+
+  //Throttler Mode
+  PPTable.ThrottlerMode = SmuInputBlock->ThrottlerMode == 0xF ? 0 : SmuInputBlock->ThrottlerMode;
+  //Cclk Mode
+  PPTable.CclkMode = SmuInputBlock->CfgPerRailFreqControl;
+}
+
+static void
+DumpPPTable (void)
+{
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "\nSMU BIOS INTERFACE TABLE VALUES\n");
+
+  //DEFAULT INFRASTRUCTURE LIMITS
+  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nDEFAULT INFRASTRUCTURE LIMITS\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "TDP = 0x%x\n", PPTable.TDP);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "PPT = 0x%x\n", PPTable.PPT);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "TDC = 0x%x\n", PPTable.TDC);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "EDC = 0x%x\n", PPTable.EDC);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "TjMax = 0x%x\n", PPTable.TjMax);
+
+  //PLATFORM INFRASTRUCTURE LIMITS
+  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nPLATFORM INFRASTRUCTURE LIMITS\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "TDP_PlatformLimit = 0x%x\n", PPTable.TDP_PlatformLimit);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "PPT_PlatformLimit = 0x%x\n", PPTable.PPT_PlatformLimit);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "TDC_PlatformLimit = 0x%x\n", PPTable.TDC_PlatformLimit);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "EDC_PlatformLimit = 0x%x\n", PPTable.EDC_PlatformLimit);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "CC1Dis = 0x%x\n", PPTable.CC1Dis);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "DeterminismEn = 0x%x\n", PPTable.DeterminismControl);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "CCX_VdciAsync = 0x%x\n", PPTable.CCX_VdciAsync);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "APBDIS = 0x%x\n", PPTable.APBDIS);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "Policy = 0x%x\n", PPTable.Policy);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "PcieSpeedControl = 0x%x\n", PPTable.PcieSpeedControl);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "ThrottlerMode = 0x%x\n", PPTable.ThrottlerMode);
+
+  //DF CSTATE CONFIG
+  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nDF CSTATE CONFIG\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "DfCstateConfigOverride = 0x%x\n", PPTable.DfCstateConfigOverride);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "DfCstateClkPwrDnEn = 0x%x\n", PPTable.DfCstateClkPwrDnEn);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "DfCstateSelfRefrEn = 0x%x\n", PPTable.DfCstateSelfRefrEn);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "DfCstateGmiPwrDnEn = 0x%x\n", PPTable.DfCstateGmiPwrDnEn);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "DfCstateGopPwrDnEn = 0x%x\n", PPTable.DfCstateGopPwrDnEn);
+
+  //xGMI CONFIGURATION
+  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nxGMI CONFIGURATION\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "xGMIMaxLinkWidthEn = 0x%x\n", PPTable.xGMIMaxLinkWidthEn);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "xGMIMaxLinkWidth = 0x%x\n", PPTable.xGMIMaxLinkWidth);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "xGMIForceLinkWidthEn = 0x%x\n", PPTable.xGMIForceLinkWidthEn);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "xGMIForceLinkWidth = 0x%x\n", PPTable.xGMIForceLinkWidth);
+
+  //TELEMETRY
+  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nTELEMETRY\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "TelemetryCurrentGuardband = 0x%x\n", PPTable.TelemetryCurrentGuardband);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "Svi3SvcSpeed = 0x%x\n", PPTable.Svi3SvcSpeed);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "PccLimit = 0x%x\n", PPTable.PccLimit);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "I3cPpHcnt = 0x%x\n", PPTable.I3cPpHcnt);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "I3cSpeed = 0x%x\n", PPTable.I3cSpeed);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "I3cSdaHold[0] = 0x%x\n", PPTable.I3cSdaHold[0]);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "I3cSdaHold[1] = 0x%x\n", PPTable.I3cSdaHold[1]);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "I3cSdaHold[2] = 0x%x\n", PPTable.I3cSdaHold[2]);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "I3cSdaHold[3] = 0x%x\n", PPTable.I3cSdaHold[3]);
+
+  //PRECISE AND DIRECT OVERCLOCKING CONFIG
+  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nPRECISE AND DIRECT OVERCLOCKING CONFIG\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "OC_DISABLE = 0x%x\n", PPTable.OC_DISABLE);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "OC_MAXVID = 0x%x\n", PPTable.OC_MAXVID);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "OC_FREQMAX = 0x%x\n", PPTable.OC_FREQMAX);
+
+  //CCLK FREQUENCY FORCE
+  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nCCLK FREQUENCY FORCE\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "ForceCclkFrequency = 0x%x\n", PPTable.ForceCclkFrequency);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "FmaxOverride = 0x%x\n", PPTable.FmaxOverride);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "APBDIS_DfPstate = 0x%x\n", PPTable.APBDIS_DfPstate);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "DFFO_Disable = 0x%x\n", PPTable.DFFO_Disable);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "ForceVddcrCpuVoltage = 0x%x\n", PPTable.ForceVddcrCpuVoltage);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "ForceVddcrSocVoltage = 0x%x\n", PPTable.ForceVddcrSocVoltage);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "ForceVddioVoltage = 0x%x\n", PPTable.ForceVddioVoltage);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "DfPstateRangeSupportEn = 0x%x\n", PPTable.DfPstateRangeSupportEn);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "DfPstateRangeMin = 0x%x\n", PPTable.DfPstateRangeMin);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "DfPstateRangeMax = 0x%x\n", PPTable.DfPstateRangeMax);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "DfPstateRangeSpare = 0x%x\n", PPTable.DfPstateRangeSpare);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "XgmiPstateRangeSupportEn = 0x%x\n", PPTable.XgmiPstateRangeSupportEn);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "XgmiPstateRangeMin = 0x%x\n", PPTable.XgmiPstateRangeMin);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "XgmiPstateRangeMax = 0x%x\n", PPTable.XgmiPstateRangeMax);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "XgmiPstateRangeSpare = 0x%x\n", PPTable.XgmiPstateRangeSpare);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "CclkMode = 0x%x\n", PPTable.CclkMode);
+
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "Sending this to the SMU...\n");
+  xUslDumpBuffer((void *)&PPTable, sizeof (PPTable_t), 1);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "\n");
+
+  return;
+}
+
+
+SIL_STATUS
+InitializeSmuBrh (void)
+{
+  GNB_HANDLE                     *GnbHandle;
+  uint32_t                       PackageType;
+  uint32_t                       SilReserved;
+  uint32_t                       CxlMsgBuffer;
+  uint32_t                       SmuArg[6];
+  SMUCLASS_INPUT_BLK             *SmuInputBlock;
+  CXL_IP2IP_API                  *CxlIp2Ip;
+  NORTH_BRIDGE_PCIE_SIB          *Pcie;
+  PCIe_PLATFORM_CONFIG           *PciePlatformConfig;
+
+  SMU_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+
+  SmuInputBlock = (SMUCLASS_INPUT_BLK *) xUslFindStructure(SilId_SmuClass, 0);
+  if (SmuInputBlock == NULL) {
+    SMU_TRACEPOINT(SIL_TRACE_ERROR, "Failed to find SMU input data blk\n");
+    return SilNotFound;
+  }
+
+  if (SilGetIp2IpApi(SilId_CxlClass, (void **)(&CxlIp2Ip)) != SilPass) {
+    SMU_TRACEPOINT(SIL_TRACE_ERROR, " CXL API is not found.\n");
+    return SilNotFound;
+  }
+
+  GnbHandle = GetGnbHandle ();
+  if (GnbHandle == NULL) {
+    SMU_TRACEPOINT(SIL_TRACE_ERROR, "Failed to find GNB handle\n");
+    return SilNotFound;
+  }
+
+  Pcie = (NORTH_BRIDGE_PCIE_SIB *) NbioGetPcieTopology ();
+  if (Pcie == NULL) {
+    SMU_TRACEPOINT(SIL_TRACE_ERROR, "Failed to find Pcie topology\n");
+    return SilNotFound;
+  }
+
+  PciePlatformConfig = &Pcie->PciePlatformConfig;
+
+  PackageType = xUslGetPackageType ();
+  SilReserved = xUSLSmnRead(
+                  GnbHandle->Address.Address.Segment,
+                  GnbHandle->Address.Address.Bus,
+                  SIL_RESERVED_ADDR_0x3810A88);
+
+  SmuFixupPlatformConfig (PackageType, &PPTable, SmuInputBlock);
+  PopulatePPTable (SmuInputBlock);
+  DumpPPTable ();
+
+  while (GnbHandle != NULL) {
+    // Pass DRAM space for the PPTable Structure.
+    if ((SilReserved & BIT_32(15)) == 0) {
+
+      SmuServiceInitArgumentsCommon(SmuArg);
+      SmuArg[0] = (uint32_t)(uintptr_t)&PPTable;
+      SmuArg[1] = (uint32_t)(((uintptr_t)&PPTable) >> 32);
+      SmuServiceRequestBrh(GnbHandle->Address,
+        SIL_SMU_RESERVED_0x5,
+        SmuArg,
+        0
+        );
+
+      //  Ask SMU to read in the PP Table, SMU reply when the DRAM read is complete.
+      SmuServiceInitArgumentsCommon(SmuArg);
+      SmuArg[0] = sizeof(PPTable_t);
+      SmuServiceRequestBrh(GnbHandle->Address,
+        SIL_SMU_RESERVED_0x10,
+        SmuArg,
+        0
+        );
+
+      SMU_TRACEPOINT (SIL_TRACE_INFO, "AgmLogDram Address = 0x%x, size = 0x%x\n", AgmLog, sizeof(AgmLog));
+      memset ((void *) AgmLog, 0, sizeof(AgmLog));
+      SmuServiceInitArgumentsCommon(SmuArg);
+      SmuArg[0] = (uint32_t)(uintptr_t)&AgmLog;
+      SmuArg[1] = (uint32_t)(((uintptr_t)&AgmLog) >> 32);
+      SmuServiceRequestBrh(GnbHandle->Address,
+        SIL_SMU_RESERVED_0x6,
+        SmuArg,
+        0
+        );
+
+      SmuServiceInitArgumentsCommon(SmuArg);
+      SmuArg[0] = SmuInputBlock->CtrlUnusedTileClkGating;
+      SmuServiceRequestBrh(GnbHandle->Address,
+        SIL_SMU_RESERVED_0x4E,
+        SmuArg,
+        0
+        );
+
+      // Cxl Speed Notification Msg Argument
+      //  - [7:0]  Cxl Present: 0 or 1
+      //  - [15:8] CxlSpeedGen5: 0 or 1
+      //  - [23:16]CxlLowLantencyMode: not used
+      CxlMsgBuffer = 0x0;
+      CxlIp2Ip->GetCxlLinkSpeed (PciePlatformConfig, &CxlMsgBuffer);
+      SMU_TRACEPOINT (SIL_TRACE_INFO, "SMU CxlSpeedNotification, CxlMsgBuffer = 0x%x\n", CxlMsgBuffer);
+      SmuServiceInitArgumentsCommon(SmuArg);
+      SmuArg[0] = CxlMsgBuffer;
+      SmuServiceRequestBrh(GnbHandle->Address,
+        SIL_SMU_RESERVED_0x8,
+        SmuArg,
+        0
+        );
+
+      if (IS_SOC_BRH) {
+        if (SmuInputBlock->AmdSmuDsmClkCtrl) {
+          // Send DSM Clock Enable
+          SMU_TRACEPOINT (SIL_TRACE_INFO, "SMU EnableDSMWorkaround on socket %d\n", GnbHandle->SocketId);
+          SmuServiceInitArgumentsCommon(SmuArg);
+          SmuServiceRequestBrh(GnbHandle->Address,
+            SIL_SMU_RESERVED_0xC,
+            SmuArg,
+            0
+            );
+        }
+      }
+
+      SMU_TRACEPOINT (SIL_TRACE_INFO, "Set SmuFeatureControls, Extended : 0x%x, Standard : 0x%x\n",
+        SmuInputBlock->SmuFeatureControlExt, SmuInputBlock->SmuFeatureControl);
+      SmuServiceInitArgumentsCommon(SmuArg);
+      SmuArg[0] = SmuInputBlock->SmuFeatureControl;
+      SmuArg[1] = SmuInputBlock->SmuFeatureControlExt;
+      SmuArg[2] = SmuInputBlock->SmuFeatureControl64;
+      SmuServiceRequestBrh(GnbHandle->Address,
+        SIL_SMU_RESERVED_0x3,
+        SmuArg,
+        0
+        );
+
+      if (SmuInputBlock->FllBtcEnable) {
+          SMU_TRACEPOINT (SIL_TRACE_INFO, "FllBtc Enable on socket %d\n", GnbHandle->SocketId);
+          SmuServiceInitArgumentsCommon(SmuArg);
+          SmuServiceRequestBrh(GnbHandle->Address,
+            SIL_SMU_RESERVED_0x37,
+            SmuArg,
+            0
+            );
+      }
+
+      //BoostFmax
+      if (SmuInputBlock->AmdBoostFmax > 0) {
+        SmuServiceInitArgumentsCommon(SmuArg);
+        SmuArg[0] = SmuInputBlock->AmdBoostFmax;
+        SmuServiceRequestBrh(GnbHandle->Address,
+          SIL_SMU_RESERVED_0x2B,
+          SmuArg,
+          0
+          );
+      }
+
+      // Send PcdSyncFloodToApml state
+      SMU_TRACEPOINT (SIL_TRACE_INFO, "Send PcdSyncFloodToApml = %x Status to SMU\n", SmuInputBlock->SyncFloodToApml);
+      SmuServiceInitArgumentsCommon(SmuArg);
+      SmuArg[0] = SmuInputBlock->SyncFloodToApml;
+      SmuServiceRequestBrh(GnbHandle->Address,
+        SIL_SMU_RESERVED_0x42,
+        SmuArg,
+        0
+        );
+
+
+      // HSMP Support
+      if (SmuInputBlock->CfgHSMPSupport == 0x1) {
+        SMU_TRACEPOINT (SIL_TRACE_INFO, "Send EnableHSMPInterrupts to SMU\n");
+        SmuServiceInitArgumentsCommon(SmuArg);
+        SmuServiceRequestBrh(GnbHandle->Address,
+          SIL_SMU_RESERVED_0x41,
+          SmuArg,
+          0
+          );
+      }
+
+      //Precision Boost Overdrive Scalar
+      if (SmuInputBlock->MocPBOLimitScalar != 0) {
+        SmuServiceInitArgumentsCommon(SmuArg);
+        SmuArg[0] = SmuInputBlock->MocPBOLimitScalar;
+        SmuServiceRequestBrh(GnbHandle->Address,
+          SIL_SMU_RESERVED_0x2F,
+          SmuArg,
+          0
+          );
+      }
+    }
+    GnbHandle = NbioGetNextSocket (GnbHandle);
+  }
+
+  GnbHandle = GetGnbHandle ();
+  while (GnbHandle != NULL) {
+    SmuLclkDpmControl (GnbHandle, SmuInputBlock);
+    GnbHandle = GnbGetNextHandle (GnbHandle);
+  }
+
+  return SilPass;
 }

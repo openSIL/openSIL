@@ -3,5 +3,9 @@
 
 #incdir += include_directories( '.' )
 
+xusl += files([
+  'SmuClassDflts.c',
+  ])
+
 subdir('Common')
 subdir('Brh')
