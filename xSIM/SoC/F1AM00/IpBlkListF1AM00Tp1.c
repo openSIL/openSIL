@@ -65,9 +65,9 @@ SOC_IP_TABLE SocIpTblF1AM00Tp1 = {
     },
     {
       SilId_SmuClass,
-      0,
-      NULL,
-      NULL,
+      sizeof (SMUCLASS_INPUT_BLK),
+      SmuSetInputBlkBrh,
+      InitializeSmuTp1Brh,
       InitializeSmuApiBrh
     },
     {

@@ -40,7 +40,7 @@ SOC_IP_TABLE SocIpTblF1AM00Tp2 = {
       SilId_SmuClass,
       0,
       NULL,
-      NULL,
+      InitializeSmuTp2Brh,
       InitializeSmuApiBrh
     },
     {
