@@ -81,9 +81,9 @@ The AMD blog “[Empowering The Industry with Open System Firmware – AMD openS
 
    * Present list of supported reference platforms is shown in the following table.
 
-     | MarketSegment | AMD ProcessorFamily Model | Firmware | Reference PlatformName |
-     |---------------|---------------------------|----------|------------------------|
-     | Server        | F19M10                    | UEFI     | Onyx                   |
+     | MarketSegment | AMD Processor Family Model | Firmware | Reference Platform Name |
+     |---------------|----------------------------|----------|-------------------------|
+     | Server        | F19M10                     | UEFI     | Onyx                    |
 
 ## Forthcoming items:
 
