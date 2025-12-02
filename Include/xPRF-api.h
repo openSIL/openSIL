@@ -951,3 +951,29 @@ void
 xPrfFchEnableSpi (
   void
   );
+
+/**
+ * xPrfGetCppcMinFrequency
+ *
+ * @brief   This Function is responsible for reading the minimal CPU frequency
+ *          from SMU for ACPI CPPC.
+ *
+ * @return  uint8_t Threads per Core values
+ */
+SIL_STATUS
+xPrfGetCppcMinFrequency (
+  uint32_t *MinFrequency
+  );
+
+/**
+ * xPrfGetCppcMNomFrequency
+ *
+ * @brief   This Function is responsible for reading the nominal CPU frequency
+ *          from SMU for ACPI CPPC.
+ *
+ * @return  uint8_t Threads per Core values
+ */
+SIL_STATUS
+xPrfGetCppcNomFrequency (
+  uint32_t *NomFrequency
+  );

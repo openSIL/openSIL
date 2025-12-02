@@ -60,6 +60,7 @@ SIL_STATUS GetCoreLogicalIdOnCurrentCore (CORE_LOGICAL_ID *CoreLogicalId);
 bool SocFamilyIdCheck (uint32_t SocFamilyId);
 
 /// Family 1A CPUID
+#define F1A_BRH_RAW_ID              0x00B00F00ul
 #define F1A_BRH_B0_RAW_ID           0x00B00F10ul
 
 /*----------------------------------------------------------------------------------------
@@ -77,6 +78,11 @@ bool SocFamilyIdCheck (uint32_t SocFamilyId);
 //----------------------------------------------------------------------------------------
 // Breithorn
 //----------------------------------------------------------------------------------------
+#define IS_SOC_BRH       (SilSocIdentificationCheck ( \
+                            F1A_BRH_RAW_ID, \
+                            (FIXED_EXT_MODEL|ANY_BASE_MODEL|ANY_STEPPING|ANY_PKG_TYPE) \
+                            ))
+
 // Check if it is Breithorn Bx
 #define IS_SOC_BRH_BX    (SilSocIdentificationCheck ( \
                             F1A_BRH_B0_RAW_ID, \

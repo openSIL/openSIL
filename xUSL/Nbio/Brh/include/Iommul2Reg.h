@@ -9,6 +9,16 @@
 
 #define SIL_RESERVED_0791                     0x44
 
+#define SIL_RESERVED_1763                     0xd0
+#define SIL_RESERVED_1764                     0xd4
+
+#define SIL_RESERVED_1765                     0xd8
+#define SIL_RESERVED_1766                     0xdc
+
+#define SIL_REG_ADDR_157000c4                 0x157000c4UL
+#define SIL_REG_ADDR_157000c8                 0x157000c8UL
+#define SIL_REG_ADDR_1570011c                 0x1570011cUL
+
 #define IOMMU_CAP_MISC_IOMMU_HT_ATS_RESV_OFFSET      22
 #define IOMMU_CAP_MISC_IOMMU_HT_ATS_RESV_MASK        0x400000
 #define SIL_RSVD_ADDR_13F00050                                    0x13f00050UL
@@ -55,6 +65,54 @@ typedef union {
 
 #define SIL_RESERVED_0792      0x80
 
+#define SMI_FILTER_REGISTER_0_0_SmiDID_0_OFFSET                0
+#define SMI_FILTER_REGISTER_0_0_SmiDID_0_MASK                  0xffff
+
+#define SMI_FILTER_REGISTER_0_0_SmiDV_0_OFFSET                 16
+#define SMI_FILTER_REGISTER_0_0_SmiDV_0_MASK                   0x10000
+
+#define SMI_FILTER_REGISTER_0_0_SmiFLock_0_OFFSET              17
+#define SMI_FILTER_REGISTER_0_0_SmiFLock_0_MASK                0x20000
+
+#define SMI_FILTER_REGISTER_0_0_Reserved_31_18_OFFSET          18
+#define SMI_FILTER_REGISTER_0_0_Reserved_31_18_MASK            0xfffc0000
+
+#define SMN_SMI_FILTER_REGISTER_0_0_ADDRESS                           0x2400060UL
+
+typedef union {
+  struct {
+    uint32_t     PREF_SUP:1;
+    uint32_t      PPR_SUP:1;
+    uint32_t       XT_SUP:1;
+    uint32_t       NX_SUP:1;
+    uint32_t       GT_SUP:1;
+    uint32_t    GAPPI_SUP:1;
+    uint32_t       IA_SUP:1;
+    uint32_t       GA_SUP:1;
+    uint32_t       HE_SUP:1;
+    uint32_t       PC_SUP:1;
+    uint32_t         HATS:2;
+    uint32_t         GATS:2;
+    uint32_t      GLX_SUP:2;
+    uint32_t     SMIF_SUP:2;
+    uint32_t      SMIF_RC:3;
+    uint32_t      GAM_SUP:3;
+    uint32_t         PPRF:2;
+    uint32_t          GAF:2;
+    uint32_t       EVENTF:2;
+    uint32_t  DVM_ERR_SUP:1;
+    uint32_t     sATS_SUP:1;
+  } Field;
+  uint32_t Value;
+} IOMMU_MMIO_EFR_0_STRUCT;
+
+#define SMN_IOMMU_MMIO_EFR_0_ADDRESS                     0x2400030UL
+#define SMN_IOMMU_MMIO_CNTRL_0_ADDRESS                   0x2400018UL
+#define IOMMU_MMIO_CNTRL_0_SMIF_EN_OFFSET                22
+#define IOMMU_MMIO_CNTRL_0_SMIF_EN_MASK                  0x400000
+#define IOMMU_MMIO_CNTRL_0_SMIF_LOG_EN_OFFSET            24
+#define IOMMU_MMIO_CNTRL_0_SMIF_LOG_EN_MASK              0x1000000
+
 #define SMN_IOMMU_MMIO_CONTROL0_W_ADDRESS                0x13f00080UL
 #define SMN_IOHUB0NBIO0_IOMMU_MMIO_CONTROL0_W_ADDRESS    0x13f00080UL
 
@@ -74,6 +132,9 @@ typedef union {
 
 #define SIL_RESERVED_0787             2
 #define SIL_RESERVED_0786               0x4
+
+#define SIL_RESERVED_1769             5
+#define SIL_RESERVED_1770               0x20
 
 #define SIL_RSVD_ADDR_13F000E8                      0x13f000e8UL
 

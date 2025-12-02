@@ -33,14 +33,17 @@ PcieEngineConfigDefaults (
   PcieEngine->Type.Port.BypassGen3EQ = 0;                                               ///< BypassGen3EQ
   PcieEngine->Type.Port.DisGen3EQPhase = 0;                                             ///< Disable Gen3 EQ Phase2/3
   PcieEngine->Type.Port.Gen3FixedPreset = 0;                                            ///< Gen3 Fixed Preset default value
+  PcieEngine->Type.Port.Gen3ForcePreset = 0;                                            ///< Gen3 Force Preset default value
   PcieEngine->Type.Port.EqSearchModeGen4 = 0;                                           ///< Equalization Search Mode for Gen4
   PcieEngine->Type.Port.BypassGen4EQ = 0;                                               ///< Gen4 Bypass phase3 EQ
   PcieEngine->Type.Port.DisGen4EQPhase = 0;                                             ///< Gen4 Bypass phase2/3 EQ
   PcieEngine->Type.Port.Gen4FixedPreset = 0;                                            ///< Gen4 Fixed Preset default value
+  PcieEngine->Type.Port.Gen4ForcePreset = 0;                                            ///< Gen4 Force Preset default value
   PcieEngine->Type.Port.EqSearchModeGen5 = 0;                                           ///< Equalization Search Mode for Gen5
   PcieEngine->Type.Port.BypassGen5EQ = 0;                                               ///< Gen5 Bypass phase3 EQ
   PcieEngine->Type.Port.DisGen5EQPhase = 0;                                             ///< Gen5 Bypass phase2/3 EQ
   PcieEngine->Type.Port.Gen5FixedPreset = 0;                                            ///< Gen5 Fixed Preset default value
+  PcieEngine->Type.Port.Gen5ForcePreset = 0;                                            ///< Gen5 Force Preset default value
   PcieEngine->Type.Port.ClkReq = 0;                                                     ///< ClkReq:[0:3]
   PcieEngine->Type.Port.EqPreset = 0;                                                   ///< EqPreset:[4:7]
   PcieEngine->Type.Port.SpcMode.SpcGen1 = 0;                                            ///< SPC Mode 2P5GT
@@ -77,6 +80,9 @@ PcieEngineConfigDefaults (
   PcieEngine->Type.Port.SetGen3FixedPreset = 0;                                         ///< Gen3 Fixed Preset set
   PcieEngine->Type.Port.SetGen4FixedPreset = 0;                                         ///< Gen4 Fixed Preset set
   PcieEngine->Type.Port.SetGen5FixedPreset = 0;                                         ///< Gen5 Fixed Preset set
+  PcieEngine->Type.Port.SetGen3ForcePreset = 0;                                         ///< Gen3 Force Preset set
+  PcieEngine->Type.Port.SetGen4ForcePreset = 0;                                         ///< Gen4 Force Preset set
+  PcieEngine->Type.Port.SetGen5ForcePreset = 0;                                         ///< Gen5 Force Preset set
   PcieEngine->Type.Port.TxVetting = 0;                                                  ///< Gen4 Tx Vetting
   PcieEngine->Type.Port.RxVetting = 0;                                                  ///< Gen4 Rx Vetting
   PcieEngine->Type.Port.TxVettingGen5 = 0;                                              ///< Gen5 Tx Vetting

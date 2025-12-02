@@ -344,7 +344,7 @@ config CCX_SVM_LOCK
 # ------------------------------ FSRM instruction --------------------------
 config CCX_FSRM_ENABLE
     int "Enable the Fast Short Repeat Move String (FSRM) capability [1/0]"
-    default 0
+    default 1
     range 0 1
     help
         Enable the Fast Short Repeat Move String (FSRM) instruction
@@ -353,7 +353,7 @@ config CCX_FSRM_ENABLE
 # ------------------------------ ERMS instruction --------------------------
 config CCX_ERMS_ENABLE
     int "Enable the Enhanced Repeat Move String (ERMS) instruction capability [1/0]"
-    default 0
+    default 1
     range 0 1
     help
         Enable the Enhanced Repeat Move String (ERMS) instruction
@@ -362,7 +362,7 @@ config CCX_ERMS_ENABLE
 # ------------------------------ RMSS instruction --------------------------
 config CCX_RMSS_ENABLE
     int "Enable the REP-MOV/STOS Streaming instruction capability [1/0]"
-    default 0
+    default 1
     range 0 1
     help
         REP-MOV/STOS Streaming instruction (RMSS) capability in the processor.

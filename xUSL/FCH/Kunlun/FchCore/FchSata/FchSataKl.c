@@ -67,7 +67,21 @@ InitializeFchSataKlTp2 (void)
 SIL_STATUS
 InitializeFchSataKlTp3 (void)
 {
+  FCHSATA_INPUT_BLK  *LclInpSataBlk; //pointer to Sata input blk
+
   FCH_TRACEPOINT (SIL_TRACE_ENTRY, "\n");
+
+  LclInpSataBlk = (FCHSATA_INPUT_BLK *) xUslFindStructure (SilId_FchSata, 0);
+  FCH_TRACEPOINT (SIL_TRACE_INFO,
+    "openSIL FCH Sata found blk at: 0x%x \n",
+    LclInpSataBlk
+    );
+  if (LclInpSataBlk == NULL) {
+    // Could not find the IP input block
+    return SilNotFound;
+  }
+
+  FchSataInitLate (LclInpSataBlk);
   FCH_TRACEPOINT (SIL_TRACE_EXIT, "\n");
   return SilPass;
 }

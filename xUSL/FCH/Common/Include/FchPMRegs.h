@@ -75,6 +75,11 @@
 #define FCH_PM_ACPIPMTMRBLK                                                    0x64
 
 /**
+ * Reg(FCH::PM::P_CNTBLK)
+ */
+#define FCH_PM_P_CNTBLK                                                        0x66
+
+/**
  * Reg(FCH::PM::ACPIGPE0BLK)
  */
 #define FCH_PM_ACPIGPE0BLK                                                     0x68
@@ -83,6 +88,11 @@
  * Reg(FCH::PM::ACPISMICMD)
  */
 #define FCH_PM_ACPISMICMD                                                      0x6A
+
+/**
+ * Reg(FCH::PM::ACPIPM2CNTBLK)
+ */
+#define FCH_PM_ACPIPM2CNTBLK                                                   0x6C
 
 /**
  * Reg(FCH::PM::ACPIPMACNTBLK)

@@ -125,6 +125,29 @@ xUslGetInitialApicId (void)
 
   return ((Regs.EbxReg >> 24) & 0xFF);
 }
+/**
+ * xUslGetPackageType
+ *
+ * @brief    Get package type from CPUID Fn0x80000001_EBX
+ *
+ * @details  Uses CPUID function 80000001 to obtain package type.
+ *
+ * @retval   Package type
+ */
+
+//  Returns the package type mask for the processor
+uint32_t
+xUslGetPackageType (void)
+{
+  CPUID_DATA  Regs = {0};
+  uint32_t    ProcessorPackageType;
+
+  xUslCpuId(0x80000001, 0, &Regs);
+
+  ProcessorPackageType = (uint32_t) (Regs.EbxReg >> 28) & 0xF;
+  return (uint32_t) (1 << ProcessorPackageType);
+}
+
 
 /**
  * xUslGetPhysAddrSize

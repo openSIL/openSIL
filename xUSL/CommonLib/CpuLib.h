@@ -159,6 +159,9 @@ xUslGetProcessorId (void);
 uint32_t
 xUslGetInitialApicId (void);
 
+uint32_t
+xUslGetPackageType (void);
+
 uint8_t
 xUslGetPhysAddrSize (void);
 

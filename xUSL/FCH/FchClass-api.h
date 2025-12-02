@@ -516,6 +516,49 @@ typedef struct {
                                                         ///
 } FCH_SD;
 
+/// Configuration values for EmmcType
+typedef enum {
+  _EmmcDisable = 0,                      ///< Disabled
+  _EmmcVer1,                             ///< Version 1.0
+  _EmmcVer2,                             ///< Version 2.0
+  _EmmcV3SDR50,                          ///< V3 SDR50
+  _EmmcV3DDR50,                          ///< V3 DDR50
+  _EmmcV3SDR104,                         ///< V3 SDR104
+  _EmmcV4p5,                             ///< V4.5
+  _EmmcV4p5SDR50,                        ///< V4.5 SDR50
+  _EmmcV4p5DDR100,                       ///< V4.5 DDR100
+  _EmmcV4p5HS200,                        ///< V4.5 HS200
+  _EmmcV5HS400,                          ///< V5 HS400
+  _EmmcV5HS300,                          ///< V5 HS300
+  _EmmcDump                              ///< EMMC DUMP, don't touch EMMC
+} EMMC_MODE;
+
+///
+/// FCH EMMC sturcture
+///
+typedef struct {
+  uint8_t                 EmmcEnable;                     ///< eMMC, 0:Disabled, 1:Enabled
+  EMMC_MODE               EmmcType;                       ///  @li   <b>0001</b> - Normal Speed 12.5MB/s 25MHz (v1.01) pll clock 63MHz (over flow, only for test, actual 100MHz)
+                                                          ///  @li   <b>0010</b> - High Speed 25MB/s 50MHz (v2) pll clock 400MHz
+                                                          ///  @li   <b>0011</b> - UHSI-SDR50 50MB/s 100MHz (v3.01) pll clock 400MHz
+                                                          ///  @li   <b>0100</b> - UHSI-DDR50 50MB/s 50MHz (v3.01)
+                                                          ///  @li   <b>0101</b> - UHSI-SDR104 100MB/s 200MHz (v3.01)
+                                                          ///  @li   <b>0110</b> - Backward Comp 25MB/s 25MHz (v4.5)
+                                                          ///  @li   <b>0111</b> - High Speed SDR 50MB/s 50MHz (v4.5)
+                                                          ///  @li   <b>1000</b> - High Speed DDR 100MB/s 50MHz (v4.5)
+                                                          ///  @li   <b>1001</b> - HS200 200MB/s 200MHz (v4.5)
+                                                          ///  @li   <b>1010</b> - HS400 400MB/s 200MHz (v5)
+                                                          ///  @li   <b>1011</b> - HS300 300MB/s 150MHz (v5)
+  bool                    EmmcDriverType;                 ///< Enable eMMC as PnP0D40, False:AMDI0040, True:PnP0D40
+  bool                    EmmcBoot;                       ///< eMMC boot, 0:Disabled, 1:Enabled
+  bool                    EmmcAdma2Support;               ///< Emmc Adma2 Support, 0:Disabled, 1:Enabled
+  bool                    EmmcAdmaSupport;                ///< Emmc Adma  Support, 0:Disabled, 1:Enabled
+  bool                    EmmcSdmaSupport;                ///< Emmc Sdma  Support, 0:Disabled, 1:Enabled
+  bool                    EmmcA64bSupport;                ///< Emmc A64b  Support, 0:Disabled, 1:Enabled
+  bool                    EmmcD3Support;                  ///< Emmc D3  Support, 0:Disabled, 1:Enabled
+} FCH_EMMC;
+
+
 ///
 /// ASF structure
 ///
@@ -654,6 +697,7 @@ typedef struct {
   FCH_RUNTIME           FchRunTime;                     ///< FCH Run Time Parameters
   FCH_SMBUS             Smbus;                          ///< SMBus structure
   FCH_SD                Sd;                             ///< SD structure
+  FCH_EMMC              Emmc;                           ///< EMMC structure
   FCH_HPET              Hpet;                           ///< HPET structure
   FCH_GCPU              Gcpu;                           ///< GCPU structure
   FCH_IMC               Imc;                            ///< IMC structure

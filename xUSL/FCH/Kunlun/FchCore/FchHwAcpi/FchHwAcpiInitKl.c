@@ -7,12 +7,14 @@
  */
 
 #include <SilCommon.h>
+#include <CommonLib/Io.h>
 #include <CommonLib/Mmio.h>
 #include <FchHwAcpi-api.h>
 #include <Fch.h>
 #include <FchCommon.h>
 #include <FchReg.h>
 #include <Pci.h>
+#include <FchCore/FchHwAcpi/FchAoacLib.h>
 #include <FchCore/FchHwAcpi/FchHwAcpiCmn2Rev.h>
 #include <FchCore/FchHwAcpi/FchHwAcpi.h>
 #include "FchHwAcpiCmn2Kl.h"
@@ -202,6 +204,51 @@ SIL_RESERVED_STRUCT_0016 mESPISlave0Decode[SIL_RESERVED_0273] = {
 };
 
 /**
+ * ProgramEmmcPins - Program eMMC pins
+ *
+ * @param[in] EmmcEn      - True to eMMC, False to keep as default for LPC
+ *
+ */
+static void
+ProgramEmmcPins (
+  bool EmmcEn
+  )
+{
+  if (EmmcEn) {
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x15), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x16), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x20), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x44), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x46), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x68), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x69), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x6A), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x6B), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x4A), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x58), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x4B), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x57), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x6D), 1);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x1F), 1);
+  } else {
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x15), 0);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x20), 0);
+    //xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x44), 0);
+    //xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x46), 0);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x68), 0);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x69), 0);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x6A), 0);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x6B), 0);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x4A), 0);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x58), 0);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x4B), 0);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x57), 0);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x6D), 0);
+    xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + 0x1F), 0);
+  }
+}
+
+/**
  * FchInitPreliminaryPrePcieHwAcpiKl
  * @brief Configures FCH ACPI module before PCI enumeration
  *
@@ -216,6 +263,38 @@ FchInitPreliminaryPrePcieHwAcpiKl (
   )
 {
   FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+
+    // Enabled (Mmio_mem_enable)
+  xUSLIoWrite8(FCH_IO_PM_INDEX, FCH_PM_DECODEEN);
+  xUSLIoReadModifyWrite8(FCH_IO_PM_DATA, 0xff, BIT_8(1));
+
+  xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x94), ~(BIT_32(14) + BIT_32(15)), 0);
+
+  xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_PCICONTROL + 2), 0xff, BIT_8(4));
+
+  // Clear UseAcpiStraps, PMIO_C8[4]
+  xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_MISC_PMIO), 0xef, 0);
+
+  // enable CF9
+  xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_PMIODEBUG), ~BIT_8(6), 0);
+
+  // enable LpcClockDriveStrength
+  if (FchDataPtr->Emmc.EmmcEnable == 0) {
+    ProgramEmmcPins(false);
+    xUSLMemWrite8(
+      (void *)(size_t)(FCH_EMMC_CFG_BASE + 0xBB),
+      (FchDataPtr->LpcClockDriveStrengthRiseTime & 0xf) |
+      ((FchDataPtr->LpcClockDriveStrengthFallTime & 0xf) << 4)
+      );
+  }
+
+  //Clear 4s shutdown event status
+  xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_S5_RESET_STATUS), 0, BIT_8(1));
+
+  // PLAT-55628
+  xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + MISC_BASE + 0x50), ~BIT_32(20), BIT_32(20));
+  xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + MISC_BASE + 0x50), ~BIT_32(20), 0);
+
   FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
 }
 
@@ -237,6 +316,11 @@ FchInitPrePcieHwAcpiKl (
   ProgramPciByteTable((REG8_MASK *) (&FchKunlunInitEnvHwAcpiPciTable[0]),
     sizeof (FchKunlunInitEnvHwAcpiPciTable) / sizeof (REG8_MASK)
     );
+
+  // MapXhcWakeEvent
+  xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + SMI_BASE + FCH_SMI_SCIMAP0 + 57), 0, 0x0B);
+  xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + SMI_BASE + FCH_SMI_SCIMAP0 + 58), 0, 0x0B);
+
   FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
 }
 
@@ -323,6 +407,66 @@ FchHwAcpiEnableIxCKl (
   FCHCLASS_INPUT_BLK *FchDataPtr
   )
 {
+  // I2C0
+  if (FchDataPtr->FchRunTime.FchDeviceEnableMap & BIT_32(5)) {
+    // ABL.FCH do I2C0 initialization
+  } else {
+    FchAoacPowerOnDev (FCH_AOAC_I2C0, 0);
+  }
+  // I2C1
+  if (FchDataPtr->FchRunTime.FchDeviceEnableMap & BIT_32(6)) {
+    // ABL.FCH do I2C1 initialization
+  } else {
+    FchAoacPowerOnDev (FCH_AOAC_I2C1, 0);
+  }
+  // I2C2
+  if (FchDataPtr->FchRunTime.FchDeviceEnableMap & BIT_32(7)) {
+    // ABL.FCH do I2C2 initialization
+  } else {
+    FchAoacPowerOnDev (FCH_AOAC_I2C2, 0);
+  }
+  // I2C3
+  if (FchDataPtr->FchRunTime.FchDeviceEnableMap & BIT_32(8)) {
+    // ABL.FCH do I2C3 initialization
+  } else {
+    FchAoacPowerOnDev (FCH_AOAC_I2C3, 0);
+  }
+  // I2C4
+  if (FchDataPtr->FchRunTime.FchDeviceEnableMap & BIT_32(9)) {
+    // ABL.FCH do I2C4 initialization
+  } else {
+    FchAoacPowerOnDev (FCH_AOAC_I2C4, 0);
+  }
+  // I2C5
+  if (FchDataPtr->FchRunTime.FchDeviceEnableMap & BIT_32(10)) {
+    // ABL.FCH do I2C5 initialization
+  } else {
+    FchAoacPowerOnDev (FCH_AOAC_I2C5, 0);
+  }
+  // I3C0
+  if (FchDataPtr->FchRunTime.FchDeviceEnableMap & BIT_32(21)) {
+    // ABL.FCH do I3C0 initialization
+  } else {
+    FchAoacPowerOnDev (FCH_AOAC_I3C0, 0);
+  }
+  // I3C1
+  if (FchDataPtr->FchRunTime.FchDeviceEnableMap & BIT_32(13)) {
+    // ABL.FCH do I3C1 initialization
+  } else {
+    FchAoacPowerOnDev (FCH_AOAC_I3C1, 0);
+  }
+  // I3C2
+  if (FchDataPtr->FchRunTime.FchDeviceEnableMap & BIT_32(14)) {
+    // ABL.FCH do I3C2 initialization
+  } else {
+    FchAoacPowerOnDev (FCH_AOAC_I3C2, 0);
+  }
+  // I3C3
+  if (FchDataPtr->FchRunTime.FchDeviceEnableMap & BIT_32(15)) {
+    // ABL.FCH do I3C3 initialization
+  } else {
+    FchAoacPowerOnDev (FCH_AOAC_I3C3, 0);
+  }
 }
 
 /**
@@ -444,7 +588,7 @@ DisableESPILegacyUARTDecoding (
   for (i = 0; i < SIL_RESERVED_0273; i++) {
     FCH_TRACEPOINT(SIL_TRACE_ENTRY, "IO Range %d\n", i);
     for (j = 0; j < sizeof (AL2AHBIoEnableRange) / sizeof (uint32_t); j++) {
-      if ( FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable & (1 << j)
+      if (FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable & (1 << j)
         && (ACPIMMIO32(SIL_RSVD_ADDR_FEC20000 + mESPISlave0Decode[i].field0) &
         mESPISlave0Decode[i].field1)
         && ((ACPIMMIO32(SIL_RSVD_ADDR_FEC20000 + mESPISlave0Decode[i].field2) >>
@@ -459,7 +603,7 @@ DisableESPILegacyUARTDecoding (
           ~mESPISlave0Decode[i].field1;
       }
 
-      if ( FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable & (1 << j)
+      if (FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable & (1 << j)
         && (ACPIMMIO32(SIL_RSVD_ADDR_FEC30000 + mESPISlave0Decode[i].field0) &
         mESPISlave0Decode[i].field1)
         && ((ACPIMMIO32(SIL_RSVD_ADDR_FEC30000 + mESPISlave0Decode[i].field2) >>
@@ -490,19 +634,19 @@ FchHwAcpiUartLegacyIoInitKl (
   )
 {
   uint32_t UartLegacyClockSelect = 0;
-  if ( FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable ) {
+  if (FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable ) {
     DisableESPILegacyUARTDecoding(FchDataPtr);
     ACPIMMIO16(FCH_AL2AHB_CFG_AL2AHB_LEGACY_UART_IO_ENABLE) = FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable;
-    if ( FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable & 0x01 ) {
+    if (FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable & 0x01 ) {
       UartLegacyClockSelect |= (uint32_t) (1 << ((FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable >> 8) & 3));
     }
-    if ( FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable & 0x02 ) {
+    if (FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable & 0x02 ) {
       UartLegacyClockSelect |= (uint32_t) (1 << ((FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable >> 10) & 3));
     }
-    if ( FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable & 0x04 ) {
+    if (FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable & 0x04 ) {
       UartLegacyClockSelect |= (uint32_t) (1 << ((FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable >> 12) & 3));
     }
-    if ( FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable & 0x08 ) {
+    if (FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable & 0x08 ) {
       UartLegacyClockSelect |= (uint32_t) (1 << ((FchDataPtr->FchRunTime.Al2AhbLegacyUartIoEnable >> 14) & 3));
     }
     xUSLPciReadModifyWrite32(PCI_LIB_ADDRESS(FCH_ISA_BUS, FCH_ISA_DEV, FCH_ISA_FUNC, SIL_RESERVED_0337),
@@ -524,4 +668,39 @@ FchHwAcpiAoacInitKl (
   FCHHWACPI_INPUT_BLK *FchHwAcpi
   )
 {
+  if (FchHwAcpi->FchAoacProgramEnable) {
+    //xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x94), 0xFF0FFFFF, 0x00B00000);
+
+    //AB
+    xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x88), 0, 0x0001);
+    xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x8C), 0, 0x39260080);
+
+    //ACPISMBUS
+    xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x88), 0, 0x0002);
+    xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x8C), 0, 0x86550100);
+
+    //LPC
+    xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x88), 0, 0x0004);
+    xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x8C), 0, 0x6E470200);
+
+    //ESPI
+    xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x88), 0, 0x0016);
+    xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x8C), 0, 0x36320300);
+    xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x88), 0, 0x001B);
+    xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x8C), 0, 0x363201C0);
+
+    xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x90), 0, 0x00000016);
+
+    if (xUSLMemRead8((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x40 + (FCH_AOAC_ESPI << 1))) & BIT_8(3)) {
+      xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x90), ~BIT_32(27), BIT_32(27));
+    }
+
+    if (xUSLMemRead8 ((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x40 + (FCH_AOAC_ESPI1 << 1))) & BIT_8(3)) {
+      xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x90), ~BIT_32(22), BIT_32(22));
+    }
+
+    xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + 0x9C), 0, BIT_32(0) + BIT_32(1));
+
+    xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + 0x1100 + 0x10), 0, BIT_32(0) + BIT_32(3));
+  }
 }

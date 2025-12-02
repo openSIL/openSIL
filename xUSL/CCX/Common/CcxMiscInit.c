@@ -9,6 +9,7 @@
 #include <SilCommon.h>
 #include <Ccx.h>
 #include <CcxCmn2Rev.h>
+#include <CCX/Zen5/CcxZen5.h>
 #include <MsrReg.h>
 #include <CommonLib/CpuLib.h>
 #include <xUslCcxRoles.h>
@@ -105,6 +106,8 @@ CcxSetMiscMsrs (
   uint64_t        LocalMsrRegister;
   uint8_t         LocalReserved1;
   uint8_t         LocalReserved2;
+  uint8_t         LocalReserved3;
+  uint8_t         LocalReserved4;
   uint8_t         LocalStreamingStoresCtrl;
   bool            LocalEnableFSRM;
   bool            LocalEnableERMS;
@@ -115,6 +118,11 @@ CcxSetMiscMsrs (
   bool            LocalEnableSvmX2AVIC;
   uint8_t         LocalMonMwaitDis;
   uint8_t         LocalWcSpec;
+  uint8_t         LocalCpuPauseCntSel_1_0;
+  uint8_t         LocalAdaptiveAlloc;
+  uint8_t         LocalSmallHammer;
+  uint8_t         LocalErmsbIntermThld;
+  uint8_t         LocalErmsbRepo;
   uint8_t         ApicMode;
   CCX_XFER_TABLE  *CcxXfer;
 
@@ -124,6 +132,8 @@ CcxSetMiscMsrs (
 
   LocalReserved1 = CcxInputBlock->AmdReserved1;
   LocalReserved2 = CcxInputBlock->AmdReserved2;
+  LocalReserved3 = CcxInputBlock->AmdReserved3;
+  LocalReserved4 = CcxInputBlock->AmdReserved4;
   LocalStreamingStoresCtrl = CcxInputBlock->StreamingStoresCtrl;
   LocalEnableFSRM = CcxInputBlock->EnableFSRM;
   LocalEnableERMS = CcxInputBlock->EnableERMS;
@@ -135,6 +145,11 @@ CcxSetMiscMsrs (
   LocalMonMwaitDis = CcxInputBlock->MonMwaitDis;
   LocalWcSpec = CcxInputBlock->WcSpecConfig;
   ApicMode = CcxInputBlock->AmdApicMode;
+  LocalCpuPauseCntSel_1_0 = CcxInputBlock->CpuPauseCntSel_1_0;
+  LocalAdaptiveAlloc = CcxInputBlock->AdaptiveAlloc;
+  LocalSmallHammer = CcxInputBlock->SmallHammerConfiguration;
+  LocalErmsbIntermThld = CcxInputBlock->ErmsbIntermThld;
+  LocalErmsbRepo = CcxInputBlock->ErmsbRepo;
 
   // Force recalc of TSC on all threads after loading patch
   LocalMsrRegister = xUslRdMsr(MSR_PSTATE_DEF_ADDRESS);
@@ -159,6 +174,32 @@ CcxSetMiscMsrs (
       ~(uint64_t) 0xD0230000,
       LocalEnableAvx512 ? 0xD0230000 : 0
       );
+  }
+
+  //MSRC001_1029[55:54]
+  switch(LocalCpuPauseCntSel_1_0){
+  case CPU_PAUSECNTSEL_1_0_AUTO:
+    break;
+  case CPU_PAUSECNTSEL_1_0_16CYCLES:
+    xUslMsrAnd(MSR_DE_CFG, ~(BIT_64(54) | BIT_64(55)));
+    break;
+  case CPU_PAUSECNTSEL_1_0_32CYCLES:
+    xUslMsrAndThenOr(MSR_DE_CFG, ~(BIT_64(54) | BIT_64(55)), BIT_64(54));
+    break;
+  case CPU_PAUSECNTSEL_1_0_64CYCLES:
+    xUslMsrAndThenOr(MSR_DE_CFG, ~(BIT_64(54) | BIT_64(55)), BIT_64(55));
+    break;
+  case CPU_PAUSECNTSEL_1_0_128CYCLES:
+    xUslMsrAndThenOr(MSR_DE_CFG, ~(BIT_64(54) | BIT_64(55)), BIT_64(54) | BIT_64(55));
+    break;
+  default:
+    assert (false);
+    break;
+  }
+
+  // MSR_C001_10E8[21]
+  if(LocalAdaptiveAlloc != 0xFF){
+    xUslMsrAndThenOr(0xC00110E8, ~BIT_64(21), ((uint64_t)(LocalAdaptiveAlloc & 1) << 21));
   }
 
   // MSR_C001_10DF[36] : FSRM
@@ -208,19 +249,89 @@ CcxSetMiscMsrs (
       );
   }
 
+  // MSRC001_10E5[26]
+  // MSRC001_10E5[23]
+  // MSRC001_10E5[19]
+  // MSRC001_10EC[0]
+  // MSRC001_10EC[39]
+  // MSRC001_10E2[30]
+  // MSRC001_102D[4]
+  // MSRC001_10E6[7]
+  switch (LocalReserved3) {
+  case 0:
+    xUslMsrAnd(MSR_LS_CFG3, ~BIT_64(23));
+    xUslMsrOr(MSR_LS_CFG3, BIT_64(26));
+    xUslMsrOr(SIL_RESERVED_0384, BIT_64(0));
+    xUslMsrAnd(MSR_L2_CFG1, ~BIT_64(30));
+    break;
+  case 1:
+    xUslMsrOr(MSR_LS_CFG3, BIT_64(26));
+    xUslMsrOr(MSR_LS_CFG3, BIT_64(23));
+    xUslMsrOr(SIL_RESERVED_0384, BIT_64(0));
+    xUslMsrAnd(MSR_L2_CFG1, ~BIT_64(30));
+    break;
+  case 2:
+    xUslMsrAnd(MSR_LS_CFG3, ~BIT_64(23));
+    xUslMsrAnd(MSR_LS_CFG3, ~BIT_64(26));
+    xUslMsrAnd(SIL_RESERVED_0384, ~BIT_64(0));
+    xUslMsrAnd(MSR_L2_CFG1, ~BIT_64(30));
+    break;
+  case 3:
+    xUslMsrOr(MSR_LS_CFG3, BIT_64(23));
+    xUslMsrOr(MSR_LS_CFG3, BIT_64(19));
+    xUslMsrOr(SIL_RESERVED_0384, BIT_64(39));
+    xUslMsrOr(MSR_LS_CFG2, BIT_64(4));
+    xUslMsrOr(MSR_LS_CFG4, BIT_64(7));
+    break;
+  }
+
+  // MSRC001_10E5[26]
+  // MSRC001_10E5[23]
+  // MSRC001_10E5[19]
+  // MSRC001_10EC[0]
+  // MSRC001_10EC[39]
+  // MSRC001_10E2[30]
+  // MSRC001_102D[4]
+  // MSRC001_10E6[7]
+  if (LocalReserved4) {
+    xUslMsrOr(MSR_LS_CFG3, BIT_64(23));
+    xUslMsrOr(MSR_LS_CFG3, BIT_64(19));
+    xUslMsrOr(SIL_RESERVED_0384, BIT_64(39));
+    xUslMsrOr(MSR_LS_CFG2, BIT_64(4));
+    xUslMsrOr(MSR_LS_CFG4, BIT_64(7));
+  }
+
+  // MSR_C001_1020[53]
+  // MSR_C001_10E5[30]
+  if (LocalSmallHammer != 0xFF) {
+    xUslMsrAnd (MSR_LS_CFG, ~BIT_64(53));
+    xUslMsrAndThenOr(0xC00110E5, ~BIT_64(30), LocalSmallHammer ? BIT_64(30) : 0);
+  }
+
   // MSR_C001_1020[53]
   // MSR_C001_10E5[30]
   // MSR_C001_10E5[33]
   if (LocalWcSpec != 0xFF) {
-    xUslMsrAnd(MSR_LS_CFG, ~((uint64_t)  BIT_64(53)));
-    xUslMsrAndThenOr(MSR_LS_CFG3, ~(uint64_t) 0x240000000, LocalWcSpec ? 0x240000000 : 0);
+    xUslMsrAnd(MSR_LS_CFG, ~BIT_64(53));
+    xUslMsrAndThenOr(MSR_LS_CFG3, ~(BIT_64(33) | BIT_64(30)), LocalWcSpec ? (BIT_64(33) | BIT_64(30)) : 0);
   }
 
   // MSR_C001_1004[53] : X2APIC
   // clear x2Apic support when in APIC mode
   if (ApicMode == xApicMode) {
-    xUslMsrAnd(MSR_CPUID_FEATS, ~((uint64_t) BIT_64(53)));
+    xUslMsrAnd(MSR_CPUID_FEATS, ~BIT_64(53));
   }
+
+  // MSR_C001_10E3[25:18]
+  if (LocalErmsbIntermThld >= 0x02) {
+    xUslMsrAndThenOr(0xC00110E3, ~(uint64_t)0x3FC0000, (uint64_t)LocalErmsbIntermThld << 18);
+  }
+
+  // MSR_C001_10DE[15]
+  if (LocalErmsbRepo != 0xFF){
+    xUslMsrAndThenOr(0xC00110DE, ~BIT_64(15), (uint64_t)(LocalErmsbRepo & 1) << 15);
+  }
+
   CcxXfer->SetMiscMsrs(CcxInputBlock);
 }
 

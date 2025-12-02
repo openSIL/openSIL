@@ -23,3 +23,10 @@
 #define SIL_RESERVED_0011           10
 
 #define SMN_CnliCxlUncorrErrMask0_ADDRESS          0x1f100064UL
+
+typedef struct {
+    uint32_t CxlPresent:8;
+    uint32_t CxlSpeedGen5:8;
+    uint32_t CxlLowLatencyMode:8;
+    uint32_t Reserved:8;
+} CXL_LINK_SPEED_INFO;

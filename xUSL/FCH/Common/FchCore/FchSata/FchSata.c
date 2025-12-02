@@ -1569,6 +1569,18 @@ FchSataInitEnvProgram (
       ~(BIT_32(28)),
       BIT_32(28)
       );
+    if (FchSata[Controller].SataUBMDiagMode ) {
+      xUSLSmnReadModifyWrite(0,
+        DieBusNum,
+        SIL_RESERVED_0274 + Controller * FCH_SMN_SATA_STEP + SIL_RESERVED_0340,
+        ~BIT_32(27),
+        BIT_32(27));
+      xUSLSmnReadModifyWrite(0,
+        DieBusNum,
+        SIL_RESERVED_0274 + Controller * FCH_SMN_SATA_STEP + SIL_RESERVED_0343,
+        ~BIT_32(27),
+        BIT_32(27));
+    }
   }
 
   FchSataXfer->FchSataInitDevSlp(DieBusNum, Controller, FchSata);

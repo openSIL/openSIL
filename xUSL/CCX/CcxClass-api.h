@@ -175,6 +175,8 @@ typedef struct {
   bool     AmdReserved;
   uint8_t  AmdReserved1;
   uint8_t  AmdReserved2;
+  uint8_t  AmdReserved3;
+  uint8_t  AmdReserved4;
   uint8_t  StreamingStoresCtrl;
   bool     EnSpecStFill;         ///< This control adjusts the performance of the speculative operations and changes
                                  ///< the behavior of memory write operations.
@@ -223,6 +225,10 @@ typedef struct {
                                            ///< CPU_PAUSECNTSEL_1_0_AUTO      - Use the recommended setting for the
                                            ///< processor.
   uint8_t  DisFstStrErmsb;                 ///< (ZEN5) Disable Enhanced Rep Movs Stos B store mechanism
+  uint8_t  AdaptiveAlloc;
+  uint8_t  SmallHammerConfiguration;
+  uint8_t  ErmsbIntermThld;
+  uint8_t  ErmsbRepo;
   bool     CapsuleUpdateDetected;          ///< Flag indicating capsule update detected
   bool     SvmEnable;                      ///< Secure Virtual Machine mode enable
   bool     SvmLock;                        ///< Secure Virtual Machine mode lock

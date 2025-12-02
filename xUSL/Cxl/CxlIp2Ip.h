@@ -20,8 +20,14 @@ typedef void (*CXL_REMOVE_LINKS_FROM_TOPOLOGY) (
   PCIe_PLATFORM_CONFIG    *Pcie
   );
 
+typedef void (*CXL_GET_LINK_SPEED) (
+  PCIe_PLATFORM_CONFIG  *Pcie,
+  uint32_t              *CxlMsgBuffer
+);
+
 // Define the Ip2Ip API as a struct containing pointers to the above functions
 
 typedef struct {
   CXL_REMOVE_LINKS_FROM_TOPOLOGY      RemoveCxlLinksFromTopology;
+  CXL_GET_LINK_SPEED                  GetCxlLinkSpeed;
 } CXL_IP2IP_API;

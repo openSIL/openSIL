@@ -66,6 +66,7 @@ typedef struct {
   bool        SataStaggeredSpinupEnable;    /// SATA Staggered Spin-up feature
   uint8_t     SataBISTLComplianceMode;      /// SATA BIST-L Compliance Mode
   uint8_t     SataRxPolarity;               /// SATA RxPolarity
+  bool        SataUBMDiagMode;
   uint8_t     Reserved[11];
 } FCHSATA_INPUT_BLK;
 

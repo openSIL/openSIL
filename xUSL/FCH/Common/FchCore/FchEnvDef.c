@@ -18,15 +18,15 @@ FCHCLASS_INPUT_BLK InitEnvCfgDefault =
     .FchDeviceD3ColdMap = 0,
     .Al2AhbLegacyUartIoEnable = 0xE400,
     .Uart0Irq = 0x03,
-    .Uart1Irq = 0x04,
-    .Uart2Irq = 0x03,
-    .Uart3Irq = 0x04,
+    .Uart1Irq = 0x0E,
+    .Uart2Irq = 0x05,
+    .Uart3Irq = 0x0F,
     .I2c0Irq = 0x0A,
     .I2c1Irq = 0x0B,
     .I2c2Irq = 0x04,
     .I2c3Irq = 0x06,
-    .I2c4Irq = 0x0E,
-    .I2c5Irq = 0x0F,
+    .I2c4Irq = 0x16,
+    .I2c5Irq = 0x17,
   },
 
   // FCH_SMBUS
@@ -49,7 +49,18 @@ FCHCLASS_INPUT_BLK InitEnvCfgDefault =
     .SdForce18 = false,
     .SdDbgConfig = 0,
   },
-
+  // FCH_EMMC
+  .Emmc = {
+    .EmmcEnable = _EmmcDisable,
+    .EmmcType = _EmmcV4p5HS200,
+    .EmmcDriverType = 0x01,
+    .EmmcBoot = false,
+    .EmmcAdma2Support = true,
+    .EmmcAdmaSupport = true,
+    .EmmcSdmaSupport = true,
+    .EmmcA64bSupport = true,
+    .EmmcD3Support = false,
+  },
   // FCH_HPET
   .Hpet = {
     .HpetEnable = true,
@@ -79,7 +90,7 @@ FCHCLASS_INPUT_BLK InitEnvCfgDefault =
 
   // FCH_MISC
   .Misc = {
-    .NativePcieSupport = false,
+    .NativePcieSupport = true,
     .S3Resume = false,
     .RebootRequired = false,
     .FchVariant = 0,

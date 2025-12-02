@@ -28,6 +28,8 @@ typedef  struct  {
                               ///< LPC Clock 1 mode
                               ///< @li <b>0</b> - forced to stop
                               ///< @li <b>1</b> - functioning with CLKRUN protocol
+  bool      LpcMsiEnable;     ///< LPC MSI capability
+  uint32_t  LpcSsid;          ///< LPC Subsystem ID
 } FCH_LPC;
 
 
@@ -67,6 +69,19 @@ typedef  struct  {
                               ///<  @li <b>0110</b> - 800Khz
                               ///<  @li <b>0111</b> - 50Mhz
                               ///<  @li <b>1000</b> - 4Mhz
+  //
+  uint8_t   FastSpeed;        ///< FastSpeed - Spi Bus fast speed
+                              ///< SPI Speed - the clock speed for fast read command
+                              ///<  @li <b>0000</b> - keep HW default
+                              ///<  @li <b>0001</b> - 66Mhz
+                              ///<  @li <b>0010</b> - 33Mhz
+                              ///<  @li <b>0011</b> - 22Mhz
+                              ///<  @li <b>0100</b> - 16.5Mhz
+                              ///<  @li <b>0101</b> - 100Mhz
+                              ///<  @li <b>0110</b> - 800Khz
+  //
+  bool    Spi100Enable;
+  bool    BurstWrite;
 } FCH_SPI;
 
 

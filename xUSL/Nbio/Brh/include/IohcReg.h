@@ -12,6 +12,15 @@
 
 #define SIL_RESERVED_0603  0
 #define SIL_RESERVED_0604  1
+
+#define SIL_RSVD_ADDR_13B102D8  0x13b102d8UL
+
+#define SIL_RSVD_ADDR_13B102DC  0x13b102dcUL
+
+#define SIL_RSVD_ADDR_13B102E0  0x13b102e0UL
+
+#define SIL_RSVD_ADDR_13B102E4  0x13b102e4UL
+
 #define SIL_RSVD_ADDR_13B102FC  0x13b102fcUL
 
 #define SIL_RSVD_ADDR_13B102F8  0x13b102f8UL
@@ -322,6 +331,7 @@ typedef union {
 #define PCIE_VDM_CNTL2_VdmP2pMode_OFFSET      0
 #define PCIE_VDM_CNTL2_VdmP2pMode_MASK        0x3
 #define SIL_RSVD_ADDR_13B10230                0x13b10230UL
+#define SIL_RSVD_ADDR_1D410230                0x1d410230UL
 
 typedef union {
   struct {

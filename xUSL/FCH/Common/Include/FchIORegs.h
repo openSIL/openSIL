@@ -28,3 +28,13 @@
  * Reg(FCH::IO::PCI_INTR_DATA)
  */
 #define FCH_IO_PCI_INTR_DATA                                                   0xC01
+
+/** PMIO Index Register
+ * Reg(FCH::IO::PM_INDEX)
+ */
+#define FCH_IO_PM_INDEX                                                        0xCD6
+
+/** PMIO Data Register
+ * Reg(FCH::IO::PM_DATA)
+ */
+#define FCH_IO_PM_DATA                                                         0xCD7

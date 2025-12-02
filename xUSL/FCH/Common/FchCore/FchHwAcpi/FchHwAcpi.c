@@ -44,7 +44,7 @@ static const ACPI_REG_WRITE MmioPrePcieResetTable[] =
   {PMIO_BASE >> 8, FCH_PM_DECODEEN + 2, 0xFB, BIT_32(2)},
   {PMIO_BASE >> 8, FCH_PM_PMIODEBUG, 0xCF, 0x00},
   {PMIO_BASE >> 8, FCH_PM_DECODEEN, 0xF7, 0x77},
-  {PMIO_BASE >> 8, FCH_PM_PCICONTROL, 0xFE, BIT_32(4)},
+  {PMIO_BASE >> 8, FCH_PM_PCICONTROL, 0xFE, BIT_32(2) + BIT_32(4)},
   {PMIO_BASE >> 8, FCH_PM_PWRRSTCFG, 0xFC, 0x00},
   {PMIO_BASE >> 8, FCH_PM_SERIALIRQCONFIG, 0x00, BIT_32(4) + BIT_32(6)},
   {PMIO_BASE >> 8, FCH_PM_ACPICONFIG, 0xF6, BIT_32(0)},
@@ -70,6 +70,7 @@ static const ACPI_REG_WRITE MmioEnvInitTable[] =
   {PMIO_BASE >> 8, FCH_PM_ACPICONFIG + 3, 0xDF, 0},
   {PMIO_BASE >> 8, FCH_PM_S_STATECONTROL, 0xF7, BIT_32(3)},
   {PMIO_BASE >> 8, FCH_PM_THROTTLINGCONTROL, 0xFD, BIT_32(1)},
+  {PMIO_BASE >> 8, FCH_PM_MISC_PMIO, 0xFD, BIT_32(1)},
   {SMI_BASE >> 8, FCH_SMI_GEVENT1, 0, 1},
   {SMI_BASE >> 8, FCH_SMI_GEVENT3, 0, 3},
   {SMI_BASE >> 8, FCH_SMI_GEVENT4, 0, 4},
@@ -239,7 +240,7 @@ void FchHwAcpiUartInit (
   FchDeviceEnMap = FchDataPtr->FchRunTime.FchDeviceEnableMap;
 
   // UART0
-  if ( FchDeviceEnMap & BIT_32(11)) {
+  if (FchDeviceEnMap & BIT_32(11)) {
     FchAoacPowerOnDev(FCH_AOAC_UART0, 1);
     xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + FCH_IOMUX_IOMUX135_GPIO), 0, 0x0);
     xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + FCH_IOMUX_IOMUX136_GPIO), 0, 0x0);
@@ -271,7 +272,7 @@ void FchHwAcpiUartInit (
   }
 
   // UART1
-  if ( FchDeviceEnMap & BIT_32(12)) {
+  if (FchDeviceEnMap & BIT_32(12)) {
     FchAoacPowerOnDev(FCH_AOAC_UART1, 1);
     xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + FCH_IOMUX_IOMUX141_GPIO), 0, 0x0);
     xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + FCH_IOMUX_IOMUX142_GPIO), 0, 0x0);
@@ -286,7 +287,7 @@ void FchHwAcpiUartInit (
   }
 
   // UART2
-  if ( FchDeviceEnMap & BIT_32(16)) {
+  if (FchDeviceEnMap & BIT_32(16)) {
     FchAoacPowerOnDev(FCH_AOAC_UART2, 1);
     xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + FCH_IOMUX_IOMUX135_GPIO), 0, 0x1);
     xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + IOMUX_BASE + FCH_IOMUX_IOMUX137_GPIO), 0, 0x1);
@@ -463,6 +464,10 @@ static void FchHwAcpiEnableIOBase (
     0x0000,
     FchDataPtr->FchBldCfg.CfgAcpiPmTmrBlkAddr
     );
+  xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_P_CNTBLK),
+    0x0000,
+    FchDataPtr->FchBldCfg.CfgCpuControlBlkAddr
+    );
   xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_ACPIGPE0BLK),
     0x0000,
     FchDataPtr->FchBldCfg.CfgAcpiGpe0BlkAddr
@@ -474,6 +479,10 @@ static void FchHwAcpiEnableIOBase (
   xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_ACPIPMACNTBLK),
     0x0000,
     FchDataPtr->FchBldCfg.CfgSmiCmdPortAddr + 8
+    );
+  xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_ACPIPM2CNTBLK),
+    0x0000,
+    0xFFFF
     );
 }
 

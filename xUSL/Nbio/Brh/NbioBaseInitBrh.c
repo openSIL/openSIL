@@ -425,6 +425,66 @@ NbioBaseInitBrh (
   return SilPass;
 }
 
+/**
+ * NbioBaseInitBrh
+ *
+ * @brief  This function initializes the IOAPICs
+ *
+ * @param  GnbHandle             Pointer to Iohc config data
+ * @param  NBIOCLASS_DATA_BLOCK  Pointer to NBIO Data Block
+ *
+ * @retval SilPass              The Nbio IOAPIC initialization is successful
+ * @retval SilInvalidParameter  Error indicating invalid input arguments are passed
+ *
+ */
+static
+SIL_STATUS
+NbioIoapicInitBrh (
+  GNB_HANDLE            *GnbHandle,
+  NBIOCLASS_DATA_BLOCK  *NbioIpBlockData
+  )
+{
+  if ((GnbHandle == NULL) || (NbioIpBlockData == NULL)) {
+    NBIO_TRACEPOINT(SIL_TRACE_INFO, "ERROR : Invalid input argument\n");
+    assert(false);
+    return SilInvalidParameter;
+  }
+
+  if (GnbHandle->RBIndex < 4) {
+      xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+        GnbHandle->Address.Address.Bus,
+        NBIO_SPACE(GnbHandle, SMN_IOHUB0_N0NBIO0_IOAPIC_FEATURES_ENABLE),
+        ~(BIT_32(2) | BIT_32(4)),
+        BIT_32(2) | BIT_32(4)
+      );
+    if (!GnbHandle->SbPresent) {
+      xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+        GnbHandle->Address.Address.Bus,
+        NBIO_SPACE(GnbHandle, SMN_IOHUB0_N0NBIO0_IOAPIC_FEATURES_ENABLE),
+        ~(BIT_32(5)),
+        BIT_32(5)
+      );
+    }
+  } else {
+      xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+        GnbHandle->Address.Address.Bus,
+        NBIO_SPACE(GnbHandle, SMN_IOHUB1_N0NBIO0_IOAPIC_FEATURES_ENABLE),
+        ~(BIT_32(2) | BIT_32(4)),
+        BIT_32(2) | BIT_32(4)
+      );
+      if (!GnbHandle->SbPresent) {
+        xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+          GnbHandle->Address.Address.Bus,
+          NBIO_SPACE(GnbHandle, SMN_IOHUB1_N0NBIO0_IOAPIC_FEATURES_ENABLE),
+          ~(BIT_32(5)),
+          BIT_32(5)
+        );
+      }
+  }
+
+  return SilPass;
+}
+
 /*----------------------------------------------------------------------------------------*/
 /**
  * NbioBaseConfigurationBrh
@@ -627,6 +687,8 @@ NbioBaseConfigurationBrh (
     if ((GnbHandle->RBIndex & 1) == 0) {
       NbioBaseInitBrh(GnbHandle, NbioIpBlockData);
     }
+    NbioIoapicInitBrh(GnbHandle, NbioIpBlockData);
+
     //For disabling SATA which is on NBIF1 Dev1 iohc2
     if (GnbHandle->RBIndex == 0) {
       NBIO_TRACEPOINT(SIL_TRACE_INFO, "Blasting table NbifSATAHideBridgeTbl for RB %d\n", GnbHandle->RBIndex);

@@ -11,7 +11,7 @@ comment "IP SDXI Common - Controls that are common to all versions of the IP: SD
 # ------------------------------ Smart Data Cache Injection --------------------------
 config SDXI_SMART_DATA_CACHE_INJECTION_ENABLE
     int  "Enable smart data cache injection feature [1/0]"
-    default 1
+    default 0
     range 0 1
     help
         Enable or disable smart data cache injection
