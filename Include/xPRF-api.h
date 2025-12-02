@@ -955,10 +955,15 @@ xPrfFchEnableSpi (
 /**
  * xPrfGetCppcMinFrequency
  *
- * @brief   This Function is responsible for reading the minimal CPU frequency
+ * @brief   This function is responsible for reading the minimal CPU frequency
  *          from SMU for ACPI CPPC.
  *
- * @return  uint8_t Threads per Core values
+ * @param[out] MinFrequency  Pointer to store the minimal CPU frequency in MHz.
+ *
+ * @retval SilPass             The minimal frequency was successfully retrieved.
+ * @retval SilInvalidParameter The MinFrequency pointer is NULL.
+ * @retval SilNotFound         The SMU or NBIO API was not found.
+ * @retval SilDeviceError      The SMU request failed.
  */
 SIL_STATUS
 xPrfGetCppcMinFrequency (
@@ -966,12 +971,17 @@ xPrfGetCppcMinFrequency (
   );
 
 /**
- * xPrfGetCppcMNomFrequency
+ * xPrfGetCppcNomFrequency
  *
- * @brief   This Function is responsible for reading the nominal CPU frequency
+ * @brief   This function is responsible for reading the nominal CPU frequency
  *          from SMU for ACPI CPPC.
  *
- * @return  uint8_t Threads per Core values
+ * @param[out] NomFrequency  Pointer to store the nominal CPU frequency in MHz.
+ *
+ * @retval SilPass             The nominal frequency was successfully retrieved.
+ * @retval SilInvalidParameter The NomFrequency pointer is NULL.
+ * @retval SilNotFound         The SMU or NBIO API was not found.
+ * @retval SilDeviceError      The SMU request failed.
  */
 SIL_STATUS
 xPrfGetCppcNomFrequency (
