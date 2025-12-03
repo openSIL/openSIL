@@ -895,6 +895,10 @@ xPrfCratCacheEntry (
   return SilPass;
 }
 
+/// SMU message ID for getting CPPC minimum frequency
+#define SMU_MSG_GET_CPPC_MIN_FREQUENCY  0x40
+/// SMU message ID for getting CPPC nominal frequency
+#define SMU_MSG_GET_CPPC_NOM_FREQUENCY  0x3A
 
 /**
  * xPrfGetCppcMinFrequency
@@ -915,7 +919,6 @@ xPrfGetCppcMinFrequency (
   )
 {
   uint32_t                     SmuArg[6];
-  uint32_t                     RequestId;
   SMC_RESULT                   Result;
   GNB_HANDLE                   *GnbHandle;
   SMU_COMMON_2_REV_XFER_BLOCK  *SmuXfer;
@@ -936,10 +939,9 @@ xPrfGetCppcMinFrequency (
   GnbHandle = NbioIp2Ip->GetGnbHandle();
 
   SmuServiceInitArgumentsCommon(SmuArg);
-  RequestId = 0x40;
 
   Result = SmuXfer->SmuServiceRequest(GnbHandle->Address,
-             RequestId,
+             SMU_MSG_GET_CPPC_MIN_FREQUENCY,
              SmuArg,
              0
              );
@@ -972,7 +974,6 @@ xPrfGetCppcNomFrequency (
   )
 {
   uint32_t                     SmuArg[6];
-  uint32_t                     RequestId;
   SMC_RESULT                   Result;
   GNB_HANDLE                   *GnbHandle;
   SMU_COMMON_2_REV_XFER_BLOCK  *SmuXfer;
@@ -993,10 +994,9 @@ xPrfGetCppcNomFrequency (
   GnbHandle = NbioIp2Ip->GetGnbHandle();
 
   SmuServiceInitArgumentsCommon(SmuArg);
-  RequestId = 0x3A;
 
   Result = SmuXfer->SmuServiceRequest(GnbHandle->Address,
-             RequestId,
+             SMU_MSG_GET_CPPC_NOM_FREQUENCY,
              SmuArg,
              0
              );
