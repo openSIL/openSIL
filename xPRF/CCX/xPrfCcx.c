@@ -203,7 +203,6 @@ xPrfCreateSratApicEntry (
   CCX_IP2IP_API         *CcxIp2Ip;
   DF_IP2IP_API          *DfIp2IpApi;
   APOB_IP2IP_API        *ApobIp2IpApi;
-  uint32_t              NumberOfApicIds;
   uint32_t              OrderedLogicalCcd[PROJ_MAX_CCD_DIES_PER_SOCKET];
   uint32_t              CcdNum;
   APOB_CCD_LOGICAL_TO_PHYSICAL_MAP_TYPE_STRUCT  ApobCcdLogToPhysMap;
@@ -242,7 +241,6 @@ xPrfCreateSratApicEntry (
   }
 
   *SratTableLength = 0;
-  NumberOfApicIds = 0;
   ApicId = 0;
   // Get Number of Socket information of the overall system.
   if (DfIp2IpApi->DfGetSystemInfo(&NumberOfSockets, NULL, NULL, NULL, NULL) == SilPass) {
@@ -329,7 +327,6 @@ xPrfCreateSratApicEntry (
                         X2ApicEntry->x2ApicId = ApicId;
                         X2ApicEntry->Flags.Enabled = 1;
                         X2ApicEntry->ClockDomain = 0;
-                        NumberOfApicIds++;
                       } else if (ApicId < SIL_XAPIC_ID_MAX) {
                         ApicEntry = (SIL_SRAT_APIC *) SratApic;
                         SratApic += sizeof (SIL_SRAT_APIC);
@@ -344,7 +341,6 @@ xPrfCreateSratApicEntry (
                         ApicEntry->Flags.Enabled = 1;
                         ApicEntry->LocalSapicEid = 0;
                         ApicEntry->ClockDomain = 0;
-                        NumberOfApicIds++;
                       }
                     }
                   }
