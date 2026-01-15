@@ -516,3 +516,119 @@ NonPciBarInit (
   }
   NBIO_TRACEPOINT(SIL_TRACE_INFO, "End\n");
 }
+
+
+/**
+ * NonPciPspBarInit
+ *
+ * @brief  This function assigns non-pci MMIO for a PSP device.
+ *
+ * @param  GnbHandle       Silicon handle to assign
+ * @param  MmioBarLow      Address of low byte
+ * @param  MmioBarHigh     Address of high byte
+ * @param  MemorySize      Size of the allocated bar required
+ * @param  Enable          Set enable bit in BAR
+ * @param  LockSettings    If the allocated memory range should be locked or not
+ *
+ * @return  nothing
+ */
+void
+NonPciPspBarInit (
+  GNB_HANDLE   *GnbHandle,
+  uint32_t     MmioBarLow,
+  uint32_t     MmioBarHigh,
+  uint32_t     MemorySize,
+  bool         Enable,
+  bool         LockSettings
+  )
+{
+  SIL_STATUS             Status;
+  FABRIC_TARGET          MmioTarget;
+  FABRIC_MMIO_ATTRIBUTE  Attributes;
+  uint64_t               MmioBase, Length;
+  uint32_t               BarLow, BarHigh;
+  RCMGR_IP2IP_API        *RcMgrIp2Ip;
+
+  BarLow = 0;
+  BarHigh = 0;
+  NBIO_TRACEPOINT(SIL_TRACE_INFO,
+    "Begin to allocate bars for SMN low %x high %x, size %x\n",
+    MmioBarLow,
+    MmioBarHigh,
+    MemorySize
+    );
+
+  ///
+  /// See if the given BAR have already been assigned
+  ///
+  BarLow = xUSLSmnRead(GnbHandle->Address.Address.Segment, GnbHandle->Address.Address.Bus, MmioBarLow);
+  BarHigh = xUSLSmnRead(GnbHandle->Address.Address.Segment, GnbHandle->Address.Address.Bus, MmioBarHigh);
+
+  if (BarLow == 0 && BarHigh == 0) {
+    NBIO_TRACEPOINT(SIL_TRACE_INFO, "Bars have not been assigned, attempting to allocate MMIO \n");
+    ///
+    /// Assign bars:
+    /// Allocate a chunk of MMIO first
+    ///
+    memset(&Attributes, 0, sizeof (Attributes));
+    memset(&MmioTarget, 0, sizeof (MmioTarget));
+    Length = MemorySize;
+    MmioTarget.TgtType = TARGET_RB;
+    MmioTarget.SocketNum = GnbHandle->SocketId;
+    MmioTarget.RbNum = GnbHandle->RBIndex;
+    Attributes.ReadEnable = 1;
+    Attributes.WriteEnable = 1;
+    Attributes.NonPosted = 0;
+    MmioBase = 0;
+    Attributes.MmioType = NON_PCI_DEVICE_BELOW_4G;
+
+    NBIO_TRACEPOINT(SIL_TRACE_INFO,
+      "FabricAllocateMmio : Socket %d , RB # %d\n",
+      MmioTarget.SocketNum,
+      MmioTarget.RbNum
+      );
+
+    if (SilGetIp2IpApi(SilId_RcManager, (void **)(&RcMgrIp2Ip)) != SilPass) {
+      NBIO_TRACEPOINT(SIL_TRACE_ERROR, " MMIO allocator API is not found.\n");
+      return;
+    }
+
+    Status = RcMgrIp2Ip->FabricReserveMmio(&MmioBase, &Length, ALIGN_1M, MmioTarget, &Attributes);
+
+    if (Status != SilPass) {
+      NBIO_TRACEPOINT(SIL_TRACE_INFO, "Allocate MMIO Fail\n");
+      return;
+    }
+    NBIO_TRACEPOINT(SIL_TRACE_INFO, "Allocate MMIO @0x%llx\n", MmioBase);
+  } else {
+    NBIO_TRACEPOINT(SIL_TRACE_INFO, "Bars have already been assigned!\n");
+    NBIO_TRACEPOINT(SIL_TRACE_INFO, "End\n");
+    return;
+  }
+
+  ///
+  /// Write the assigned memory address registers to SMN
+  ///
+  BarLow = (uint32_t) MmioBase;
+  BarHigh = (uint32_t) (MmioBase >> 32);
+
+  xUSLSmnWrite(GnbHandle->Address.Address.Segment, GnbHandle->Address.Address.Bus, MmioBarLow, BarLow);
+  xUSLSmnWrite(GnbHandle->Address.Address.Segment, GnbHandle->Address.Address.Bus, MmioBarHigh, BarHigh);
+
+  NBIO_TRACEPOINT(SIL_TRACE_INFO, "BarLow = %x , BarHigh %x\n", BarLow, BarHigh);
+
+  // Set enable bit separate from other bits
+  if (Enable) {
+    BarLow = BarLow | BIT_32(0); /// Set enable bit
+    xUSLSmnWrite(0, GnbHandle->Address.Address.Bus, MmioBarLow, BarLow);
+    xUSLSmnWrite(0, GnbHandle->Address.Address.Bus, MmioBarHigh, BarHigh);
+  }
+
+  // Set lock bit separate from other bits
+  if (LockSettings) {
+    BarLow = BarLow | BIT_32(8); /// Set lock bit
+    xUSLSmnWrite(GnbHandle->Address.Address.Segment, GnbHandle->Address.Address.Bus, MmioBarLow, BarLow);
+    xUSLSmnWrite(GnbHandle->Address.Address.Segment, GnbHandle->Address.Address.Bus, MmioBarHigh, BarHigh);
+  }
+  NBIO_TRACEPOINT(SIL_TRACE_INFO, "End\n");
+}

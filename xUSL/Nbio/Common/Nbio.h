@@ -94,6 +94,16 @@ NonPciBarInit (
   );
 
 void
+NonPciPspBarInit (
+  GNB_HANDLE     *GnbHandle,
+  uint32_t       MmioBarLow,
+  uint32_t       MmioBarHigh,
+  uint32_t       MemorySize,
+  bool           Enable,
+  bool           LockSettings
+  );
+
+void
 NbioEnableNbifDevice (
   GNB_HANDLE  *GnbHandle,
   uint8_t     DeviceType

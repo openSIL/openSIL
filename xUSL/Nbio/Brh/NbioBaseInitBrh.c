@@ -824,6 +824,15 @@ NbioBaseConfigurationBrh (
           false
           );
       }
+      if (GnbHandle->RBIndex == 0) {
+        NonPciPspBarInit(GnbHandle,
+          NBIO_SPACE(GnbHandle, SIL_RSVD_ADDR_13B102E0),
+          NBIO_SPACE(GnbHandle, SIL_RSVD_ADDR_13B102E4),
+          NONPCI_BARSIZE_1MB,
+          true,
+          true
+          );
+      }
     } else {
       NBIO_TRACEPOINT(SIL_TRACE_INFO,
         "Blasting table GnbEarlyInitTableCommonSmallIohc for RB %d\n",
