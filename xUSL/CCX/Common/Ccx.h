@@ -138,7 +138,7 @@ typedef struct {
   // as offset to this element is used in ApAsm nasm file.
   volatile uint32_t          ApSyncCount;                      ///< Do NOT change the offset of this variable
   // as offset to this element is used in ApAsm nasm file.
-  uint32_t                   AllowToLaunchNextThreadLocation; ///< Do NOT change the offset of this variable
+  volatile uint32_t          AllowToLaunchNextThreadLocation; ///< Do NOT change the offset of this variable
   // as offset to this element is used in ApAsm nasm file.
   uint32_t                   ApStackBasePtr;                  ///< Do NOT change the offset of this variable
   // as offset to this element is used in ApAsm nasm file.
@@ -219,7 +219,8 @@ SIL_STATUS InitializeCcx (
 void CcxSetMca (void);
 void CcxInitializeC6 (CCXCLASS_INPUT_BLK *CcxInputBlock);
 void ApAsmCode (void);
-void RegSettingBeforeLaunchingNextThread (volatile AMD_CCX_AP_LAUNCH_GLOBAL_DATA *);
+NASM_ABI void RegSettingBeforeLaunchingNextThread (
+  volatile AMD_CCX_AP_LAUNCH_GLOBAL_DATA *ApLaunchGlobalData);
 NASM_ABI void ApEntryPointInC (
   volatile AMD_CCX_AP_LAUNCH_GLOBAL_DATA *ApLaunchGlobalData);
 void CcxSetMiscMsrs (

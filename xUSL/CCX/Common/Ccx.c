@@ -206,7 +206,7 @@ InitializeCcxAndLaunchAps (
   uint8_t            ApicMode;
   uint32_t           ApicId;
   uint32_t           ApNumBfLaunch = 0x0;
-  volatile uint16_t  *ApSyncFlag = NULL;
+  volatile uint32_t  *ApSyncFlag = NULL;
   uint8_t            i = 0;
   DF_IP2IP_API       *DfApi;
   NBIO_IP2IP_API     *NbioApi;
@@ -419,7 +419,7 @@ InitializeCcxAndLaunchAps (
 
   if (ApLaunchGlobalData.SleepType == 3) {
     PspSmmHdrData = (PSP_SMM_HDR_DATA *)(uintptr_t)xUslRdMsr(MSR_SMM_ADDR); //SMMADDR_ADDRESS - Start of TSEG
-    ApSyncFlag = (volatile uint16_t *)&PspSmmHdrData->ApSyncFlag;
+    ApSyncFlag = (volatile uint32_t *)&PspSmmHdrData->ApSyncFlag;
     assert(ApSyncFlag != NULL);
     *ApSyncFlag = 0;
     PspSmmHdrData->ApStackTop = PspSmmHdrData->PspSmmRsmMemInfo.StackPtr + \
@@ -527,7 +527,7 @@ InitializeCcxAndLaunchAps (
         CcxConfigData,
         CcxDataBlk
         );
-      ApSyncFlag = (volatile uint16_t *)(uintptr_t) ApLaunchGlobalData.AllowToLaunchNextThreadLocation;
+      ApSyncFlag = (volatile uint32_t *)(uintptr_t) ApLaunchGlobalData.AllowToLaunchNextThreadLocation;
     }
   }
 
@@ -755,6 +755,7 @@ SIL_STATUS CcxClassSetInputBlk (
  * @brief Necessary register setting before launching next thread
  *
  */
+NASM_ABI
 void
 RegSettingBeforeLaunchingNextThread (
   volatile AMD_CCX_AP_LAUNCH_GLOBAL_DATA *ApLaunchGlobalData
