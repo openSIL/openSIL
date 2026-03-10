@@ -272,6 +272,8 @@ MpioSetGlobalConfigDefaults (
   GlobalConfig->EnablePcieNonCompliantWa = 0;
   GlobalConfig->DeferredMessageSupport = 0;
   GlobalConfig->CxlGpfPhase2Timeout = 0;
+  GlobalConfig->enable_dlwm = 0;
+  GlobalConfig->combine_training_early_and_normal = 0;
 
   /*
    * DWORD 1 - Power Management
@@ -573,6 +575,8 @@ MpioEarlyInitV1 (
   InstanceId = 0xFFFF;
   while (GnbHandle != NULL) {
     InstanceId = (GnbHandle->SocketId << 6) + GnbHandle->MP_Instance;
+    InstanceIndex = GetInstanceIndex(GnbHandle);
+
     if (MpioData[InstanceIndex].MpioAsk != NULL) {
 
       memset(MpioArg, 0x00, sizeof (MpioArg));

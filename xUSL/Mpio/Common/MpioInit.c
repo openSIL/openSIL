@@ -112,7 +112,7 @@ NbioInitializeDxio (
 
   MpioCfgBeforeDxioInit(SilContext, Pcie, PcieTopologyData);
 
-  MpioXferTable->PcieEarlyTrainFixups(SilDataCommon, NbioIp2Ip->NbioGetHandle(Pcie), PcieTopologyData);
+  MpioXferTable->PcieEarlyTrainFixups(SilContext, SilDataCommon, NbioIp2Ip->NbioGetHandle(Pcie), PcieTopologyData);
 
   MpioXferTable->NbifDeviceEarlyControl(SilContext, NbioIp2Ip->NbioGetHandle(Pcie));
 

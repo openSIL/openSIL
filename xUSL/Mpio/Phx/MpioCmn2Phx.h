@@ -124,6 +124,7 @@ void MpioConfigurePsppPhx (
 
 void
 PcieEarlyTrainFixupsPhx (
+  SIL_CONTEXT                 *SilContext,
   MPIOCLASS_COMMON_INPUT_BLK  *SilDataCommon,
   GNB_HANDLE                  *GnbHandle,
   MPIO_COMPLEX_DESCRIPTOR     *PcieTopologyData

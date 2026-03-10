@@ -96,6 +96,7 @@ typedef void (*MPIO_CONFIGURE_PSPP) (
   );
 
 typedef void (*PCIE_EARLY_TRAIN_FIXUPS) (
+  SIL_CONTEXT                     *SilContext,
   MPIOCLASS_COMMON_INPUT_BLK      *SilDataCommon,
   GNB_HANDLE                      *GnbHandle,
   MPIO_COMPLEX_DESCRIPTOR         *PcieTopologyData

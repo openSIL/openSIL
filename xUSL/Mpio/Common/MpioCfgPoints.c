@@ -158,6 +158,7 @@ MpioCfgEarlyLinkAuthentication (
   PCI_ADDR         EarlyLinkAddress
   )
 {
+  // TODO: Add PHX AM5 chipset auth
   return;
 }
 
