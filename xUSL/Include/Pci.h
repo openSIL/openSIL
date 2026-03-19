@@ -31,6 +31,19 @@ typedef enum ACCESS_WIDTH {
   AccessS3SaveWidth64,                                      ///< Save 64 bits data.
 } ACCESS_WIDTH;
 
+typedef enum PCIE_DEVICE_TYPE {
+  PcieDeviceEndPoint,                       ///< Endpoint (Type 00h Header)
+  PcieDeviceLegacyEndPoint,                 ///< Legacy endpointt (Type 00h Header)
+  PcieDeviceRootComplex = 4,                ///< Root complex (Type 01h Header)
+  PcieDeviceUpstreamPort,                   ///< Upstream port (Type 01h Header)
+  PcieDeviceDownstreamPort,                 ///< Downstream Port (Type 01h Header)
+  PcieDevicePcieToPcix,                     ///< PCIe to PCI/PCIx bridge (Type 01h Header)
+  PcieDevicePcixToPcie,                     ///< PCI/PCIx to PCIe bridge (Type 01h Header)
+  PCieDeviceRCiEP,                          ///< CXL RCiEP (Type 00h Header)
+  PcieDeviceRcec,                           ///< Root Complex Event Collector (Type 00h Header)
+  PcieNotPcieDevice = 0xff                  ///< unknown device
+} PCIE_DEVICE_TYPE;
+
 /// Extended PCI address format
 typedef struct {
   uint32_t      Register:12;             ///< Register offset
