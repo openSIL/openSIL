@@ -66,7 +66,7 @@ MpioProcessEarlyTrain (
             EarlyLinkAddress.Address.Device,
             EarlyLinkAddress.Address.Function
             );
-          MpioCfgEarlyLinkAuthentication(GnbHandle, EarlyLinkAddress);
+          MpioCfgEarlyLinkAuthentication(SilContext, GnbHandle, EarlyLinkAddress);
           break;
         }
       }

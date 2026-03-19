@@ -144,6 +144,7 @@ MpioCfgAfterReconfig (
 
 void
 MpioCfgEarlyLinkAuthentication (
+  SIL_CONTEXT      *SilContext,
   GNB_HANDLE       *GnbHandle,
   PCI_ADDR         EarlyLinkAddress
   );
