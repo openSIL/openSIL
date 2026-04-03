@@ -102,6 +102,16 @@ typedef struct {
   APOB_HMAC ApobTypeHmac;               ///< Hmac location for type
 } APOB_TYPE_HEADER;
 
+typedef struct {
+  uint32_t  PreSilCtrl0;
+  uint32_t  PreSilCtrl1;
+} ENV_FLAGS_STRUCT;
+
+typedef struct {
+  APOB_TYPE_HEADER           ApobTypeHeader;
+  ENV_FLAGS_STRUCT           Flags;
+} APOB_ENV_FLAGS_STRUCT;
+
 ///
 /// APOB SPD Data for each DIMM.
 ///
@@ -406,6 +416,8 @@ typedef enum {
   ReservedCxlAlignment,       ///< Read-only 0xFFs.  This region is
                               ///< set to WB DRAM and cannot be used as MMIO.
   ReservedCpuTmr,             ///< DRAM reserved for CPU TMR
+  ReservedRasEinj,            ///< DRAM reserved for RAS EINJ
+  ReservedABLOutput,          ///< DRAM reserved for ABL Output
   MaxMemoryHoleTypes,         ///< Not a valid type.  Used for validating the others.
 } MEMORY_HOLE_TYPES;
 
