@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <SilCommon.h>
+#include <SilSocLogicalId.h>
 #include <APOB/Common/ApobCmn.h>
 #include <Utils.h>
 #include <Mpio/Common/MpioLib.h>
@@ -331,6 +332,10 @@ MpioCfgGlobalConfigPhx (
     GlobalConfig->LinkL0Polling = SilDataCommon->PCIELinkL0Polling;
   }
 
+  if (SilDataPhx->CfgCombinTrainingEnable) {
+    GlobalConfig->combine_training_early_and_normal = 1;
+  }
+
   /*
    * Exact Match
    */
@@ -365,6 +370,10 @@ MpioCfgGlobalConfigPhx (
 
   if (SilDataPhx->CfgPcieLoopbackMode) {
     GlobalConfig->enableLoopbackSupport = 1;
+  }
+
+  if (SilDataPhx->AmdEnableKPXShallowPstate != 0) {
+    GlobalConfig->enable_kpx_shallow_pstate = SilDataPhx->AmdEnableKPXShallowPstate;
   }
 }
 
@@ -2045,6 +2054,10 @@ MpioCfgAddCtrllerStrapList (
     StrapEntry->field16.data = 1;
   }
 
+  if (ISSOCPHXAM5) {
+    StrapEntry->field17.strapIdx = MPIOSTRAPx22;
+  }
+
   if (SilDataPhx->PcieOBFF == true) {
     StrapEntry->field17.data = 0x2;
   }
@@ -2052,8 +2065,8 @@ MpioCfgAddCtrllerStrapList (
   /*
    * Data Link Feature Extended Capability
    */
-  if (SilDataPhx->AmdDlfCapEnV2 == 0xF) {
-    StrapEntry->field18.data = 0xF;
+  if (SilDataPhx->AmdDlfCapEnV2) {
+    StrapEntry->field18.data = 1;
   }
 
   /*
@@ -2163,15 +2176,15 @@ MpioCfgAddAllPortStrapList (
    * Update Allport strap data
    * Data Link Feature Extended Capability V2
    */
-  if (SilDataPhx->AmdDlfCapEnV2 == 0xF) {
-    StrapEntry->field3.data = 0xF;
+  if (SilDataPhx->AmdDlfCapEnV2) {
+    StrapEntry->field3.data = 1;
   }
 
   /*
    * Data Link Feature Exchange Enable V2
    */
-  if (SilDataPhx->AmdDlfExEnV2 == 0xF) {
-    StrapEntry->field4.data = 0xF;
+  if (SilDataPhx->AmdDlfExEnV2) {
+    StrapEntry->field4.data = 1;
   }
 
   /*
@@ -2186,6 +2199,15 @@ MpioCfgAddAllPortStrapList (
     if (false == SilDataPhx->CfgTbtRequesterEn) {
       StrapEntry->field6.data = 0;
     }
+  }
+
+  /*
+   * Advertise EQ To High Rate Support Enable
+   */
+  if (SilDataPhx->AmdAdvertiseEqToHighRateSupport) {
+    StrapEntry->field7.data = 1;
+  } else {
+    StrapEntry->field7.data = 0;
   }
 
   /*
@@ -2280,6 +2302,11 @@ MpioCfgAddPortStrapList (
 
     StrapEntry->field1[Index].strapIdx = MPIOSTRAPx15F;
     StrapEntry->field1[Index].data = 1;
+    if (ISSOCPHXAM5){
+      if (PortPointer->Port.MiscControls.SbLink == 1) {
+        StrapEntry->field1[Index].data = 0;
+      }
+    }
     Index++;
 
     StrapEntry->field1[Index].strapIdx = MPIOSTRAPx161;
@@ -2287,6 +2314,11 @@ MpioCfgAddPortStrapList (
     Value8 = SilDataPhx->CfgPCIeTPowerOnValue;
     if (Value8 != 0) {
       StrapEntry->field1[Index].data = Value8;
+    }
+    if (ISSOCPHXAM5){
+      if (PortPointer->Port.MiscControls.SbLink == 1) {
+        StrapEntry->field1[Index].data = 5;
+      }
     }
     Index++;
   }

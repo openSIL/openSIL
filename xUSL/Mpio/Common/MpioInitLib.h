@@ -198,19 +198,22 @@ typedef struct {
   uint32_t    Reserved0                            :1;
   uint32_t    RunXgmiSafeRecoveryOdt               :1;
   uint32_t    RunZcal                              :1;
-  uint32_t    padDword0                            :8;
+  uint32_t    XgmiAsyncFifoModeEnable              :1;
+  uint32_t    padDword0                            :7;
 
   /*
    * DWORD 1 - Power Management
    */
-  uint32_t    PWRMNGMT_PRFRM_CLK_GATING            :1;
-  uint32_t    PWRMNGMT_PRFRM_STATIC_PWR_GATING     :1;
-  uint32_t    PWRMNGMT_PRFRM_REFCLK_SHUTDOWN       :1;
-  uint32_t    CBSOPTIONS_ENABLEPOWERMANAGEMENT     :1;
-  uint32_t    PWRMNGMT_PRFRM_PMA_POWER_GATING      :1;
-  uint32_t    PWRMNGMT_PRFRM_PMA_CLOCK_GATING      :1;
-  uint32_t    CBSOPTIONS_DYNAMIC_PWR_GATING        :1;
-  uint32_t    padDword1                            :25;
+  uint32_t    PWRMNGMT_PRFRM_CLK_GATING             :1;
+  uint32_t    PWRMNGMT_PRFRM_STATIC_PWR_GATING      :1;
+  uint32_t    PWRMNGMT_PRFRM_REFCLK_SHUTDOWN        :1;
+  uint32_t    CBSOPTIONS_ENABLEPOWERMANAGEMENT      :1;
+  uint32_t    PWRMNGMT_PRFRM_PMA_POWER_GATING       :1;
+  uint32_t    PWRMNGMT_PRFRM_PMA_CLOCK_GATING       :1;
+  uint32_t    CBSOPTIONS_DYNAMIC_PWR_GATING         :1;
+  uint32_t    enable_kpx_shallow_pstate             :4;
+  uint32_t    PWRMNGMT_PRFRM_USB4_STATIC_PWR_GATING :1;
+  uint32_t    padDword1                             :20;
 
   /*
    * DWORD 2 - PCIE Link Timeouts (in msec)

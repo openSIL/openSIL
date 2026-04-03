@@ -160,6 +160,14 @@ typedef void (*MPIO_REMOVE_CXL_LINKS) (
   PCIe_PLATFORM_CONFIG          *Pcie
   );
 
+typedef SIL_STATUS (*MPIO_PCIE_SET_SPEED) (
+  SIL_CONTEXT                   *SilContext,
+  PCIe_PLATFORM_CONFIG          *Pcie,
+  uint8_t                       PciDevice,
+  uint8_t                       PciFunction,
+  uint8_t                       TargetSpeed
+  );
+
 // Define the Cmn2Rev xfer table containing pointers to these functions
 
 typedef struct {
@@ -191,4 +199,5 @@ typedef struct {
   MPIO_RELEASE_PORT                 MpioReleasePort;
   MPIO_GET_PORT_ID                  MpioGetPortId;
   MPIO_REMOVE_CXL_LINKS             MpioRemoveCxlLinks;
+  MPIO_PCIE_SET_SPEED               MpioPcieSetSpeed;
 } MPIO_COMMON_2_REV_XFER_BLOCK;

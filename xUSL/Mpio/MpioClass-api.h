@@ -139,6 +139,8 @@ typedef struct {
   bool        PcieIdeCapSup;
   bool        SafeRecoveryBER;
   bool        PeriodicCal;
+  bool        CfgCombinTrainingEnable;
+  uint8_t     AmdEnableKPXShallowPstate;
   PCIe_DPC_STATUS_DATA    DpcStatusData;    ///< DPC status
   PCIe_PLATFORM_TOPOLOGY  PcieTopologyData; ///< PCIe Platform topology
 } MPIOCLASS_COMMON_INPUT_BLK;

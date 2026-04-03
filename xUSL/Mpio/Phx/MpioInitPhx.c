@@ -12,7 +12,9 @@
 #include <Nbio/Phx/includePHX/PHX_GnbRegistersPhx.h>
 #include <Nbio/Phx/includePHX/PHX_NBIFMM.h>
 #include <Mpio/MpioClass-api.h>
+#include <Mpio/Common/MpioLib.h>
 #include <APOB/Common/ApobCmn.h>
+#include <string.h>
 #include "MpioCmn2Phx.h"
 #include "MpioPhxData.h"
 
@@ -254,7 +256,9 @@ const MPIOCLASS_PHX_INPUT_BLK mMpioClassDfltsPhx = {
   .CfgPcieTbtSupport = CONFIG_MPIO_PCIE_TBT_SUPPORT_ENABLE,
   .CfgACSEnable = CONFIG_MPIO_CFG_ACS_ENABLE,
   .CfgPCIeLTREnable = CONFIG_PCIE_LTR_ENABLE,
-  .PcieEcrcEnablement = CONFIG_PCIE_ECRC_ENABLE
+  .PcieEcrcEnablement = CONFIG_PCIE_ECRC_ENABLE,
+  .CfgCombinTrainingEnable = false,
+  .AmdAdvertiseEqToHighRateSupport = false
 };
 
 /**--------------------------------------------------------------------
@@ -577,4 +581,77 @@ MpioRemoveCxlLinksPhx (
   UNUSED(PcieTopologyData);
 
   MPIO_TRACEPOINT(SIL_TRACE_EXIT, "\n");
+}
+
+SIL_STATUS
+MpioPcieSetSpeed (
+  SIL_CONTEXT                   *SilContext,
+  PCIe_PLATFORM_CONFIG          *Pcie,
+  uint8_t                       PciDevice,
+  uint8_t                       PciFunction,
+  uint8_t                       TargetSpeed
+  )
+{
+  SIL_STATUS                     Status;
+  GNB_HANDLE                     *GnbHandle;
+  uint32_t                       EngineId;
+  uint32_t                       StartLaneId;
+  uint32_t                       EndLaneId;
+  PCIe_ENGINE_CONFIG             *PcieEngine;
+  PCIe_WRAPPER_CONFIG            *PcieWrapper;
+  uint32_t                       Response;
+  uint32_t                       MpioArg[6];
+  NBIO_IP2IP_API                 *NbioIp2Ip;
+
+  MPIO_TRACEPOINT(SIL_TRACE_ENTRY, "Device %d Function %d to Gen%d\n", PciDevice, PciFunction, TargetSpeed);
+
+  if (SilGetIp2IpApi(SilContext, SilId_NbioClass, (void **)(&NbioIp2Ip)) != SilPass) {
+    MPIO_TRACEPOINT(SIL_TRACE_ERROR, " NBIO API is not found.\n");
+    return SilNotFound;
+  }
+
+  GnbHandle = NbioIp2Ip->NbioGetHandle(Pcie);
+  Status = SilUnsupported;
+  EngineId = 0xFF;
+  StartLaneId = 0xFF;
+  EndLaneId = 0xFF;
+
+  PcieWrapper = (PCIe_WRAPPER_CONFIG *) NbioIp2Ip->PcieConfigGetChild(DESCRIPTOR_ALL_WRAPPERS, &Pcie->Header);
+  while (PcieWrapper != NULL) {
+    PcieEngine =(PCIe_ENGINE_CONFIG *)(NbioIp2Ip->PcieConfigGetChild(DESCRIPTOR_ALL_ENGINES, &(PcieWrapper->Header)));
+    while (PcieEngine != NULL) {
+      if ((PcieEngine->Type.Port.PortData.DeviceNumber == PciDevice)
+          && (PcieEngine->Type.Port.PortData.FunctionNumber == PciFunction)
+          && ((PcieEngine->Header.DescriptorFlags & DESCRIPTOR_ALLOCATED) == DESCRIPTOR_ALLOCATED)) {
+        EngineId = PcieEngine->Type.Port.PcieBridgeId;
+        StartLaneId = PcieEngine->EngineData.StartLane;
+        EndLaneId = PcieEngine->EngineData.EndLane;
+        if (StartLaneId > EndLaneId) {
+          //Handle the port reversal case
+          StartLaneId = PcieEngine->EngineData.EndLane;
+          EndLaneId = PcieEngine->EngineData.StartLane;
+        }
+        break;
+      }
+      PcieEngine = PcieLibGetNextDescriptor (PcieEngine);
+    }
+    if (EngineId != 0xFF) {
+      if (StartLaneId != 0xFF) {
+
+        memset(MpioArg, 0x00, sizeof (MpioArg));
+        MpioArg[0] = StartLaneId;
+        MpioArg[1] = TargetSpeed;
+        Response = MpioServiceRequestCommon(SilContext, GnbHandle->Address, MPIO_MSG_PCIE_SPEED_CHANGE, MpioArg, 0);
+        MPIO_TRACEPOINT(SIL_TRACE_INFO, "  StartLaneId = %d, EndLaneId = %d TargetSpeed = %d, MPIO Response = 0x%x\n",
+          StartLaneId, EndLaneId, TargetSpeed, Response);
+        if ((Response & 0xFF) == 0x01) {
+          Status = SilPass;
+        }
+        break;
+      }
+    }
+    PcieWrapper = PcieLibGetNextDescriptor (PcieWrapper);
+  }
+
+  return Status;
 }

@@ -197,3 +197,12 @@ MpioRemoveCxlLinksPhx (
   MPIO_COMPLEX_DESCRIPTOR       *PcieTopologyData,
   PCIe_PLATFORM_CONFIG          *Pcie
   );
+
+SIL_STATUS
+MpioPcieSetSpeed (
+  SIL_CONTEXT                   *SilContext,
+  PCIe_PLATFORM_CONFIG          *Pcie,
+  uint8_t                       PciDevice,
+  uint8_t                       PciFunction,
+  uint8_t                       TargetSpeed
+  );
