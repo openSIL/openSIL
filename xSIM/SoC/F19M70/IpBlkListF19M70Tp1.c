@@ -26,6 +26,7 @@
 #include <FCH/Tacoma/FchCore/FchHwAcpi/FchHwAcpiTc.h>
 #include <FCH/Tacoma/FchCore/FchUsb/FchUsbTc.h>
 #include <FCH/Tacoma/FchCore/FchIsa/FchIsaTc.h>
+#include <FCH/Tacoma/FchCore/FchSd/FchSdTc.h>
 #include <APOB/PHX/ApobPhx.h>
 #include <MEM/Phx/MemPhx.h>
 
@@ -111,13 +112,6 @@ const SOC_IP_TABLE SocIpTblF19M70Tp1 = {
       InitializeApiNbioPhx
     },
     {
-      SilId_CcxClass,
-      CCX_DATA_SIZE_ZEN4_PHX,
-      CcxSetInputBlkPhx,
-      InitializeCcxZen4PhxTp1,
-      InitializeApiZen4Phx
-    },
-    {
       SilId_FchClass,
       FCHCLASS_INPBLK_SIZE_TC,
       FchClassSetInputBlkTc,
@@ -160,6 +154,13 @@ const SOC_IP_TABLE SocIpTblF19M70Tp1 = {
       InitializeApiFchIsaTc
     },
     {
+      SilId_FchSd,
+      0,
+      NULL,
+      InitializeFchSdTcTp1,
+      NULL
+    },
+    {
       SilId_GfxClass,
       GFX_DATA_SIZE_PHX,
       GfxSetInputBlkPhx,
@@ -172,6 +173,13 @@ const SOC_IP_TABLE SocIpTblF19M70Tp1 = {
       MpioSetInputBlkPhx,
       InitializeMpioPhxTp1,
       InitializeApiMpioPhx
+    },
+    {
+      SilId_CcxClass,
+      CCX_DATA_SIZE_ZEN4_PHX,
+      CcxSetInputBlkPhx,
+      InitializeCcxZen4PhxTp1,
+      InitializeApiZen4Phx
     },
     {SilId_ListEnd, 0, NULL, NULL, NULL}  // End of list marker
   }

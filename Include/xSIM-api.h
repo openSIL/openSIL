@@ -58,6 +58,7 @@ typedef enum {
   SilId_FchIsa,
   SilId_FchEspi,
   SilId_FchUsb,
+  SilId_FchSd,
   SilId_MemClass,
   SilId_MultiFch,
   SilId_NbioClass,
