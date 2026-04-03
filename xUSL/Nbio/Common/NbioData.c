@@ -29,6 +29,9 @@ const NBIO_CONFIG_DATA mNbioConfigDataDflts = {
   .IommuAvicSupport = CONFIG_IOMMU_AVIC_SUPPORT,
   .IommuL2ClockGatingEnable = CONFIG_IOMMU_L2_CLOCK_GATING_EN,
   .IommuL1ClockGatingEnable = CONFIG_IOMMU_L1_CLOCK_GATING_EN,
+  .CfgIOMMUDynamicPgEnable = CONFIG_IOMMU_DYNAMIC_POWER_GATING_EN,
+  .CfgIOMMUL1MemoryPGEnable = CONFIG_IOMMU_L1_MEMORY_POWER_GATING_EN,
+  .CfgIOMMUL2MemoryPGEnable = CONFIG_IOMMU_L2_MEMORY_POWER_GATING_EN,
   .IOHCPgEnable = CONFIG_IOHC_PG_ENABLE,
   .NbioGlobalCgOverride = CONFIG_NBIO_GLOBAL_CG_OVERRIDE,
   .IommuSupport = CONFIG_IOMMU_SUPPORT,
@@ -119,7 +122,26 @@ const NBIO_CONFIG_DATA mNbioConfigDataDflts = {
   .CfgIommuSocket1Nbio3Enable = 0x01,
   .AmdCxlOnAllPorts = 0x01,
   .CfgPcieTbtSupport = true,
-  .CfgTbtCompleterEn = true
+  .CfgTbtCompleterEn = true,
+  .AmdNbioAudioSelect = 1,
+  .Pcie23DynPowerGating = true,
+  .Usb4Rt0En = true,
+  .Usb4Rt0PcieTnlEn = true,
+  .Usb4Rt1En = true,
+  .Usb4Rt1PcieTnlEn = true,
+  .UsbSysHubSelect = 0xff,
+  .CfgIgpuControl = 1,
+  .NbifPgHysteresis = 0,
+  .SyshubMgcgHspClkHysteresis = 0,
+  .SyshubGdcMgcgHysteresis = 0,
+  .CfgNbifPgClkGating = true,
+  .SysHubPg = true,
+  .EnableNbifOBFF = false,
+  .EnableNbifDmaOBFF = false,
+  .CfgSyshubGdcMgcgClkGating = true,
+  .CfgSyshubMgcgHspClkGating = true,
+  .CfgAzaliaEnable = true,
+  .PcieSramWA = false
 };
 
 /*----------------------------------------------------------------------------------------*/

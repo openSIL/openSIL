@@ -49,3 +49,6 @@
 #define IOMMUL1x148001f4                        0x148001f4UL
 
 #define IOMMUL1x147001f4                      0x147001f4UL
+#define IOMMUL1x147000e4                      0x147000e4UL
+#define IOMMUL1x148000e4                      0x148000e4UL
+#define IOMMUL1x14800024                      0x14800024UL

@@ -190,3 +190,69 @@
   (0x0 << L2_L2B_CK_GATE_CONTROL_CKGateL2BMiscDisable_OFFSET) | \
   (0x0 << L2_L2B_CK_GATE_CONTROL_CKGateL2BCacheDisable_OFFSET) \
   ),
+
+  #define NBIO_IOMMU_L2_DYNAMIC_POWER_GATING_TBL \
+    SMN_ENTRY_PROPERTY_RMW(PROPERTY_IOMMU_DYNAMIC_PWRGATING_ENABLED, \
+      IOMMUL2x157000f8, \
+      0xffffffff, \
+      0x800 \
+      ), \
+    SMN_ENTRY_PROPERTY_RMW(PROPERTY_IOMMU_DYNAMIC_PWRGATING_ENABLED, \
+      IOMMUL2x15700104, \
+      0x1, \
+      (0x1 << 0) \
+      ), \
+    SMN_ENTRY_PROPERTY_RMW(PROPERTY_IOMMU_DYNAMIC_PWRGATING_ENABLED, \
+      IOMMUL2x157000d4, \
+      (0x1 << 4), \
+      (0x1 << 4) \
+      ), \
+    SMN_ENTRY_PROPERTY_RMW(PROPERTY_IOMMU_DYNAMIC_PWRGATING_ENABLED, \
+      IOMMUL2x13f01254, \
+      (0x1 << 4), \
+      (0x1 << 4) \
+      ),
+
+  #define NBIO_IOMMU_L2_MEMORY_POWER_GATING_TBL \
+    SMN_ENTRY_PROPERTY_RMW(PROPERTY_IOMMU_L2PWRGATING_ENABLED, \
+      IOMMUL2x157000d4, \
+      (0x1 << 0) | \
+      (0x1 << 1) | \
+      (0x1 << 2), \
+      (0x1 << 0) | \
+      (0x1 << 1) | \
+      (0x1 << 2) \
+      ), \
+    SMN_ENTRY_PROPERTY_RMW(PROPERTY_IOMMU_L2PWRGATING_ENABLED, \
+      IOMMUL2x13f01254, \
+      (0x1 << 0) | \
+      (0x1 << 1) | \
+      (0x1 << 2), \
+      (0x1 << 0) | \
+      (0x1 << 1) | \
+      (0x1 << 2) \
+      ),
+
+  #define NBIO_IOMMU_L1_MEMORY_POWER_GATING_TBL \
+    SMN_ENTRY_PROPERTY_RMW(PROPERTY_IOMMU_L1PWRGATING_ENABLED, \
+      IOMMUL1x147000e4, \
+      (0x1 << 0) | \
+      (0x1 << 1) | \
+      (0x1 << 2) | \
+      (0x1 << 3) , \
+      (0x1 << 0) | \
+      (0x1 << 1) | \
+      (0x1 << 2) | \
+      (0x1 << 3) \
+      ), \
+    SMN_ENTRY_PROPERTY_RMW(PROPERTY_IOMMU_L1PWRGATING_ENABLED, \
+      IOMMUL1x148000e4, \
+      (0x1 << 0) | \
+      (0x1 << 1) | \
+      (0x1 << 2) | \
+      (0x1 << 3) , \
+      (0x1 << 0) | \
+      (0x1 << 1) | \
+      (0x1 << 2) | \
+      (0x1 << 3) \
+      ),

@@ -97,3 +97,10 @@
 #define BIT24_OFFSET_AAAAANM          24
 #define BITS_24_TO_31_MASK_AAAAANL            0xff000000
 #define SYSHUBMMx1411990                    0x1411990UL
+
+#define SYSHUBMMx1411020         0x1411020UL
+#define SYSHUBMMx1411034         0x1411034UL
+#define SYSHUBMMx1410040         0x1410040UL
+#define SYSHUBMMx1412020         0x1412020UL
+#define SYSHUBMMx1403ba8         0x1403ba8UL
+#define SYSHUBMMx1403c64         0x1403c64UL

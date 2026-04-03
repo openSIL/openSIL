@@ -256,3 +256,140 @@
   BITS_24_TO_29_MASK_AAAAANN, \
   (0x5 << BIT24_OFFSET_AAAAANO) \
   ),
+
+  #define NBIO_NBIF_DISABLE_IGPU_TBL \
+    SMN_ENTRY_RMW ( \
+      NBIFMMx10131000, \
+      (0x1 << 31), \
+      (0x1 << 31) \
+      ), \
+    SMN_ENTRY_RMW ( \
+        NBIFMMx10134200, \
+        BIT28_MASK_AAAABEL, \
+        (0 << BIT28_OFFSET_AAAABEM) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      NBIFMMx10134038, \
+      0xffff, \
+      (0x1022 << 0) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      NBIFMMx10134034, \
+      (BITS_0_TO_7_MASK_AAAABDD | \
+      BITS_8_TO_15_MASK_AAAABDF | \
+      BITS_16_TO_23_MASK_AAAABDB), \
+      (0x0 << BIT0_OFFSET_AAAABDE) | \
+      (0x0 << BIT8_OFFSET_AAAABDG) | \
+      (0x13 << BIT16_OFFSET_AAAABDC) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      NBIFMMx10134010, \
+      BITS_28_TO_30_MASK_AAAABEH, \
+      (0x0 << BIT28_OFFSET_AAAABEI) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      NBIFMMx1013400c, \
+      BIT18_MASK_AAAABEB | \
+      BIT20_MASK_AAAABDZ, \
+      (0x0 << BIT18_OFFSET_AAAABEC) | \
+      (0x0 << BIT20_OFFSET_AAAABEA) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      NBIFMMx10134010, \
+      BITS_23_TO_27_MASK_AAAABEJ, \
+      (0x0 << BIT23_OFFSET_AAAABEK) \
+      ), \
+    SMN_ENTRY_RMW ( \
+      NBIFMMx10134008, \
+      (0x1 << 8), \
+      (0x0 << 8) \
+      ),
+
+  #define NBIO_NBIF_DISABLE_LTR_TBL \
+    SMN_ENTRY_RMW ( \
+      NBIFMMx1013100c, \
+      0x2 | \
+      0x4, \
+      (0x0 << 1) | \
+      (0x0 << 2) \
+      ),
+
+  #define NBIO_NBIF_DISABLE_AER_TBL \
+    SMN_ENTRY_RMW ( \
+      NBIFMMx10134008, \
+      (0x1 << 16) | \
+      (0x1 << 17) | \
+      (0x1 << 18) | \
+      (0x1 << 28) | \
+      (0x1 << 27) | \
+      (0x1 << 8), \
+      (0x0 << 16) | \
+      (0x0 << 17) | \
+      (0x0 << 18) | \
+      (0x0 << 28) | \
+      (0x0 << 27) | \
+      (0x0 << 8) \
+      ),
+
+  #define NBIO_NBIF_DISABLE_FLR_ATOMIC_TBL \
+    SMN_ENTRY_RMW ( \
+      NBIFMMx10134008, \
+      (0x1 << 22) | \
+      (0x1 << 21) | \
+      (0x1 << 20), \
+      (0x0 << 22) | \
+      (0x0 << 21) | \
+      (0x0 << 20) \
+      ),
+
+  #define NBIO_NBIF_CLOCK_GATING_TBL \
+    SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_NBIF_MGCG_CLKGATING_ENABLED, \
+      NBIFMMx1013a21c, \
+      (0x1 << 0), \
+      (0x1 << 0) \
+      ), \
+    SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_SYSHUB_MGCG_CLKGATING_ENABLED, \
+      SYSHUBMMx1411020, \
+      (0x1 << 0), \
+      (0x1 << 0) \
+      ), \
+    SMN_ENTRY_PROPERTY_RMW ( \
+      PROPERTY_SYSHUB_MGCG_CLKGATING_ENABLED, \
+      SYSHUBMMx1410020, \
+      (0x1 << 0), \
+      (0x1 << 0) \
+      ),
+
+  #define NBIO_NBIF_POWER_GATING_TBL \
+    SMN_ENTRY_RMW ( \
+      NBIFMMx1013a0e0, \
+      (0xff << 0) | \
+      (0x1 << 8), \
+      (0x10 << 0) | \
+      (0x1 << 8) \
+      ),
+
+  #define NBIO_NBIF_SHUB_POWER_GATING_TBL \
+    SMN_ENTRY_RMW ( \
+      SYSHUBMMx1403c64, \
+      (0xff << 0) | \
+      (0x1 << 8), \
+      (0x10 << 0) | \
+      (0x1 << 8) \
+      ),
+
+  #define NBIO_NBIF_OBFF_CTRL_TBL \
+    SMN_ENTRY_RMW ( \
+      NBIFMMx1013a1d0, \
+      (0x1 << 0), \
+      (0x1 << 0) \
+      ),
+
+  #define NBIO_NBIF_OBFF_DMA_TBL \
+    SMN_ENTRY_RMW ( \
+      SYSHUBMMx1410040, \
+      (0x1 << 0), \
+      (0x1 << 0) \
+      ),

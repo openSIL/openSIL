@@ -29,6 +29,7 @@ NbioIoApicMmioAddressPhx (
 {
   uint32_t          BarLow;
   uint32_t          BarHigh;
+  uint32_t          Value;
 
   ///
   /// Write the assigned memory address registers to SMN
@@ -43,8 +44,38 @@ NbioIoApicMmioAddressPhx (
   xUSLSmnWrite(0,
     GnbHandle->Address.Address.Bus,
     NBIO_SPACE(GnbHandle, IOHCx13b102f0),
-    BarLow
+    BarLow | 1
     );
+
+  xUSLSmnWrite(0,
+    GnbHandle->Address.Address.Bus,
+    NBIO_SPACE(GnbHandle, IOHCx13b102f4),
+    BarHigh
+    );
+
+  Value = xUSLSmnRead (0,
+            GnbHandle->Address.Address.Bus,
+            NBIO_SPACE(GnbHandle, IOHCx14300000)
+            );
+  Value |= 1 << 2;    //Ioapic_id_ext_en
+  Value |= 1 << 4;    //Ioapic_sb_feature_en
+  if (GnbHandle->InstanceId != 0) {
+    Value |= 1 << 5;  //Ioapic_secondary_en
+  }
+  xUSLSmnWrite (0,
+    GnbHandle->Address.Address.Bus,
+    NBIO_SPACE(GnbHandle, IOHCx14300000),
+    Value
+    );
+
+  Value = GnbHandle->Address.Address.Bus;
+  Value |= 1 << 8;
+  xUSLSmnWrite (0,
+    GnbHandle->Address.Address.Bus,
+    NBIO_SPACE(GnbHandle, IOHCx13b10044),
+    Value
+    );
+
   return;
 }
 

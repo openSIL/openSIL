@@ -127,8 +127,36 @@
 
 #define IOHCx13b10230                                    0x13b10230UL
 
-/** PCIE_VDM_CNTL3
- * Reg(IOHC::PCIE_VDM_CNTL3)
+/** CCP_BASE_ADDR_LO
+ * Reg(IOHC::CCP_BASE_ADDR_LO)
+ * Classification(NDA)
+ *   Disposition(TBD)
+ */
+#define IOHCx13b102d8                                  0x13b102d8UL
+
+/** CCP_BASE_ADDR_LO
+ * Reg(IOHC::CCP_BASE_ADDR_HI)
+ * Classification(NDA)
+ *   Disposition(TBD)
+ */
+#define IOHCx13b102dc                                  0x13b102dcUL
+
+/** PSP_BASE_ADDR_LO
+ * Reg(IOHC::PSP_BASE_ADDR_LO)
+ * Classification(NDA)
+ *   Disposition(TBD)
+ */
+#define IOHCx13b102e0                                  0x13b102e0UL
+
+/** PSP_BASE_ADDR_LO
+ * Reg(IOHC::PSP_BASE_ADDR_HI)
+ * Classification(NDA)
+ *   Disposition(TBD)
+ */
+#define IOHCx13b102e4                                  0x13b102e4UL
+
+/** SMU_BASE_ADDR_LO
+ * Reg(IOHC::SMU_BASE_ADDR_LO)
  * Classification(NDA)
  *   Disposition(TBD)
  */
@@ -260,6 +288,10 @@
 #define IOHCx13b31004           0x13b31004UL
 #define IOHCx13b33004           0x13b33004UL
 
+#define IOHCx13b38404           0x13b38404UL
+
+#define IOHCx13b1007c           0x13b1007cUL
+
 /** NB_PROG_DEVICE_REMAP
  * Reg(IOHC::NB_PROG_DEVICE_REMAP)
  * Classification(NDA)
@@ -292,6 +324,8 @@ typedef union {
 
 #define IOHCx13b10190                     0x13b10190UL
 
+
+
 /** NB_ADAPTER_ID_W
  * Reg(IOHC::NB_ADAPTER_ID_W)
  * Classification(NDA)
@@ -314,6 +348,14 @@ typedef union {
 } NB_TOP_OF_DRAM_SLOT1_STRUCT;
 
 #define IOHCx13b00090                        0x13b00090UL
+
+/***********************************************************
+ * Register Name : NB_BUS_NUM_CNTL
+ * Register Description :
+ * GNB Bus Number Control.
+ * Visibility : 0x2
+ ************************************************************/
+#define IOHCx13b10044    0x13b10044UL
 
 /***********************************************************
  * Register Name : NB_LOWER_TOP_OF_DRAM2
@@ -381,3 +423,11 @@ typedef union {
  * Visibility : 0x2
  ************************************************************/
 #define IOHCx13b102f0    0x13b102f0UL
+
+/***********************************************************
+ * Register Name : FEATURES_ENABLE
+ * Register Description :
+ * IOAPIC feature control bits.
+ * Visibility : 0x2
+ ************************************************************/
+#define IOHCx14300000    0x14300000UL

@@ -28,6 +28,9 @@ const SMN_TABLE GnbIommuEnvInitTable [] = {
   NBIO_IOMMU_L1_INIT_TBL       // IOMMU L1 Initialization
   NBIO_IOMMU_L2_INIT_TBL       // IOMMU L2 Initialization
   NBIO_IOMMU_CLOCK_GATING_TBL  // IOMMU Clock Gating
+  NBIO_IOMMU_L2_DYNAMIC_POWER_GATING_TBL // IOMMU L2 Dynamic Power Gating
+  NBIO_IOMMU_L2_MEMORY_POWER_GATING_TBL  // IOMMU L2 Memory Power Gating
+  NBIO_IOMMU_L1_MEMORY_POWER_GATING_TBL  // IOMMU L1 Memory Power Gating
   //
   // Configure IOMMU Power Island, hide IOMMU function if disabled
   //
@@ -100,21 +103,34 @@ NbioIommuInit (
     return SilInvalidParameter;
   }
 
+  if (NbioIpBlockData->NbioConfigData.NbioGlobalCgOverride == 0) {
+    NbioIpBlockData->NbioConfigData.IommuL2ClockGatingEnable = false;
+    NbioIpBlockData->NbioConfigData.IommuL1ClockGatingEnable = false;
+    NbioIpBlockData->NbioConfigData.CfgIOMMUDynamicPgEnable = false;
+    NbioIpBlockData->NbioConfigData.CfgIOMMUL1MemoryPGEnable = false;
+    NbioIpBlockData->NbioConfigData.CfgIOMMUL2MemoryPGEnable = false;
+  }
+
   if (NbioIpBlockData->NbioConfigData.IommuL1ClockGatingEnable) {
     Property |= PROPERTY_IOMMU_L1CLKGATING_ENABLED;
-  } else {
-    Property |= PROPERTY_IOMMU_L1CLKGATING_DISABLED;
   }
   if (NbioIpBlockData->NbioConfigData.IommuL2ClockGatingEnable) {
     Property |= PROPERTY_IOMMU_L2CLKGATING_ENABLED;
-  } else {
-    Property |= PROPERTY_IOMMU_L2CLKGATING_DISABLED;
   }
   if (xApicMode == NbioIpBlockData->NbioConfigData.AmdApicMode) {
     Property |= PROPERTY_XAPIC_MODE;
   }
   if (false == NbioIpBlockData->NbioConfigData.IommuSupport) {
     Property |= PROPERTY_IOMMU_DISABLED;
+  }
+  if (NbioIpBlockData->NbioConfigData.CfgIOMMUDynamicPgEnable) {
+    Property |= PROPERTY_IOMMU_DYNAMIC_PWRGATING_ENABLED;
+  }
+  if (NbioIpBlockData->NbioConfigData.CfgIOMMUL1MemoryPGEnable) {
+    Property |= PROPERTY_IOMMU_L1PWRGATING_ENABLED;
+  }
+  if (NbioIpBlockData->NbioConfigData.CfgIOMMUL2MemoryPGEnable) {
+    Property |= PROPERTY_IOMMU_L2PWRGATING_ENABLED;
   }
 
   NBIO_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
@@ -194,6 +210,29 @@ NbioIommuInit (
     // Program up IOMMU NBIO Tables
     ProgramNbioSmnTable(GnbHandle, GnbIommuEnvInitTable, NBIO_SPACE(GnbHandle, 0), Property);
 
+    // AM5 does not support IOMMU AVIC
+    if (ISSOCPHXAM5) {
+      NbioIpBlockData->NbioConfigData.IommuAvicSupport = false;
+    }
+
+    xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+      GnbHandle->Address.Address.Bus,
+      SMN_IOMMU_MMIO_CONTROL0_W_ADDRESS,
+      (uint32_t)~0xe00000,
+      (NbioIpBlockData->NbioConfigData.IommuAvicSupport << 21)
+      );
+    xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+      GnbHandle->Address.Address.Bus,
+      IOMMUL2x15704330,
+      (uint32_t)~0xe00000,
+      (NbioIpBlockData->NbioConfigData.IommuAvicSupport << 21)
+      );
+    xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+      GnbHandle->Address.Address.Bus,
+      SMN_IOMMU_MMIO_EFR_0_ADDRESS,
+      (uint32_t)~0xe00000,
+      (NbioIpBlockData->NbioConfigData.IommuAvicSupport << 21)
+      );
 
     if (NbioIpBlockData->NbioConfigData.AmdApicMode != xApicMode) {
       for (Index = 0; Index < 4; Index++) {

@@ -172,6 +172,31 @@ config IOMMU_L2_CLOCK_GATING_EN
     help
         Enable/Disable I/O Memory Management Unit (IOMMU) L2 clock gating support
 
+# ------------------------------- IOMMU power gating support ----------------------------
+config IOMMU_DYNAMIC_POWER_GATING_EN
+    int "IOMMU dynamic power gating support"
+    default 1
+    range 0 1
+    help
+        Enable/Disable I/O Memory Management Unit (IOMMU) dynamic power gating support
+
+# -------------------------- IOMMU L1 memory power gating support -----------------------
+config IOMMU_L1_MEMORY_POWER_GATING_EN
+    int "IOMMU L1 memory power gating support"
+    default 1
+    range 0 1
+    help
+        Enable/Disable I/O Memory Management Unit (IOMMU) L1 memory gating support
+
+# ------------------------------ IOMMU L2 clock gating support --------------------------
+config IOMMU_L2_MEMORY_POWER_GATING_EN
+    int "IOMMU L2 memory power gating support"
+    default 1
+    range 0 1
+    help
+        Enable/Disable I/O Memory Management Unit (IOMMU) L2 memory power gating support
+
+
 # ------------------------------ IOMMU General AVIC modes support --------------------------
 config IOMMU_AVIC_SUPPORT
     int "IOMMU General AVIC modes support"

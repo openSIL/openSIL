@@ -52,3 +52,15 @@
 #define BIT44_OFFSET_AAAAASR                      0x44
 
 #define SMN_IOMMU_MMIO_CONTROL0_W_ADDRESS                      0x13f00080UL
+
+#define SMN_IOMMU_MMIO_EFR_0_ADDRESS                           0x2400030UL
+
+#define IOMMUL2x157000f8                            0x157000f8UL
+#define IOMMUL2x15700104                            0x15700104UL
+#define IOMMUL2x157000d4                            0x157000d4UL
+
+#define IOMMUL2x13f01254                            0x13f01254UL
+
+#define IOMMUL2x15704330                            0x15704330UL
+
+#define IOMMUL2x13f0112c                            0x13f0112cUL
