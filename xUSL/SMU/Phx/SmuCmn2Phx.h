@@ -19,3 +19,13 @@ SmuServiceRequestPhx (
   uint32_t *RequestArgument,
   uint32_t AccessFlags
   );
+
+SIL_STATUS
+SmuInitAfterCcxDonePhx (
+  SIL_CONTEXT                   *SilContext
+  );
+
+SIL_STATUS
+SmuInitAfterPcieTrainingDonePhx (
+  SIL_CONTEXT                   *SilContext
+  );

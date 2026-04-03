@@ -24,6 +24,7 @@
 #include <APOB/ApobIp2Ip.h>
 #include <Nbio/NbioIp2Ip.h>
 #include <FCH/Common/FchCommon.h>
+#include <SMU/Common/SmuCmn2Rev.h>
 
 #define SNP_DISABLE                            0   // SNP is disable no need to allocate memory for RMP table
 #define SNP_ENTIRE_MEMORY_ENABLE               1   // SNP is enable need to allocate entire memory size for RMP table
@@ -217,6 +218,7 @@ InitializeCcxAndLaunchAps (
   APOB_CCD_LOGICAL_TO_PHYSICAL_MAP_TYPE_STRUCT  ApobCcdLogToPhysMap;
   volatile AMD_CCX_AP_LAUNCH_GLOBAL_DATA ApLaunchGlobalData;
   CCX_DATA_BLOCK        *CcxDataBlk = NULL;
+  SMU_COMMON_2_REV_XFER_BLOCK  *SmuXfer;
 
   void              *ApStartupBuffer = NULL;
   uint8_t           MemoryContentCopy[AP_TEMP_BUFFER_SIZE];
@@ -637,6 +639,12 @@ InitializeCcxAndLaunchAps (
       MemoryContentCopy,
       MemoryContentCopySize
       );
+  }
+
+  if (SilGetCommon2RevXferTable(SilContext, SilId_SmuClass, (void **)(&SmuXfer)) == SilPass) {
+    Status = SmuXfer->SmuInitAfterCcxDone(SilContext);
+  } else {
+    CCX_TRACEPOINT(SIL_TRACE_ERROR, "SMU Xfer table not found!!\n");
   }
 
   UpdateCcxOutputData(SilContext, CcxConfigData);

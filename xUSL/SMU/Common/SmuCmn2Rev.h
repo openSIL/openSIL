@@ -20,8 +20,18 @@ typedef SMC_RESULT (*SMU_CMN2REV_SERVICE_REQUEST) (
   uint32_t  AccessFlags
   );
 
+typedef SIL_STATUS (*SMU_CMN2REV_INIT_AFTER_CCX_DONE) (
+  SIL_CONTEXT                   *SilContext
+  );
+
+typedef SIL_STATUS (*SMU_CMN2REV_INIT_AFTER_PCIE_TRAINING_DONE) (
+  SIL_CONTEXT                   *SilContext
+  );
+
 // Define the Cmn2Rev xfer table containing pointers to these functions
 
 typedef struct {
-  SMU_CMN2REV_SERVICE_REQUEST SmuServiceRequest;
+  SMU_CMN2REV_SERVICE_REQUEST               SmuServiceRequest;
+  SMU_CMN2REV_INIT_AFTER_CCX_DONE           SmuInitAfterCcxDone;
+  SMU_CMN2REV_INIT_AFTER_PCIE_TRAINING_DONE SmuInitAfterPcieTrainingDone;
 } SMU_COMMON_2_REV_XFER_BLOCK;

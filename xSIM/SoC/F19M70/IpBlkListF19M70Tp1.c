@@ -91,8 +91,8 @@ const SOC_IP_TABLE SocIpTblF19M70Tp1 = {
     },
     {
       SilId_SmuClass,
-      0,
-      NULL,
+      sizeof (SMUCLASS_INPUT_BLK),
+      SmuSetInputBlkPhx,
       NULL,
       InitializeApiSmuPhx
     },

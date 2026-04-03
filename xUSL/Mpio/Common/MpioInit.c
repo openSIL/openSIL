@@ -15,6 +15,7 @@
 #include "MpioCmn2Rev.h"
 #include <Mpio/MpioClass-api.h>
 #include <Nbio/NbioIp2Ip.h>
+#include <SMU/Common/SmuCmn2Rev.h>
 
 extern MPIO_COMPLEX_DESCRIPTOR PcieComplex;
 
@@ -88,6 +89,7 @@ NbioInitializeDxio (
   MPIO_COMPLEX_DESCRIPTOR         *PcieTopologyData;
   NBIO_IP2IP_API                  *NbioIp2Ip;
   MPIO_COMMON_2_REV_XFER_BLOCK    *MpioXferTable;
+  SMU_COMMON_2_REV_XFER_BLOCK     *SmuXfer;
 
   MPIO_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
 
@@ -132,6 +134,12 @@ NbioInitializeDxio (
   PcieConfigureHotplugPorts(SilContext, Pcie);
   MpioVisibilityControl(SilContext);
   MpioXferTable->MpioHotplugConfigureUSB4(NbioIp2Ip->NbioGetHandle(Pcie));
+
+  if (SilGetCommon2RevXferTable(SilContext, SilId_SmuClass, (void **)(&SmuXfer)) == SilPass) {
+    return SmuXfer->SmuInitAfterPcieTrainingDone(SilContext);
+  } else {
+    MPIO_TRACEPOINT(SIL_TRACE_ERROR, "SMU Xfer table not found!!\n");
+  }
 
   return SilPass;
 }
