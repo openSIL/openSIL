@@ -848,11 +848,11 @@ SilInitMmioEqually4 (
 
   //   4. if there's a spare MMIO register pair, try to set undescribed space (above or below PCIe Configuration)
   //      as primary RootBridge's 2nd MMIO
-  if (SystemRbNumber < MaxSystemRbCount) {
+  if (SystemRbNumber < MaxSystemRbCount + PRIMARY_RB_HAS_2ND_MMIO) {
     if ((AbovePcieCfgIsTooSmall && (SizeAbovePcieCfg != 0)) ||
       ((SizeBelowPcieCfg != 0) && (BelowPcieCfgIsTooSmall || (SystemRbNumber == 1)))) {
       for (i = 0; i < RCMGR_MAX_SOCKETS; i++) {
-        for (j = 0; j < SilData->RbsPerSocket; j++) {
+        for (j = 0; j < SilData->RbsPerSocket + PRIMARY_RB_HAS_2ND_MMIO; j++) {
           if (SilData->RbsPerSocket > PROJ_MAX_RBS_PER_SOCKET) {
             return SilOutOfBounds;
           }
