@@ -240,3 +240,6 @@ xUslDisableCache (void);
 
 NASM_ABI void
 xUslEnableCache (void);
+
+uint32_t
+xUSLGetPackageType (void);

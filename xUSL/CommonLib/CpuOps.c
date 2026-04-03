@@ -317,3 +317,19 @@ xUslClearMtrr (
   xUslWrMsr(AMD_MTRR_VARIABLE_MASK0 + (MtrrIndex << 1), 0);
   xUslWrMsr(AMD_MTRR_VARIABLE_BASE0 + (MtrrIndex << 1), 0);
 }
+
+/**
+ * xUSLGetPackageType
+ * @brief Returns the package type mask for the processor
+ * 
+ * @return uint32_t  Package type mask
+ */
+uint32_t
+xUSLGetPackageType (void)
+{
+  CPUID_DATA    Regs = {0};
+
+  xUslCpuId(AMD_CPUID_FMF, 0, &Regs);
+
+  return (uint32_t) (1 << ((Regs.EbxReg >> 28) & 0xF));
+}
