@@ -147,21 +147,25 @@ typedef struct {
   uint32_t                PcieMmioBase;                     ///< PcieMmioBase
   uint32_t                FchDeviceEnableMap;               ///< FchDeviceEnableMap
                                                             ///< Indicate FCH devices map
-                                                            ///< BIT4 - LPC : LpcEnable
-                                                            ///< BIT5 - I2C0 : FchRTDeviceEnableMap[BIT5]
-                                                            ///< BIT6 - I2C1 : FchRTDeviceEnableMap[BIT6]
-                                                            ///< BIT7 - I2C2 : FchRTDeviceEnableMap[BIT7]
-                                                            ///< BIT8 - I2C3 : FchRTDeviceEnableMap[BIT8]
-                                                            ///< BIT9 - I2C4 : FchRTDeviceEnableMap[BIT9]
-                                                            ///< BIT10 - I2C5 : FchRTDeviceEnableMap[BIT10]
+                                                            ///< BIT4  - LPC   : LpcEnable
+                                                            ///< BIT5  - I2C0  : FchRTDeviceEnableMap[BIT5]
+                                                            ///< BIT6  - I2C1  : FchRTDeviceEnableMap[BIT6]
+                                                            ///< BIT7  - I2C2  : FchRTDeviceEnableMap[BIT7]
+                                                            ///< BIT8  - I2C3  : FchRTDeviceEnableMap[BIT8]
+                                                            ///< BIT9  - I2C4  : FchRTDeviceEnableMap[BIT9]
+                                                            ///< BIT10 - I2C5  : FchRTDeviceEnableMap[BIT10]
                                                             ///< BIT11 - UART0 : FchRTDeviceEnableMap[BIT11]
                                                             ///< BIT12 - UART1 : FchRTDeviceEnableMap[BIT12]
+                                                            ///< BIT13 - I3C1  : FchRTDeviceEnableMap[BIT13]
+                                                            ///< BIT14 - I3C2  : FchRTDeviceEnableMap[BIT14]
+                                                            ///< BIT15 - I3C3  : FchRTDeviceEnableMap[BIT15]
                                                             ///< BIT16 - UART2 : FchRTDeviceEnableMap[BIT16]
-                                                            ///< BIT18 - SD : EmmcEnable and EmmcType < 5
+                                                            ///< BIT18 - SD    : EmmcEnable and EmmcType < 5
                                                             ///< BIT20 - UART4 : FchRTDeviceEnableMap[BIT20]
+                                                            ///< BIT21 - I3C0  : FchRTDeviceEnableMap[BIT21]
                                                             ///< BIT26 - UART3 : FchRTDeviceEnableMap[BIT26]
-                                                            ///< BIT27 - eSPI : EspiEnable
-                                                            ///< BIT28 - eMMC : EmmcEnable
+                                                            ///< BIT27 - eSPI  : EspiEnable
+                                                            ///< BIT28 - eMMC  : EmmcEnable
                                                             ///< BIT29 - HFP Enable
                                                             ///< BIT30 - HID Enable
                                                             ///< BIT31 - HID2 Enable

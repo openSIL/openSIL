@@ -453,6 +453,10 @@ FchHwAcpiEnableIOBase (
     0x0000,
     FchDataPtr->FchBldCfg.CfgAcpiPmTmrBlkAddr
     );
+  xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_ACPICPUCNTBLK),
+    0x0000,
+    FchDataPtr->FchBldCfg.CfgCpuControlBlkAddr
+    );
   xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_ACPIGPE0BLK),
     0x0000,
     FchDataPtr->FchBldCfg.CfgAcpiGpe0BlkAddr
@@ -464,6 +468,10 @@ FchHwAcpiEnableIOBase (
   xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_ACPIPMACNTBLK),
     0x0000,
     FchDataPtr->FchBldCfg.CfgSmiCmdPortAddr + 8
+    );
+  xUSLMemReadModifyWrite16((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_ACPIPM2CNTBLK),
+    0x0000,
+    0xFFFF
     );
 }
 
