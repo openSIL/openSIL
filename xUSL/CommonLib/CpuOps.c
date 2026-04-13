@@ -96,7 +96,7 @@ xUslGetProcessorId (void)
  *
  * @param    None
  *
- * @retval   APIC Id in EAX
+ * @retval   Extended APIC Id in EDX
  */
 uint32_t
 xUslGetInitialApicId (void)
@@ -104,9 +104,9 @@ xUslGetInitialApicId (void)
   CPUID_DATA  Regs = {0};
 
   // Read CPUID for family information
-  xUslCpuId(0x00000001, 0, &Regs);
+  xUslCpuId(0x0000000B, 0, &Regs);
 
-  return ((Regs.EbxReg >> 24) & 0xFF);
+  return Regs.EdxReg;
 }
 
 /**

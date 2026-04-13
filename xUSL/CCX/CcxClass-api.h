@@ -223,7 +223,9 @@ typedef struct {
   uint8_t  AmdCpuSpeculativeStoreMode;     ///< CPU Speculative Store Modes
   uint8_t  AmdCpuPauseDelay;               ///< Control number of cycles a thread will be idle
                                            ///< after PAUSE instruction.
-
+  bool     AmdEnableFSRM;
+  bool     AmdEnableERMS;
+  bool     AmdStatisticalCorrectPredictor;
   bool     CapsuleUpdateDetected;          ///< Flag indicating capsule update detected
   bool     SvmEnable;                      ///< Secure Virtual Machine mode enable
   bool     SvmLock;                        ///< Secure Virtual Machine mode lock
