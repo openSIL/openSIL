@@ -13,5 +13,6 @@
 #include "FchUsbCmn2Tc.h"
 
 FCH_USB_XFER_TABLE mFchUsbXferTc = {
-  .FchCioPcieDisable = FchCioPcieDisableTc
+  .FchCioPcieDisable = FchCioPcieDisableTc,
+  .FchUsbAfterPcieTrainingDone = FchUsbAfterPcieTrainingDoneTc
 };

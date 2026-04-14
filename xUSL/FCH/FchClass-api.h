@@ -77,6 +77,18 @@ typedef struct {
   uint8_t           ClockInterruptTag;      // Mark the periodic timer interrupt
                                             //  <b>1</b> - disable
                                             //  <b>0</b> - enable
+  uint8_t           OhciTrafficHanding;     // Cause CPU to break out from C state when USB OHCI has pending traffic
+                                            //  <b>1</b> - disable
+                                            //  <b>0</b> - enable
+  uint8_t           EhciTrafficHanding;     // Cause CPU to break out from C state when USB EHCI has pending traffic
+                                            //  <b>1</b> - disable
+                                            //  <b>0</b> - enable
+  uint8_t           GcpuMsgCMultiCore;      // Track of CPU C state by monitoring each core's C state message
+                                            //  <b>1</b> - disable
+                                            //  <b>0</b> - enable
+  uint8_t           GcpuMsgCStage;          // Enable the FCH C state coordination logic
+                                            //  <b>1</b> - disable
+                                            //  <b>0</b> - enable
 } FCH_GCPU;
 
 ///

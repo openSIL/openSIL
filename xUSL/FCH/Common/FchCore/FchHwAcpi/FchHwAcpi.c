@@ -719,6 +719,80 @@ FchHwAcpiProgramSpreadSpectrum (
   FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
 }
 
+static void
+FchHidInitPerCtrlr (
+  FCHCLASS_INPUT_BLK *FchDataPtr,
+  uint32_t Controller
+  )
+{
+  xUSLMemReadModifyWrite32(
+    (void *)(size_t)(FCH_HID_BASE_ADDRESS - (Controller * HID_CONTROLLER_STEP) + 0x00),
+    ~(BIT_32(18) + BIT_32(29) + BIT_32(30)),
+    ((FchDataPtr->FchRunTime.HidControl[Controller].SpiReadMode & 1) << 18) |
+      ((FchDataPtr->FchRunTime.HidControl[Controller].SpiReadMode & 6) << 28)
+    );
+  xUSLMemReadModifyWrite32(
+    (void *)(size_t)(FCH_HID_BASE_ADDRESS - (Controller * HID_CONTROLLER_STEP) + 0x20),
+    0x000FFFFF,
+    ((FchDataPtr->FchRunTime.HidControl[Controller].SpiSpeed & 0xf) << 20) |
+    ((FchDataPtr->FchRunTime.HidControl[Controller].SpiSpeed & 0xf) << 24) |
+    ((FchDataPtr->FchRunTime.HidControl[Controller].SpiSpeed & 0xf) << 28)
+    );
+  xUSLMemReadModifyWrite16(
+    (void *)(size_t)(FCH_HID_BASE_ADDRESS - (Controller * HID_CONTROLLER_STEP) + 0x6c),
+    0xc0c0,
+    (FchDataPtr->FchRunTime.HidControl[Controller].Spi_spd6 & 0x3f) |
+      ((FchDataPtr->FchRunTime.HidControl[Controller].Spi_spd7 & 0x3f) << 8)
+    );
+  xUSLMemReadModifyWrite32(
+    (void *)(size_t)(FCH_HID_BASE_ADDRESS - (Controller * HID_CONTROLLER_STEP) + 0x150),
+    ~(uint32_t) (BIT_32(15)),
+    BIT_32(15)
+    );
+}
+
+/**
+ * ProgramFchEnvHfpInit - Host Finger Print configuration
+ *
+ * @param[in] FchDataPtr Fch configuration structure pointer.
+ *
+ */
+static void
+ProgramFchEnvHfpInit (
+    FCHCLASS_INPUT_BLK *FchDataPtr,
+    FCHHWACPI_INPUT_BLK *FchHwAcpi
+  )
+{
+  if (FchHwAcpi->FchHfpEnable) {
+    //
+    // Enable ACPI HFP device
+    //
+    FchDataPtr->FchRunTime.FchDeviceEnableMap |= BIT_32(29);
+  }
+
+  xUSLMemReadModifyWrite8((void *)(size_t)(FCH_HFP_BASE_ADDRESS + 0x1d), 0xFC, 0x2);
+  xUSLMemReadModifyWrite8((void *)(size_t)(FCH_HFP_BASE_ADDRESS + 0x02), 0x3F, 0x0);
+}
+
+/**
+ * ProgramFchEnvHidInit - Host Hid configuration
+ *
+ * @param[in] FchDataPtr Fch configuration structure pointer.
+ *
+ */
+static void
+ProgramFchEnvHidInit (
+  FCHCLASS_INPUT_BLK *FchDataPtr
+  )
+{
+  if (FchDataPtr->FchRunTime.FchDeviceEnableMap & BIT_32(30)) {
+    FchHidInitPerCtrlr(FchDataPtr, 0);
+  }
+  if (FchDataPtr->FchRunTime.FchDeviceEnableMap & BIT_32(31)) {
+    FchHidInitPerCtrlr(FchDataPtr, 1);
+  }
+}
+
 /**
  * FchHwAcpiPrePcieInit
  * @brief Config HwAcpi controller during power-on
@@ -823,6 +897,9 @@ FchHwAcpiPrePcieInit (
 
   // Configure AOAC
   FchHwAcpiXfer->FchHwAcpiAoacInit(FchHwAcpi);
+
+  ProgramFchEnvHfpInit(FchDataPtr, FchHwAcpi);
+  ProgramFchEnvHidInit(FchDataPtr);
 
   FchHwAcpiXfer->FchHwAcpiZstateTiming ();
 }

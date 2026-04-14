@@ -36,6 +36,13 @@ SMC_RESULT FchXhciSmuService (
   uint32_t     RequestId
   );
 
+SMC_RESULT FchXhciUsbInitSmuService (
+  SIL_CONTEXT    *SilContext,
+  uint32_t       DieBusNum,
+  uint32_t       RequestId,
+  USB_INIT_DATA  *UsbInitData
+  );
+
 SMC_RESULT
 FchXhciSmuUsbConfigUpdate (
   SIL_CONTEXT   *SilContext,

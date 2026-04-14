@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <SilCommon.h>
 #include <FCH/Common/FchCore/FchUsb/FchUsbCmn2Rev.h>
 
 extern FCH_USB_XFER_TABLE mFchUsbXferTc;
@@ -15,4 +16,8 @@ extern FCH_USB_XFER_TABLE mFchUsbXferTc;
 void FchCioPcieDisableTc (
   uint32_t         PcieController,
   FCHUSB_INPUT_BLK *FchUsbData
+  );
+
+void FchUsbAfterPcieTrainingDoneTc (
+  SIL_CONTEXT *SilContext
   );

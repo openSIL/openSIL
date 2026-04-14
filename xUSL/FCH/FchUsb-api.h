@@ -31,6 +31,69 @@ typedef struct {
   uint8_t DisableUsbDbgClk;
 } FCH_BIOSSMC_MSG_INPUT_BLK;
 
+///
+/// USB Enable Structure
+///
+typedef struct {
+  uint32_t usb_hc_0             : 1;  ///< 1: Controller enabled
+  uint32_t usb_hc_1             : 1;  ///< 1: Controller enabled
+  uint32_t usb_hc_2             : 1;  ///< 1: Controller enabled
+  uint32_t usb_hc_3             : 1;  ///< 1: Controller enabled
+  uint32_t usb_hc_4             : 1;  ///< 1: Controller enabled
+  uint32_t reserved0            : 11; ///< spare
+  uint32_t usb4_rt_0            : 1;  ///< 1: Controller enabled; RMB/PHX/STX: pair with usb_hc_3
+  uint32_t usb4_rt_1            : 1;  ///< 1: Controller enabled; RMB.PHX/STX: pair with usb_hc_4
+  uint32_t reserved1            : 6;  ///< spare
+  uint32_t usb4_phy_0           : 1;  ///< 1: Controller enabled
+  uint32_t usb4_phy_1           : 1;  ///< 1: Controller enabled
+  uint32_t reserved2            : 5;  ///< spare
+  uint32_t usb_init_combined    : 1;  ///< 1: USB 3 and 4 initializations are combined
+} USB_ENABLE;
+
+///
+/// USB Combo Phy Static Config Structure
+///
+typedef struct {
+  uint32_t usb_hc_0             : 8;  ///< 8: Controller 0
+  uint32_t usb_hc_1             : 8;  ///< 8: Controller 1
+  uint32_t usb_hc_2             : 8;  ///< 8: Controller 2, RMB/PHX/STX: Unsupported
+  uint32_t reserved0            : 8;  ///< spare
+  uint32_t usb_hc_3             : 8;  ///< 8: Controller 3
+  uint32_t usb_hc_4             : 8;  ///< 8: Controller 4
+  uint32_t reserved1            : 16; ///< spare
+} USB_COMBO_PHY_STATIC_CONFIG;
+
+///
+/// USB Controller Config Structure
+///
+typedef struct {
+  uint32_t usb_hc_0_ss_port0_disable    : 1;  ///< 8: Disable Controller 0 - SS Port 0 of XHCI HC
+  uint32_t usb_hc_0_ss_port1_disable    : 1;  ///< 8: Disable Controller 0 - SS Port 1 of XHCI HC
+  uint32_t usb_hc_0_ss_port2_disable    : 1;  ///< 8: Disable Controller 0 - SS Port 2 of XHCI HC
+  uint32_t usb_hc_0_ss_port3_disable    : 1;  ///< 8: Disable Controller 0 - SS Port 3 of XHCI HC
+  uint32_t usb_hc_1_ss_port0_disable    : 1;  ///< 8: Disable Controller 1 - SS Port 0 of XHCI HC
+  uint32_t usb_hc_1_ss_port1_disable    : 1;  ///< 8: Disable Controller 1 - SS Port 1 of XHCI HC
+  uint32_t usb_hc_1_ss_port2_disable    : 1;  ///< 8: Disable Controller 1 - SS Port 2 of XHCI HC
+  uint32_t usb_hc_1_ss_port3_disable    : 1;  ///< 8: Disable Controller 1 - SS Port 3 of XHCI HC
+  uint32_t reserved0                    : 16; ///< spare
+  uint32_t usb_hc_3_ss_port0_disable    : 1;  ///< 8: Disable Controller 3 - SS Port 0 of USB3 Adapter HC
+  uint32_t usb_hc_4_ss_port0_disable    : 1;  ///< 8: Disable Controller 4 - SS Port 0 of USB3 Adapter HC
+  uint32_t reserved1                    : 6;  ///< spare
+} USB_CTRLR_CONFIG;
+
+///
+/// BIOSSMC MSG UsbInit Data Structure
+///
+typedef struct {
+  USB_ENABLE                  Enable;               ///< USB Init enable (DW0)
+  USB_COMBO_PHY_STATIC_CONFIG ComboPhyStaticConfig; ///< Combo Phy Static Config (DW1 & DW2)
+  USB_CTRLR_CONFIG            UsbControllerConfig;  ///< USB Controller Config (DW3)
+  uint16_t                    NumUsb3Entries;       ///< Usb3 entry number
+  uint16_t                    NumUsb4Entries;       ///< Usb4 entry number
+  uint16_t                    Usb3EntriesOffset;    ///< Usb3 offset, 0 means no entry
+  uint16_t                    Usb4EntriesOffset;    ///< Usb4 offset, 0 means no entry
+} USB_INIT_DATA;
+
 /**
  * Structure for OC pin select for each USB controller
  *
@@ -98,7 +161,8 @@ typedef struct {
   XHCI_OC            XhciOCpinSelect[4];             ///< XHCI OverCurrent OC Pin, [3:0] - Port0, [7:4] Port1, etc.
   bool               XhciOcPolarityCfgLow;
   uint8_t            Usb3PortForceGen1;
-  uint64_t           OemUsbConfigurationTable;
+  uint64_t           OemUsbConfigurationTable;       ///< FCH_TC_USB_OEM_PLATFORM_TABLE
+  USB_INIT_DATA      UsbInitData;
   bool               UsbSparseModeEnable;
   bool               UsbDbgSCPipeSwitchEnable;
   uint32_t           DdiModeEnable;                  ///< XHCI Combo-PHY DDI mode enable

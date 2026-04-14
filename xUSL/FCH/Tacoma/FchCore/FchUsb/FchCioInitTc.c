@@ -10,6 +10,7 @@
 #include <FchUsb-api.h>
 #include <FCH/Common/Fch.h>
 #include <FCH/Common/FchCommon.h>
+#include <FchReg.h>
 #include <FchXhci.h>
 #include <FCH/Common/FchCore/FchUsb/FchCio.h>
 #include <CommonLib/SmnAccess.h>
@@ -416,7 +417,7 @@ static void
 FchCioOemUsb20PhyTc (
   SIL_CONTEXT *SilContext,
   uint32_t DieBusNum,
-  SIL_RESERVED_STRUCT_0012 *PlatformUsbConfigureTable
+  FCH_TC_USB_OEM_PLATFORM_TABLE *PlatformUsbConfigureTable
   )
 {
   FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
@@ -427,14 +428,14 @@ FchCioOemUsb20PhyTc (
     DieBusNum,
     3,
     0,
-    &(PlatformUsbConfigureTable->field4[6])
+    &(PlatformUsbConfigureTable->Usb20PhyPort[6])
     );
   // HC4 (1 USB2): Port0
   FchUsbOemUsb20PhyConfigurePerPortTc(SilContext,
     DieBusNum,
     4,
     0,
-    &(PlatformUsbConfigureTable->field4[7])
+    &(PlatformUsbConfigureTable->Usb20PhyPort[7])
     );
 
   FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
@@ -597,6 +598,105 @@ FchCioOemUsb4PhyTc (
 }
 
 /**
+ * FchUsb4OemUsb3PhyConfigurePerPortTc
+ *
+ * @brief Helper function to update USB 3 PHY settings for each USB port.
+ *
+ * @param SilContext            A context structure through which host firmware defined data
+ *                              can be passed to openSIL. The host firmware is responsible
+ *                              for initializing the SIL_CONTEXT structure.
+ * @param DieBusNum             Bus Number on Current Die.
+ * @param Controller            USB3 Controller number.
+ * @param Port                  USB3 port number.
+ * @param Usb3Phy               USB3 PHY configuration parameter.
+ */
+static void
+FchUsb4OemUsb3PhyConfigurePerPortTc (
+  SIL_CONTEXT       *SilContext,
+  uint32_t          DieBusNum,
+  uint32_t          Controller,
+  uint8_t           Port,
+  uint8_t           *Usb4Phy
+  )
+{
+  uint32_t DW0_Index;
+  uint32_t DW1_Mask;
+  uint32_t DW2_Data;
+  uint32_t DW3_OpGroup;
+
+  DW0_Index = FCHUSBx00088;
+  DW1_Mask = 0x000003c0;
+  DW2_Data = (uint32_t)(Usb4Phy[2] & (0xF << (Port * 4))) << (6 - (Port * 4));
+  DW3_OpGroup = GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup2);
+
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    DW0_Index,
+    DW1_Mask,
+    DW2_Data,
+    DW3_OpGroup
+    );
+
+  DW0_Index = FCHUSBx08044;
+  DW1_Mask = 0x0000e000;
+  DW2_Data = (uint32_t)(Usb4Phy[0] & (0x7 << (Port * 4))) << (13 - (Port * 4));
+  DW3_OpGroup = GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup2);
+
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    DW0_Index,
+    DW1_Mask,
+    DW2_Data,
+    DW3_OpGroup
+    );
+
+  DW0_Index = FCHUSBx1825C;
+  DW1_Mask = 0x00000380;
+  DW2_Data = (uint32_t)(Usb4Phy[1] & (0x7 << (Port * 4))) << (7 - (Port * 4));
+  DW3_OpGroup = GET_USB_OP_GROUP((Controller << 1), FchUsbConfigRegGroup2);
+
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    DW0_Index,
+    DW1_Mask,
+    DW2_Data,
+    DW3_OpGroup
+    );
+}
+
+/**
+ * FchCioOemUsb4PhyConfigureTc - USB3 PHY tuning
+ */
+static void
+FchCioOemUsb4PhyConfigureTc (
+  SIL_CONTEXT      *SilContext,
+  FCHUSB_INPUT_BLK *FchUsbData
+  )
+{
+  FCH_TC_USB_OEM_PLATFORM_TABLE *FchUsbOemPlatformTable;
+
+  FchUsbOemPlatformTable = (FCH_TC_USB_OEM_PLATFORM_TABLE*)(uintptr_t)FchUsbData->OemUsbConfigurationTable;
+  FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+
+  // HC0 (2 USB3 + 5 USB2): Port0-1
+  FchUsb4OemUsb3PhyConfigurePerPortTc(SilContext,
+    FchUsbData->DieBusNum,
+    6,
+    0,
+    FchUsbOemPlatformTable->Reserved1
+    );
+
+  FchUsb4OemUsb3PhyConfigurePerPortTc(SilContext,
+    FchUsbData->DieBusNum,
+    8,
+    1,
+    FchUsbOemPlatformTable->Reserved1
+    );
+
+  FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
+}
+
+/**
  * @brief FchCioOemConfigureTc  -  USB4 OEM Platform Configuration
  *
  * @param SilContext            A context structure through which host firmware defined data
@@ -612,19 +712,91 @@ FchCioOemConfigureTc (
   FCHUSB_INPUT_BLK *FchUsbData
   )
 {
-  SIL_RESERVED_STRUCT_0012 *PlatformUsbConfigureTable;
+  FCH_TC_USB_OEM_PLATFORM_TABLE *PlatformUsbConfigureTable;
 
   FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
   FCH_TRACEPOINT(SIL_TRACE_INFO, "sizeof (uintptr_t) = 0x%x\n", sizeof (uintptr_t));
 
-  PlatformUsbConfigureTable = (SIL_RESERVED_STRUCT_0012 *)(uintptr_t) FchUsbData->OemUsbConfigurationTable;
+  PlatformUsbConfigureTable = (FCH_TC_USB_OEM_PLATFORM_TABLE *)(uintptr_t) FchUsbData->OemUsbConfigurationTable;
 
   if (FchUsbCheckOemTableValidTc(PlatformUsbConfigureTable)) {
+    if (ISSOCPHXAM5) {
+      FchCioOemUsb4PhyConfigureTc(SilContext, FchUsbData);
+    }
     FchCioOemUsb20PhyTc(SilContext, FchUsbData->DieBusNum, PlatformUsbConfigureTable);
     FchCioOemUsb4PhyTc(SilContext, FchUsbData);
   } else {
     FCH_TRACEPOINT(SIL_TRACE_ERROR, "Oem configure is not called!\n");
   }
+  FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
+}
+
+static void
+FchCioDisablePortPerControllerTc (
+  SIL_CONTEXT      *SilContext,
+  FCHUSB_INPUT_BLK *FchUsbData,
+  uint32_t         Controller
+  )
+{
+  uint32_t DW0_Index;
+  uint32_t DW1_Mask;
+  uint32_t DW2_Data;
+  uint32_t DW3_OpGroup;
+
+  DW0_Index = FCHOFSTx00180000 + USB0CFGx0018012c;
+  DW1_Mask = 0x00010001;
+  DW2_Data = ((FchUsbData->XhciUsb2PortDisable >> (8 + (Controller - 3) * 4)) & 0x1) +
+              (((FchUsbData->XhciUsb3PortDisable >> (4 + (Controller - 3) * 2)) & 0x1) << 16);
+  DW3_OpGroup = GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup1);
+
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    FchUsbData->DieBusNum,
+    DW0_Index,
+    DW1_Mask,
+    DW2_Data,
+    DW3_OpGroup
+    );
+
+  if (Controller == 3) {
+    FCH_TRACEPOINT(SIL_TRACE_INFO, "USB4 xHC0 PortDisable: %x\n",
+                   xUSLSmnRead(0,
+                     FchUsbData->DieBusNum,
+                     FCH_TC_USB3_SMN_BASE+ FCHOFSTx00180000 + USB0CFGx0018012c
+                     ));
+  } else if (Controller == 4) {
+    FCH_TRACEPOINT(SIL_TRACE_INFO, "USB4 xHC1 PortDisable: %x\n",
+                   xUSLSmnRead(0,
+                     FchUsbData->DieBusNum,
+                     FCH_TC_USB4_SMN_BASE+ FCHOFSTx00180000 + USB0CFGx0018012c
+                     ));
+  }
+
+}
+
+/**
+ * FchCioDisablePortTc -  USB4 Xhci Disable Port Control
+ *
+ * @param SilContext            A context structure through which host firmware defined data
+ *                              can be passed to openSIL. The host firmware is responsible
+ *                              for initializing the SIL_CONTEXT structure.
+ * @param DieBusNum             Bus Number for Current Die
+ * @param FchUsbData            Fch Usb configuration structure pointer.
+ *
+ */
+static void
+FchCioDisablePortTc (
+  SIL_CONTEXT      *SilContext,
+  FCHUSB_INPUT_BLK *FchUsbData
+  )
+{
+  FCH_TRACEPOINT(SIL_TRACE_ENTRY, "XhciUsb2PortDisable: %x, XhciUsb3PortDisable %x\n",
+                 FchUsbData->XhciUsb2PortDisable, FchUsbData->XhciUsb3PortDisable);
+
+  // HC2 (1 USB3 + 1 USB2): Port0-1
+  FchCioDisablePortPerControllerTc(SilContext, FchUsbData, 3);
+  // HC3 (1 USB3 + 1 USB2): Port0-1
+  FchCioDisablePortPerControllerTc(SilContext, FchUsbData, 4);
+
   FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
 }
 
@@ -649,6 +821,7 @@ FchCioPassParameterTc (
   )
 {
   FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+  FchCioDisablePortTc(SilContext, FchUsbData);
   FchCioOverCurrentTc(SilContext, FchUsbData);
   FchCioPortForceGen1Tc(SilContext, FchUsbData);
   FchCioTunnelDisableTc(SilContext, FchUsbData);
@@ -873,6 +1046,151 @@ FchCioDebugSCDisableTc (
 }
 
 /**
+ * @brief FchTCUSB4S3nBIFService  -  USB4 S3 nBIF Service Request
+ *
+ * @param SilContext            A context structure through which host firmware defined data
+ *                              can be passed to openSIL. The host firmware is responsible
+ *                              for initializing the SIL_CONTEXT structure.
+ * @param FchUsbData            Fch USB configuration structure pointer.
+ *
+ */
+static void
+FchCioS3nBIFServiceTc (
+  SIL_CONTEXT      *SilContext,
+  FCHUSB_INPUT_BLK *FchUsbData
+  )
+{
+
+  USB_INIT_DATA *UsbInitData = (USB_INIT_DATA *)&FchUsbData->UsbInitData;
+
+  FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+
+  if (FchUsbData->Usb4Host[0].InitEnable) {
+    if (FchUsbData->Usb4Host[0].HostEnable) {
+      UsbInitData->Enable.usb4_rt_0 = 1;
+    } else {
+      FchCioPcieDisableTc(0, FchUsbData);
+    }
+    if ((FchUsbData->Usb4Host[0].Usb3HCDisable & BIT_8(0)) == 0) {
+      UsbInitData->Enable.usb_hc_3 = 1;
+    } else {
+      xUSLSmnReadModifyWrite(0,
+        FchUsbData->DieBusNum,
+        FCH_USB4_HC3_NBIF_STRAP0_TC,
+        ~BIT_32(28),
+        0
+        );
+    }
+  }
+
+  // USB4 Router1
+  if (FchUsbData->Usb4Host[1].InitEnable) {
+    if (FchUsbData->Usb4Host[1].HostEnable) {
+      UsbInitData->Enable.usb4_rt_1 = 1;
+    } else {
+      FchCioPcieDisableTc(1, FchUsbData);
+    }
+    if ((FchUsbData->Usb4Host[1].Usb3HCDisable & BIT_8(0)) == 0) {
+      UsbInitData->Enable.usb_hc_4 = 1;
+    } else {
+      xUSLSmnReadModifyWrite(0,
+        FchUsbData->DieBusNum,
+        FCH_USB4_HC4_NBIF_STRAP0_TC,
+        ~BIT_32(28),
+        0
+        );
+    }
+  }
+
+  FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
+}
+
+/**
+ * @brief FchCioInitMessageTc  -  SMU Service USB Init Request
+ *
+ * @param SilContext            A context structure through which host firmware defined data
+ *                              can be passed to openSIL. The host firmware is responsible
+ *                              for initializing the SIL_CONTEXT structure.
+ * @param FchUsbData            Fch USB configuration structure pointer.
+ *
+ */
+static void
+FchCioInitMessageTc (
+  SIL_CONTEXT      *SilContext,
+  FCHUSB_INPUT_BLK *FchUsbData
+  )
+{
+  FCH_TC_USB_OEM_PLATFORM_TABLE  *PlatformUsbConfigureTable;
+  USB_INIT_DATA *UsbInitData = &FchUsbData->UsbInitData;
+
+  PlatformUsbConfigureTable = (FCH_TC_USB_OEM_PLATFORM_TABLE *)(uintptr_t)FchUsbData->OemUsbConfigurationTable;
+
+  FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+
+  UsbInitData->Enable.usb_init_combined = 1;
+
+  // USB4 Router0
+  if (FchUsbData->Usb4Host[0].InitEnable) {
+    if (FchUsbData->Usb4Host[0].PhyEnable != 0) {
+      UsbInitData->Enable.usb4_phy_0 = 1;
+    }
+    if (FchUsbData->Usb4Host[0].HostEnable) {
+      UsbInitData->Enable.usb4_rt_0 = 1;
+    } else {
+      FchCioPcieDisableTc(0, FchUsbData);
+    }
+    if ((FchUsbData->Usb4Host[0].Usb3HCDisable & BIT_8(0)) == 0) {
+      UsbInitData->Enable.usb_hc_3 = 1;
+    } else {
+      xUSLSmnReadModifyWrite(0,
+        FchUsbData->DieBusNum,
+        FCH_USB4_HC3_NBIF_STRAP0_TC,
+        ~BIT_32(28),
+        0
+        );
+    }
+    if ((FchUsbData->Usb4Host[0].SSPortDisable & BIT_8(0)) == 1) {
+      UsbInitData->UsbControllerConfig.usb_hc_3_ss_port0_disable = 1;
+      UsbInitData->Enable.usb4_rt_0 = 0;
+    }
+    if (PlatformUsbConfigureTable != NULL) {
+      UsbInitData->ComboPhyStaticConfig.usb_hc_3 =
+        PlatformUsbConfigureTable->ComboPhyStaticConfig[1] & 0x0F;
+    }
+  }
+
+  // USB4 Router1
+  if (FchUsbData->Usb4Host[1].InitEnable) {
+    if (FchUsbData->Usb4Host[1].PhyEnable != 0) {
+      UsbInitData->Enable.usb4_phy_1 = 1;
+    }
+    if (FchUsbData->Usb4Host[1].HostEnable) {
+      UsbInitData->Enable.usb4_rt_1 = 1;
+    } else {
+      FchCioPcieDisableTc(1, FchUsbData);
+    }
+    if ((FchUsbData->Usb4Host[1].Usb3HCDisable & BIT_8(0)) == 0) {
+      UsbInitData->Enable.usb_hc_4 = 1;
+    } else {
+      xUSLSmnReadModifyWrite(0,
+        FchUsbData->DieBusNum,
+        FCH_USB4_HC4_NBIF_STRAP0_TC,
+        ~BIT_32(28),
+        0
+        );
+    }
+    if ((FchUsbData->Usb4Host[1].SSPortDisable & BIT_8(0)) == 1) {
+      UsbInitData->UsbControllerConfig.usb_hc_4_ss_port0_disable = 1;
+      UsbInitData->Enable.usb4_rt_1 = 0;
+    }
+    if (PlatformUsbConfigureTable != NULL) {
+      UsbInitData->ComboPhyStaticConfig.usb_hc_4 =
+        PlatformUsbConfigureTable->ComboPhyStaticConfig[2] & 0x0F;
+    }
+  }
+}
+
+/**
  * FchCioInitS3ExitProgramTc
  *
  * @brief Config USB4 controllers during S3 Exit
@@ -901,6 +1219,8 @@ FchCioInitS3ExitProgramTc (
   }
 
   FchCioPassParameterTc(SilContext, FchUsbData);
+  FchCioLinkSpeedTc(SilContext, FchUsbData);
+  FchCioS3nBIFServiceTc(SilContext, FchUsbData);
 
   FchBiosSmcMsg = (FCH_BIOSSMC_MSG_INPUT_BLK *) xUslFindStructure(SilContext,
     SilId_FchUsb,
@@ -955,6 +1275,7 @@ static void FchCioInitBootProgramTc (
   FchCioP4PgEnableTc(SilContext, FchUsbData);
   FchCioLinkSpeedTc(SilContext, FchUsbData);
   FchCioDebugSCDisableTc(SilContext, FchUsbData);
+  FchCioInitMessageTc(SilContext, FchUsbData);
 }
 
 /**

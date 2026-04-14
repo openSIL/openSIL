@@ -38,9 +38,11 @@
 #define FCH_PM_VIRTUALWIRE                                                     0xA8
 #define FCH_PM_TPRESET2                                                        0xB8
 #define FCH_PM_S_STATECONTROL                                                  0xBA
+#define PMx000000BC                                                            0xBC
 #define FCH_PM_RESETCONTROL2                                                   0xBF
 #define FCH_PM_S5_RESET_STATUS                                                 0xC0
 #define FCH_PM_RESETCOMMAND                                                    0xC4
+#define PMx000000C8                                                            0xC8
 #define FCH_PM_PMIODEBUG                                                       0xD2
 #define FCH_PM_ABREGBAR                                                        0xE0
 #define FCH_PM_USBGATING                                                       0xED

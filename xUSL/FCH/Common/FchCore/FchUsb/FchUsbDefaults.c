@@ -26,6 +26,7 @@ const FCHUSB_INPUT_BLK mFchUsbDefaults = {
   .XhciOcPolarityCfgLow = false,
   .Usb3PortForceGen1 = 0x0,
   .OemUsbConfigurationTable = 0,
+  .UsbInitData = { { 0 }, { 0 }, { 0 }, 0, 0, 0, 0 },
   .UsbSparseModeEnable = true,
   .UsbDbgSCPipeSwitchEnable = false,
   .DdiModeEnable = 0,

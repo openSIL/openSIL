@@ -14,10 +14,14 @@
 #define FCH_USB0_NBIF_STRAP0_TC              0x10134600ul
 #define FCH_USB1_NBIF_STRAP0_TC              0x10134800ul
 
+#define FCH_USB0_SMN_PCICFG_TC               0x10143000ul
+#define FCH_USB1_SMN_PCICFG_TC               0x10144000ul
+
 //
 // USB4
 //
-
+#define FCH_USB4_HC3_NBIF_STRAP0_TC          0x10136600ul
+#define FCH_USB4_HC4_NBIF_STRAP0_TC          0x10136800ul
 #define FCH_USB4_RT0_NBIF_STRAP0_TC          0x10136A00ul
 #define FCH_USB4_RT1_NBIF_STRAP0_TC          0x10136C00ul
 

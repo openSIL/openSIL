@@ -11,6 +11,11 @@ typedef void (*FCH_CIO_PCIE_DISABLE) (
   FCHUSB_INPUT_BLK *FchUsbData
   );
 
+typedef void (*FCH_USB_AFTER_PCIE_TRAINING_DONE) (
+  SIL_CONTEXT *SilContext
+  );
+
 typedef struct {
   FCH_CIO_PCIE_DISABLE FchCioPcieDisable;
+  FCH_USB_AFTER_PCIE_TRAINING_DONE FchUsbAfterPcieTrainingDone;
 } FCH_USB_XFER_TABLE;
