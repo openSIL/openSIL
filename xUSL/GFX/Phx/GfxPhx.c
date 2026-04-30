@@ -14,6 +14,7 @@
 #include <GFX/Common/Gfx.h>
 #include <GFX/Common/GfxDisplayPhySettings.h>
 #include <GFX/Common/GfxDisplayTypeSettings.h>
+#include "GfxInitPhx.h"
 #include "GfxPhx.h"
 
 /**
@@ -31,6 +32,8 @@ InitializeGfxPhxTp1 (
   SIL_CONTEXT  *SilContext
   )
 {
+  SIL_STATUS  Status;
+  GFXCLASS_INPUT_BLK *GfxConfigData;
   uint32_t   InfoN6BlockDataSize;
   uint32_t   InfoDdiBlockDataSize;
 
@@ -40,11 +43,22 @@ InitializeGfxPhxTp1 (
    */
   GFX_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
 
+  GfxConfigData = (GFXCLASS_INPUT_BLK *)xUslFindStructure(SilContext,
+    SilId_GfxClass,
+    GFXCLASS_INSTANCE
+    );
+
+  if (GfxConfigData == NULL) {
+    GFX_TRACEPOINT(SIL_TRACE_ERROR, "GFX input block not found\n");
+    return SilNotFound;
+  }
+
   GetGfxN6Config(SilContext, &InfoN6BlockDataSize);
   GetGfxDdiConfig(SilContext, &InfoDdiBlockDataSize);
+  Status = GfxInitPhx(SilContext, GfxConfigData);
 
   GFX_TRACEPOINT(SIL_TRACE_EXIT, "\n");
-  return SilPass;
+  return Status;
 }
 
 /**

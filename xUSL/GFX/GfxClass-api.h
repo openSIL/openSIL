@@ -68,12 +68,12 @@ typedef struct {
   bool Usb4Rt1En;
   bool Usb4Rt1DpTnlEn;
   uint32_t  AmdPreSilCtrl1;
-  void *AmdDisplayPhyTuningSettingTableHeader;
-  void *AmdDisplayPhyTuningSettingTableContent;
-  void *AmdDdiContent;
-  uint32_t  PeiGopConfigMemsize;
-  uint32_t  PeiGopVmFbOffset;
-  uint32_t  PeiGopVmFbLocationTop;
+  uint64_t  AmdDisplayPhyTuningSettingTableHeader;
+  uint64_t  AmdDisplayPhyTuningSettingTableContent;
+  uint64_t  AmdDdiContent;
+  uint64_t  PeiGopConfigMemsize;
+  uint64_t  PeiGopVmFbOffset;
+  uint64_t  PeiGopVmFbLocationTop;
   uint32_t  BootMode;
   uint32_t  DisplayCapDdi0;
   uint32_t  DisplayCapDdi1;
@@ -91,4 +91,6 @@ typedef struct {
   uint8_t   PwrDownBloffToVaryBlOff;
   uint8_t   PwrOffDelay;
   uint8_t   Usb4DpiaDisable;
+  uint8_t   UmaMode;
+  uint32_t  AmdUmaCarveoutIndexMax;
 } GFXCLASS_INPUT_BLK;

@@ -8,6 +8,7 @@
 
 
 #include <xSIM.h>
+#include <APOB/Common/ApobCmn.h>
 #include <GFX/GfxClass-api.h>
 #include <GFX/Common/GfxDisplayPhySettings.h>
 #include <GFX/Common/GfxDisplayTypeSettings.h>
@@ -39,4 +40,10 @@ void *
 GetGfxDdiConfig (
   SIL_CONTEXT  *SilContext,
   uint32_t     *InfoDdiBlockDataSize
+  );
+
+SIL_STATUS
+GetUmaInformation (
+  SIL_CONTEXT *SilContext,
+  MEMORY_HOLE_DESCRIPTOR *UmaRange
   );

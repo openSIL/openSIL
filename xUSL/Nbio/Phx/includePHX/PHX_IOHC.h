@@ -431,3 +431,8 @@ typedef union {
  * Visibility : 0x2
  ************************************************************/
 #define IOHCx14300000    0x14300000UL
+
+#define IOHCx13b0004c    0x13b0004cul
+#define IOHCx13b1005c    0x13b1005cul
+#define IOHCx13b10060    0x13b10060ul
+#define IOHCx13b00084    0x13b00084ul

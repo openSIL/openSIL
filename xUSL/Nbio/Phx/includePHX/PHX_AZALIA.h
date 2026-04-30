@@ -7,4 +7,6 @@
 
 #pragma once
 
+#define AZALIAxe370          0xe370UL
+
 #define AZALIAx1200008       0x1200008UL

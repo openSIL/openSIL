@@ -60,3 +60,11 @@
 #define PCIECOREx1128047c    0x1128047cUL
 
 #define GNBREGx5d978                              0x5d978UL
+
+#define GNBREGx6a340      0x6a340UL
+#define GNBREGx6a344      0x6a344UL
+#define GNBREGx6a348      0x6a348UL
+#define GNBREGx6a34c      0x6a34cUL
+#define GNBREGx6a350      0x6a350UL
+#define GNBREGx6a354      0x6a354UL
+#define GNBREGx6a358      0x6a358UL

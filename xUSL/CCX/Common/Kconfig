@@ -5,7 +5,7 @@
 # ------------------------------ APIC Mode --------------------------
 choice
     prompt  "APIC - operational mode for this plaltform"
-    default CHOICE_APIC_AUTO
+    default APIC_AUTO
     help
         Ref: typedef enum{} APIC_MODE;
 
