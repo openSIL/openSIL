@@ -29,6 +29,8 @@
 #include <FCH/Tacoma/FchCore/FchSd/FchSdTc.h>
 #include <APOB/PHX/ApobPhx.h>
 #include <MEM/Phx/MemPhx.h>
+#include <PROM/PromClass-api.h>
+#include <PROM/Common/PromInit.h>
 
 
 /**
@@ -59,7 +61,7 @@
  *          - MPIO:   MPIO firmware initializes and trains the PCIe links
  *                    (required for CXL). Due to this dependency,
  *                    MPIO is initialized prior to CXL IP block.
- *          - CXL:    CXL is dependent on MPIO and is initialized after MPIO.
+ *          - Prom: PROM21 is dependent on MPIO and is initialized after MPIO.
  */
 const SOC_IP_TABLE SocIpTblF19M70Tp1 = {
   AMD_FAMILY_19_PHX,     // This is the 'Client' F19M70  a.k.a. Phoenix
@@ -173,6 +175,13 @@ const SOC_IP_TABLE SocIpTblF19M70Tp1 = {
       MpioSetInputBlkPhx,
       InitializeMpioPhxTp1,
       InitializeApiMpioPhx
+    },
+    {
+      SilId_PromClass,
+      PROMCLASS_DATA_SIZE,
+      PromClassSetInputBlock,
+      InitializePromTp1,
+      NULL,
     },
     {
       SilId_CcxClass,

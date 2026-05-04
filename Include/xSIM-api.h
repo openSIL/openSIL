@@ -70,6 +70,7 @@ typedef enum {
   SilId_RasClass,
   SilId_ApobClass,
   SilId_GfxClass,
+  SilId_PromClass,
   // Add new elements above this line ^^^
   SilId_ListEnd             ///< Value to bound the list
 } SIL_DATA_BLOCK_ID;
