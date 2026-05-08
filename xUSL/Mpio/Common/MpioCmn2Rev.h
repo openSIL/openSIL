@@ -168,6 +168,20 @@ typedef SIL_STATUS (*MPIO_PCIE_SET_SPEED) (
   uint8_t                       TargetSpeed
   );
 
+typedef struct {
+  bool      EarlyLinkStatus;
+  uint8_t   PhysicalRootBridge;
+  uint8_t   LogicalRootBridge;
+  uint8_t   RootPortBus;
+  uint8_t   RootPortDevice;
+  uint8_t   RootPortFunction;
+} EARLY_LINK_STATUS;
+
+typedef SIL_STATUS (*MPIO_GET_EARLY_LINK_CONFIG) (
+  SIL_CONTEXT                   *SilContext,
+  EARLY_LINK_STATUS             *EarlyLinkStatus
+  );
+
 // Define the Cmn2Rev xfer table containing pointers to these functions
 
 typedef struct {
@@ -200,4 +214,5 @@ typedef struct {
   MPIO_GET_PORT_ID                  MpioGetPortId;
   MPIO_REMOVE_CXL_LINKS             MpioRemoveCxlLinks;
   MPIO_PCIE_SET_SPEED               MpioPcieSetSpeed;
+  MPIO_GET_EARLY_LINK_CONFIG        MpioGetEarlyLinkConfig;
 } MPIO_COMMON_2_REV_XFER_BLOCK;

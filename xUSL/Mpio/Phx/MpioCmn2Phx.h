@@ -11,8 +11,8 @@
 
 #include <SilCommon.h>
 #include <Nbio/Common/GnbDxio.h>
+#include <Mpio/Common/MpioCmn2Rev.h>
 #include <Mpio/MpioClass-api.h>
-
 
 void
 MpioCfgGlobalConfigPhx (
@@ -205,4 +205,10 @@ MpioPcieSetSpeed (
   uint8_t                       PciDevice,
   uint8_t                       PciFunction,
   uint8_t                       TargetSpeed
+  );
+
+SIL_STATUS
+MpioGetEarlyLinkConfig (
+  SIL_CONTEXT                   *SilContext,
+  EARLY_LINK_STATUS             *EarlyLinkStatus
   );

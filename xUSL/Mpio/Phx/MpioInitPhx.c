@@ -12,6 +12,7 @@
 #include <Nbio/Phx/includePHX/PHX_GnbRegistersPhx.h>
 #include <Nbio/Phx/includePHX/PHX_NBIFMM.h>
 #include <Mpio/MpioClass-api.h>
+#include <Mpio/Common/MpioCmn2Rev.h>
 #include <Mpio/Common/MpioLib.h>
 #include <APOB/Common/ApobCmn.h>
 #include <string.h>
@@ -616,7 +617,7 @@ MpioPcieSetSpeed (
   StartLaneId = 0xFF;
   EndLaneId = 0xFF;
 
-  PcieWrapper = (PCIe_WRAPPER_CONFIG *) NbioIp2Ip->PcieConfigGetChild(DESCRIPTOR_ALL_WRAPPERS, &Pcie->Header);
+  PcieWrapper = (PCIe_WRAPPER_CONFIG *) NbioIp2Ip->PcieConfigGetChild(DESCRIPTOR_ALL_WRAPPERS, &(GnbHandle->Header));
   while (PcieWrapper != NULL) {
     PcieEngine =(PCIe_ENGINE_CONFIG *)(NbioIp2Ip->PcieConfigGetChild(DESCRIPTOR_ALL_ENGINES, &(PcieWrapper->Header)));
     while (PcieEngine != NULL) {
@@ -654,4 +655,74 @@ MpioPcieSetSpeed (
   }
 
   return Status;
+}
+
+static void
+FindEarlyLink (
+  SIL_CONTEXT           *SilContext,
+  PCIe_ENGINE_CONFIG    *Engine,
+  void                  *Buffer,
+  PCIe_PLATFORM_CONFIG  *Pcie
+  )
+{
+  GNB_HANDLE            *GnbHandle;
+  EARLY_LINK_STATUS     *EarlyLinkStatus;
+
+  if (Engine->Type.Port.PortData.MiscControls.SbLink == 1) {
+    if (Engine->InitStatus == INIT_STATUS_PCIE_TRAINING_SUCCESS) {
+      EarlyLinkStatus = (EARLY_LINK_STATUS *)Buffer;
+      EarlyLinkStatus->EarlyLinkStatus = true;
+      GnbHandle = (GNB_HANDLE *)PcieConfigGetParentSilicon(Engine);
+      EarlyLinkStatus->PhysicalRootBridge = GnbHandle->RBIndex;
+      EarlyLinkStatus->LogicalRootBridge = GnbHandle->LogicalRBIndex;
+      EarlyLinkStatus->RootPortBus = (uint8_t) GnbHandle->Address.Address.Bus;
+      EarlyLinkStatus->RootPortDevice = Engine->Type.Port.PortData.DeviceNumber;
+      EarlyLinkStatus->RootPortFunction = Engine->Type.Port.PortData.FunctionNumber;
+    }
+  }
+}
+
+SIL_STATUS
+MpioGetEarlyLinkConfig (
+  SIL_CONTEXT                   *SilContext,
+  EARLY_LINK_STATUS             *EarlyLinkStatus
+  )
+{
+  PCIe_PLATFORM_CONFIG          *Pcie;
+  NBIO_IP2IP_API                *NbioIp2Ip;
+  NORTH_BRIDGE_PCIE_SIB         *NbPcieData;
+
+  MPIO_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+
+  if (SilGetIp2IpApi(SilContext, SilId_NbioClass, (void **)(&NbioIp2Ip)) != SilPass) {
+    MPIO_TRACEPOINT(SIL_TRACE_ERROR, " NBIO API is not found.\n");
+    return SilNotFound;
+  }
+  NbPcieData = (NORTH_BRIDGE_PCIE_SIB *)xUslFindStructure(SilContext,
+                                          SilId_NbioClass,
+                                          NBIOPCIECLASS_INSTANCE);
+  if (NbPcieData == NULL) {
+    MPIO_TRACEPOINT(SIL_TRACE_ERROR, " NBIO Pcie config not found.\n");
+    return SilNotFound;
+  }
+
+  Pcie = &NbPcieData->PciePlatformConfig;
+
+  EarlyLinkStatus->EarlyLinkStatus = false;
+  EarlyLinkStatus->PhysicalRootBridge = 0;
+  EarlyLinkStatus->LogicalRootBridge = 0;
+  EarlyLinkStatus->RootPortBus = 0;
+  EarlyLinkStatus->RootPortDevice = 0;
+  EarlyLinkStatus->RootPortFunction = 0;
+
+  NbioIp2Ip->PcieConfigRunProcForAllEngines(SilContext,
+    DESCRIPTOR_ALLOCATED | DESCRIPTOR_PCIE_ENGINE,
+    FindEarlyLink,
+    EarlyLinkStatus,
+    Pcie
+    );
+
+  MPIO_TRACEPOINT(SIL_TRACE_EXIT, "\n");
+
+  return SilPass;
 }
