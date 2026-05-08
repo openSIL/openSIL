@@ -61,7 +61,7 @@
  *          - MPIO:   MPIO firmware initializes and trains the PCIe links
  *                    (required for CXL). Due to this dependency,
  *                    MPIO is initialized prior to CXL IP block.
- *          - Prom: PROM21 is dependent on MPIO and is initialized after MPIO.
+ *          - PROM:   PROM is dependent on MPIO and is initialized after MPIO.
  */
 const SOC_IP_TABLE SocIpTblF19M70Tp1 = {
   AMD_FAMILY_19_PHX,     // This is the 'Client' F19M70  a.k.a. Phoenix
@@ -177,18 +177,18 @@ const SOC_IP_TABLE SocIpTblF19M70Tp1 = {
       InitializeApiMpioPhx
     },
     {
-      SilId_PromClass,
-      PROMCLASS_DATA_SIZE,
-      PromClassSetInputBlock,
-      InitializePromTp1,
-      NULL,
-    },
-    {
       SilId_CcxClass,
       CCX_DATA_SIZE_ZEN4_PHX,
       CcxSetInputBlkPhx,
       InitializeCcxZen4PhxTp1,
       InitializeApiZen4Phx
+    },
+    {
+      SilId_PromClass,
+      PROMCLASS_DATA_SIZE,
+      PromClassSetInputBlock,
+      InitializePromTp1,
+      NULL,
     },
     {SilId_ListEnd, 0, NULL, NULL, NULL}  // End of list marker
   }
