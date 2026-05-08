@@ -94,7 +94,7 @@ SIL_STATUS PromClassSetInputBlock (
   PROMCLASS_DATA_BLK *PromConfigData;
 
   PromConfigData = (PROMCLASS_DATA_BLK *)SilCreateInfoBlock(SilContext,
-    SilId_CxlClass,
+    SilId_PromClass,
     sizeof (PROMCLASS_DATA_BLK),
     PROMCLASS_INSTANCE,
     PROMCLASS_MAJOR_REV,
@@ -104,9 +104,13 @@ SIL_STATUS PromClassSetInputBlock (
   if (PromConfigData == NULL) {
     return SilAborted;
   }
+
   // fill PROM IP data structure with defaults
-  memcpy(PromConfigData, &PromClassDflts, sizeof (PROMCLASS_DATA_BLK));
-  memcpy(&PromConfigData->Secondary, &PromClassDflts.Primary, sizeof (PROM21_DATA_BLK));
+  memcpy(&PromConfigData->PromInputBlk, &PromClassDflts, sizeof(PROMCLASS_INPUT_BLK));
+  memcpy(&PromConfigData->PromInputBlk.Secondary,
+         &PromClassDflts.PromInputBlk.Primary,
+         sizeof(PROM21_DATA_BLK));
+  memset(&PromConfigData->PromOutputBlk, 0, sizeof(PROMCLASS_OUTPUT_BLK));
 
   return SilPass;
 }

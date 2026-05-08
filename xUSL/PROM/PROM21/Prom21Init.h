@@ -3,7 +3,7 @@
 
 /**
  *  @file Prom21Init.h
- *  @brief All PROM related defines and structures
+ *  @brief Promontory21 related defines and structures
  */
 
 #pragma once
@@ -15,5 +15,5 @@
 SIL_STATUS
 InitializePromontoryChipset (
   SIL_CONTEXT        *SilContext,
-  PROMCLASS_DATA_BLK *PromInputBlk
+  PROMCLASS_DATA_BLK *PromDataBlk
   );
