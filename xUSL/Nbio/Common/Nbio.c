@@ -383,6 +383,17 @@ NbioIoApicInit (
     }
   } else {
     NBIO_TRACEPOINT(SIL_TRACE_INFO, "We don't need reserved IOAPIC MMIO space\n");
+    if (NbioIpBlockData->NbioConfigData.CfgGnbIoapicAddress != 0) {
+      NBIO_TRACEPOINT(SIL_TRACE_INFO, "Using fixed IOAPIC MMIO address %x\n",
+        NbioIpBlockData->NbioConfigData.CfgGnbIoapicAddress);
+      GnbHandle = GetGnbHandle(SilContext);
+      if (GnbHandle) {
+        NbioXfer->NbioIoApicMmioAddress(
+          GnbHandle,
+          NbioIpBlockData->NbioConfigData.CfgGnbIoapicAddress
+          );
+      }
+    }
   }
 
   if (NbioIpBlockData->NbioConfigData.IoApicIdPreDefineEn) {

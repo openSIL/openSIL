@@ -46,6 +46,7 @@ typedef struct {
   bool IoApicMMIOAddressReservedEnable; ///< Enable Ioapic MMIO reserved from GNB driver. 0:Disable
   bool IoApicIdPreDefineEn;             ///< Enable assign IOAPIC ID
   uint8_t IoApicIdBase;                 ///< Base NBIO IOAPIC ID. ID assigned start from this value */
+  uint64_t CfgGnbIoapicAddress;         ///< Fixed Ioapic MMIO address if not reserved from RcMGr. 0:Disable
   uint8_t NbifMgcgHysteresis;           ///< NBIF MGCG HYSTERESIS for gating count
   uint8_t SyshubMgcgHysteresis;         ///< NBIF MGCG HYSTERESIS for gating count
   bool IohcNonPCIBarInitSmu;            ///< Configure non pci device bar for SMU

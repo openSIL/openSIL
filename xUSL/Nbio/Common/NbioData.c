@@ -18,6 +18,7 @@ const NBIO_CONFIG_DATA mNbioConfigDataDflts = {
   .IoApicMMIOAddressReservedEnable = CONFIG_IOAPIC_MMIO_ADDRESS_RESERVED_ENABLE,
   .IoApicIdPreDefineEn = CONFIG_IOAPIC_ID_PREDEFINE_EN,
   .IoApicIdBase = CONFIG_IOAPIC_ID_BASE,
+  .CfgGnbIoapicAddress = 0,
   .NbifMgcgHysteresis = CONFIG_NBIF_MGCG_HYSTERESIS,
   .SyshubMgcgHysteresis = CONFIG_SYSHUB_MGCG_HYSTERESIS,
   .IohcNonPCIBarInitSmu = CONFIG_IOHC_NONPCI_BAR_INIT_SMU,
