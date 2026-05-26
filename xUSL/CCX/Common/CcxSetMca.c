@@ -40,7 +40,12 @@ void CcxSetMca (void)
     /// MCi_CONFIG[32][McaXEnable] = 1 if MGC_CAP[Count] <= 32, else 0
     McaCfg.Field.McaXEnable = (McaCount <= 32) ? 1 : 0;
 
-    /// MCi_CONFIG[34][LogDeferredInMcaStat] = 1 if supported
+    // MCi_CONFIG[33][TransparentErrorLoggingEnable] = 0 if supported
+    if (McaCfg.Field.TransparentErrorLoggingSupported == 1) {
+      McaCfg.Field.TransparentErrorLoggingEnable = 0;
+    }
+
+    // MCi_CONFIG[34][LogDeferredInMcaStat] = 1 if supported
     if (McaCfg.Field.DeferredErrorLoggingSupported == 1) {
       McaCfg.Field.LogDeferredInMcaStat = 1;
     }
@@ -55,6 +60,36 @@ void CcxSetMca (void)
       McaCtlMsk.Value = xUslRdMsr(McaCtlMaskAddr);
       McaCtlMsk.Field.FTI_ADDR_VIOL = 1;
       xUslWrMsr(McaCtlMaskAddr, McaCtlMsk.Value);
+    }
+  }
+}
+
+/**
+ *
+ * CcxSetTransparentErrorLoggingMca
+ *
+ *  @brief This routine sets TransparentErrorLoggingEnable bit in each MCA
+ *    Config MSR
+ *
+ *  @param TransparentErrorLoggingEnable    TRUE to enable logging
+ *                                          or FALSE to disable logging
+ */
+void
+CcxSetTransparentErrorLoggingMca (
+  bool TransparentErrorLoggingEnable
+  )
+{
+  uint8_t             McaBankIndex;
+  uint8_t             McaBankCount;
+  SIL_MCA_CONFIG_MSR  McaCfg;
+
+  McaBankCount = xUslRdMsr(MSR_MCG_CAP) & MCA_BANKS_VISIBLE_MASK;
+  for (McaBankIndex = 0; McaBankIndex < McaBankCount; McaBankIndex++) {
+    McaCfg.Value = xUslRdMsr(MSR_MCA_CFG_BANK0 + MCA_BANK_SIZE * McaBankIndex);
+
+    if (McaCfg.Field.TransparentErrorLoggingSupported == 1) {
+      McaCfg.Field.TransparentErrorLoggingEnable = TransparentErrorLoggingEnable ? 1 : 0;
+      xUslWrMsr(MSR_MCA_CFG_BANK0 + MCA_BANK_SIZE * McaBankIndex, McaCfg.Value);
     }
   }
 }

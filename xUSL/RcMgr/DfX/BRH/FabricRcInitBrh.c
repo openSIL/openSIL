@@ -269,7 +269,7 @@ SilInitPciBusBasedOnNvVariableBrh (
     }
 
     // WA for IOD C0 to set BIT7 of CfgBaseAddress[SegmentNum] to inform IOM which range is its local segment
-    if (!IS_SOC_BRH_BX) {
+    if (!IS_SOC_BRH_Ax && !IS_SOC_BRH_Bx && !IS_SOC_BRHD_Ax) {
       PciCfgSpace = (xUslRdMsr(MSR_MMIO_CFG_BASE) >> 2) & 0xF;// Get bus range from MSR_C001_0058[5:2]
       PciCfgSpace = ((uint64_t) 1 << PciCfgSpace);
       Remainder = (uint32_t) (PciCfgSpace % MAX_PCI_BUS_NUMBER_PER_SEGMENT);

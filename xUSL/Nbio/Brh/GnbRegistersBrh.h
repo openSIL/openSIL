@@ -34,6 +34,11 @@
             PORTINDEX)   (ADDRESS + (HANDLE->RBIndex << 20) + (PORTINDEX << 2) + ((PORTINDEX < 20)? 0 : 0x280))
 #endif
 
+#ifndef IOHC_DEVIND_SPACE
+  #define  IOHC_DEVIND_SPACE(HANDLE, PORTINDEX, \
+            ADDRESS)   (ADDRESS + ((HANDLE->RBIndex & 0x3) << 20) + (PORTINDEX * 0x400))
+#endif
+
 /// CAUTION: This is very specific to SDPMUX registers that use a different address calculation
 #ifndef SDPMUX_SPACE
   #define  SDPMUX_SPACE(HANDLE, \

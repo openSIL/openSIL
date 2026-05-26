@@ -15,13 +15,27 @@ static const SOC_LOGICAL_REVISION_XLAT SocBrhLogicalRevisionTable[] =
   {0x2, 0x1, AMD_REV_F1A_BRH_C1, AMD_CORE_F1A_ZEN5_C1},
   {0x2, 0x0, AMD_REV_F1A_BRH_C0, AMD_CORE_F1A_ZEN5_C0},
   {0x1, 0x1, AMD_REV_F1A_BRH_B1, AMD_CORE_F1A_ZEN5_B0},
+  {0x1, 0x0, AMD_REV_F1A_BRH_B0, AMD_CORE_F1A_ZEN5_A0},
+  {0x0, 0x0, AMD_REV_F1A_BRH_A0, AMD_CORE_F1A_ZEN5_A0},
   SOC_LOGICAL_REVISION_XLAT_TERMINATOR
 };
+
+static const SOC_LOGICAL_REVISION_XLAT SocBrhdLogicalRevisionTable[] =
+{
+  // NOTE: the highest supported stepping should be the first one
+  {0x1, 0x1, AMD_REV_F1A_BRHD_B1, AMD_CORE_F1A_ZEN5_B0},
+  {0x1, 0x0, AMD_REV_F1A_BRHD_B0, AMD_CORE_F1A_ZEN5_B0},
+  {0x0, 0x0, AMD_REV_F1A_BRHD_A0, AMD_CORE_F1A_ZEN5_A0},
+  SOC_LOGICAL_REVISION_XLAT_TERMINATOR
+};
+
 
 static const SOC_LOGICAL_FAMILY_XLAT SocLogicalFamilyTable[] =
 {
   // Family 1Ah, Models 00h-0Fh
-  {0x1A, 0x0, AMD_FAMILY_1A_BRH, AMD_CORE_FAMILY_1A_ZEN5, SocBrhLogicalRevisionTable   },
+  {0x1A, 0x0, AMD_FAMILY_1A_BRH,  AMD_CORE_FAMILY_1A_ZEN5, SocBrhLogicalRevisionTable  },
+  // Family 1Ah, Models 10h-1Fh
+  {0x1A, 0x1, AMD_FAMILY_1A_BRHD, AMD_CORE_FAMILY_1A_ZEN5, SocBrhdLogicalRevisionTable },
   // Terminator for the list
   SOC_LOGICAL_FAMILY_XLAT_TERMINATOR
 };

@@ -117,7 +117,6 @@ CcxSetMiscMsrs (
   uint8_t         LocalEnableAvx512;
   bool            LocalEnableSvmX2AVIC;
   uint8_t         LocalMonMwaitDis;
-  uint8_t         LocalWcSpec;
   uint8_t         LocalCpuPauseCntSel_1_0;
   uint8_t         LocalAdaptiveAlloc;
   uint8_t         LocalSmallHammer;
@@ -143,7 +142,6 @@ CcxSetMiscMsrs (
   LocalIbsHardwareEn = CcxInputBlock->IbsHardwareEn;
   LocalEnableAvx512 = CcxInputBlock->EnableAvx512;
   LocalMonMwaitDis = CcxInputBlock->MonMwaitDis;
-  LocalWcSpec = CcxInputBlock->WcSpecConfig;
   ApicMode = CcxInputBlock->AmdApicMode;
   LocalCpuPauseCntSel_1_0 = CcxInputBlock->CpuPauseCntSel_1_0;
   LocalAdaptiveAlloc = CcxInputBlock->AdaptiveAlloc;
@@ -306,14 +304,6 @@ CcxSetMiscMsrs (
   if (LocalSmallHammer != 0xFF) {
     xUslMsrAnd (MSR_LS_CFG, ~BIT_64(53));
     xUslMsrAndThenOr(0xC00110E5, ~BIT_64(30), LocalSmallHammer ? BIT_64(30) : 0);
-  }
-
-  // MSR_C001_1020[53]
-  // MSR_C001_10E5[30]
-  // MSR_C001_10E5[33]
-  if (LocalWcSpec != 0xFF) {
-    xUslMsrAnd(MSR_LS_CFG, ~BIT_64(53));
-    xUslMsrAndThenOr(MSR_LS_CFG3, ~(BIT_64(33) | BIT_64(30)), LocalWcSpec ? (BIT_64(33) | BIT_64(30)) : 0);
   }
 
   // MSR_C001_1004[53] : X2APIC

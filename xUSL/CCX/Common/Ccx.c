@@ -104,7 +104,6 @@ static const CCXCLASS_DATA_BLK gCcxConfigData = {
     .AmdFixedMtrr26E = 0x1818181818181818,
     .AmdFixedMtrr26F = 0x1818181818181818,
     .AmdSnpMemCover = 0x0,
-    .WcSpecConfig = 0x1,
     .IommuSupport = CONFIG_IOMMU_SUPPORT,
     .AmdPstatePolicy = 0x0,
     .AmdSplitRmpTable = 0x0,
@@ -459,6 +458,7 @@ InitializeCcxAndLaunchAps (
 
   // Mca initialization
   CcxSetMca ();
+  CcxSetTransparentErrorLoggingMca (ApLaunchGlobalData.TransparentErrorLoggingEnable);
 
   // CacWeights initialization is split into two routines as APs will not be getting
   // CacWeigts, but will be setting up CacWeights in AP flow
@@ -732,6 +732,7 @@ ApEntryPointInC (
 
   // Mca initialization
   CcxSetMca ();
+  CcxSetTransparentErrorLoggingMca(ApLaunchGlobalData->TransparentErrorLoggingEnable);
 
   // Cac Weights initialization
   if (ApLaunchGlobalData->SetCacWeightsEnable) {

@@ -7,6 +7,7 @@
  */
 
 #include <SilCommon.h>
+#include <SilSocLogicalId.h>
 #include <SMU/Common/SmuCommon.h>
 #include <Utils.h>
 #include <CommonLib/CpuLib.h>
@@ -164,7 +165,11 @@ SmuGetOpnCorePresenceExBrh (
       }
     }
 
-    MaxCoresPerCcx = CCX_MAX_CORES_PER_COMPLEX / 2;
+    if (ISSOCBRHD) {
+      MaxCoresPerCcx = CCX_MAX_CORES_PER_COMPLEX;
+    } else {
+      MaxCoresPerCcx = CCX_MAX_CORES_PER_COMPLEX / 2;
+    }
 
     if (CoreDisMap != NULL) {
       *CoreDisMapBufferSize = sizeof (CoreDisMap[0]) * MAX_CCDS_PER_IOD;
@@ -290,7 +295,11 @@ SmuGetOpnCorePresenceBrh (
     DisCoresMap = 0;
     DisCoresCount = 0;
 
-    MaxCoresPerCcx = CCX_MAX_CORES_PER_COMPLEX / 2;
+    if (ISSOCBRHD) {
+      MaxCoresPerCcx = CCX_MAX_CORES_PER_COMPLEX;
+    } else {
+      MaxCoresPerCcx = CCX_MAX_CORES_PER_COMPLEX / 2;
+    }
 
     for (CcdIndex = 0; CcdIndex < SIL_ARRAY_SIZE(Mp5CoreDisableList); CcdIndex++) {
       Status = ApobIp2IpApi->ApobGetApcbUpdate(ApobEntry, Mp5CoreDisableList[CcdIndex], &Mp5CoreDisListValue);
@@ -953,6 +962,10 @@ PopulatePPTable (
   PPTable.ThrottlerMode = SmuInputBlock->ThrottlerMode == 0xF ? 0 : SmuInputBlock->ThrottlerMode;
   //Cclk Mode
   PPTable.CclkMode = SmuInputBlock->CfgPerRailFreqControl;
+  //Adjust GB
+  PPTable.AdjustGB = SmuInputBlock->CfgAdjustGB;
+  //One Cppc Max
+  PPTable.OneCppcMax = SmuInputBlock->CfgOneCppcMax;
 }
 
 static void
@@ -1133,6 +1146,14 @@ InitializeSmuBrh (void)
         0
         );
 
+      SmuServiceInitArgumentsCommon(SmuArg);
+      SmuArg[0] = SmuInputBlock->BalanceAlphaTempFilter;
+      SmuServiceRequestBrh(GnbHandle->Address,
+        SIL_SMU_RESERVED_0x54,
+        SmuArg,
+        0
+        );
+
       // Cxl Speed Notification Msg Argument
       //  - [7:0]  Cxl Present: 0 or 1
       //  - [15:8] CxlSpeedGen5: 0 or 1
@@ -1148,7 +1169,7 @@ InitializeSmuBrh (void)
         0
         );
 
-      if (IS_SOC_BRH) {
+      if (ISSOCBRH) {
         if (SmuInputBlock->AmdSmuDsmClkCtrl) {
           // Send DSM Clock Enable
           SMU_TRACEPOINT (SIL_TRACE_INFO, "SMU EnableDSMWorkaround on socket %d\n", GnbHandle->SocketId);

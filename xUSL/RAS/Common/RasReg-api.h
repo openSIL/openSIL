@@ -91,13 +91,13 @@ typedef union {
 typedef union {
   struct {                                         ///< Bitfields of MCA Config MSR
     uint64_t  McaX:1;                              ///< McaX
-    uint64_t  :1;                                  ///< Reserved
+    uint64_t  TransparentErrorLoggingSupported:1;  ///< TransparentErrorLoggingSupported
     uint64_t  DeferredErrorLoggingSupported:1;     ///< DeferredErrorLoggingSupported
     uint64_t  :2;                                  ///< Reserved
     uint64_t  DeferredIntTypeSupported:1;          ///< DeferredIntTypeSupported
     uint64_t  :26;                                 ///< Reserved
     uint64_t  McaXEnable:1;                        ///< McaXEnable
-    uint64_t  :1;                                  ///< Reserved
+    uint64_t  TransparentErrorLoggingEnable:1;     ///< TransparentErrorLoggingEnable
     uint64_t  LogDeferredInMcaStat:1;              ///< LogDeferredInMcaStat
     uint64_t  :2;                                  ///< Reserved
     uint64_t  DeferredIntType:2;                   ///< DeferredIntType
