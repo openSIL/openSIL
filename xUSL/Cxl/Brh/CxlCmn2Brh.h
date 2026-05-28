@@ -28,3 +28,9 @@ void
 CxlDevListGenerateBrh (
   PCIe_PLATFORM_CONFIG  *Pcie
   );
+
+SIL_STATUS
+CxlHotPlugSlotResetBrh (
+  GNB_HANDLE            *GnbHandle,
+  PCIe_ENGINE_CONFIG    *Engine
+  );

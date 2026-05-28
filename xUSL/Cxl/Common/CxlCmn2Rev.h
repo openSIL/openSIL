@@ -30,9 +30,16 @@ typedef void (*CXL_DEV_LIST_GENERATE) (
   PCIe_PLATFORM_CONFIG  *Pcie
   );
 
+
+typedef SIL_STATUS (* CXL_HOTPLUG_SLOT_RESET) (
+  GNB_HANDLE            *GnbHandle,
+  PCIe_ENGINE_CONFIG    *Engine
+  );
+
 // Internal Common-2-Rev Transfer Block for CXL
 typedef struct {
   CXL_ASSIGN_RESOURCES     CxlAssignResources;
   CXL_FIND_PORTS           CxlFindPorts;
   CXL_DEV_LIST_GENERATE    CxlDevListGenerate;
+  CXL_HOTPLUG_SLOT_RESET   CxlHotPlugSlotReset;
 } CXL_COMMON_2_REV_XFER_BLOCK;

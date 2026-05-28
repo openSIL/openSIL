@@ -16,6 +16,7 @@ const CXLCLASS_DATA_BLK CxlClassDflts = {
     .CxlIoArbWeights = 0,
     .CxlCaMemArbWeights = 0,
     .CnliTokenAdvertisement = 0,
+    .CxlHotPlugSlotTimeOut = 10,
     .AmdCxlProtocolErrorReporting = 0,
     .AmdPcieAerReportMechanism = 1,
     .CxlCamemRxOptimization = false,

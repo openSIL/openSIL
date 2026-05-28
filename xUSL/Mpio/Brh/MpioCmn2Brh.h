@@ -97,3 +97,8 @@ void
 MpioCfgAfterDxioInitBrh (
   PCIe_PLATFORM_CONFIG                 *Pcie
   );
+
+SIL_STATUS
+MpioServerHotplugInitBrh (
+  PCIe_PLATFORM_CONFIG                 *Pcie
+  );

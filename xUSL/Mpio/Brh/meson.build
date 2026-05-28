@@ -6,5 +6,5 @@ incdir += include_directories( '.' )
 xusl += files(['MpioTopologyBrh.c', 'MpioLibBrh.c',
                'MpioBrh.c', 'MpioPortVisibilityBrh.c',
                'MpioPcieBrh.c', 'MpioCmn2Brh.c', 'MpioCfgPointsBrh.c',
-               'MpioIp2IpBrh.c'
+               'MpioIp2IpBrh.c', 'MpioServerHotplugBrh.c'
               ])

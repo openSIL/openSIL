@@ -55,7 +55,9 @@ MpioEnablePorts (
  *
  */
 void
-MpioVisibilityControl (void)
+MpioVisibilityControl (
+  bool Hide
+  )
 {
   GNB_HANDLE                    *GnbHandle;
   MPIO_COMMON_2_REV_XFER_BLOCK  *MpioXferTable;
@@ -70,10 +72,17 @@ MpioVisibilityControl (void)
     MPIO_TRACEPOINT(SIL_TRACE_ERROR, " NBIO API is not found.\n");
     return;
   }
+
+  MPIO_TRACEPOINT(SIL_TRACE_INFO, "%s Ports\n", Hide ? "Hide" : "Unhide");
+
   GnbHandle = NbioIp2Ip->GetGnbHandle ();
   while (GnbHandle != NULL) {
-    MpioXferTable->MpioControlPorts(HidePorts, GnbHandle);
-    MpioEnablePorts(GnbHandle);
+    if (Hide) {
+      MpioXferTable->MpioControlPorts(HidePorts, GnbHandle);
+      MpioEnablePorts(GnbHandle);
+    } else {
+      MpioXferTable->MpioControlPorts(UnhidePorts, GnbHandle);
+    }
     GnbHandle = GnbGetNextHandle(GnbHandle);
   }
   MPIO_TRACEPOINT(SIL_TRACE_EXIT, "\n");

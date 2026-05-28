@@ -30,7 +30,6 @@ SilFchStall (
   uint16_t TimerAddr;
   uint32_t StartTime;
   uint32_t ElapsedTime;
-  FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
   // Note: AcpiPmTmrBlk is a 32-bit timer. Timer value is at FCH::PM::TMRVALUE_ETMRVALUE register.
   // AcpiPmTmrBlk IO address is defined at FCH::PM::ACPIPMTMRBLK.
   SilFchReadPmio(FCH_PM_ACPIPMTMRBLK, AccessWidth16, (uint8_t *)&TimerAddr);
@@ -54,7 +53,6 @@ SilFchStall (
       }
     }
   }
-  FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
 }
 
 /**
