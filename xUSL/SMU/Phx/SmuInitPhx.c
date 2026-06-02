@@ -184,14 +184,11 @@ SmuServiceRequestPhx (
   xUSLIndirectPciWrite32(PciAddress.AddressValue, MP1MMIOx3B10528, (uint32_t)RequestId);
 
   // 4 Poll Response until non-zero
+  SMU_TRACEPOINT(SIL_TRACE_INFO, "Poll SMU Message Response until non-zero!!\n");
   do {
     xUSLIndirectPciRead32(PciAddress.AddressValue, MP1MMIOx3B10578, &SmuMessageResponse);
-    SMU_TRACEPOINT(SIL_TRACE_INFO,
-      "Poll SMU Message Response until non-zero!! Current SMU Message Response 0x%x\n",
-      SmuMessageResponse
-      );
   } while (SmuMessageResponse == 0x0);
-  SMU_TRACEPOINT(SIL_TRACE_INFO, "After SMU Message Responded!!\n");
+  SMU_TRACEPOINT(SIL_TRACE_INFO, "After SMU Message Responded!! (%x)\n", SmuMessageResponse);
 
   if ((SMC_RESULT)SmuMessageResponse == SMC_Result_Fatal) {
     assert((SMC_RESULT)SmuMessageResponse != SMC_Result_Fatal);
