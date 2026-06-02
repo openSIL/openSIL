@@ -210,11 +210,6 @@ NbioIommuInit (
     // Program up IOMMU NBIO Tables
     ProgramNbioSmnTable(GnbHandle, GnbIommuEnvInitTable, NBIO_SPACE(GnbHandle, 0), Property);
 
-    // AM5 does not support IOMMU AVIC
-    if (ISSOCPHXAM5) {
-      NbioIpBlockData->NbioConfigData.IommuAvicSupport = false;
-    }
-
     xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
       GnbHandle->Address.Address.Bus,
       SMN_IOMMU_MMIO_CONTROL0_W_ADDRESS,
@@ -234,32 +229,34 @@ NbioIommuInit (
       (NbioIpBlockData->NbioConfigData.IommuAvicSupport << 21)
       );
 
-    if (NbioIpBlockData->NbioConfigData.AmdApicMode != xApicMode) {
-      for (Index = 0; Index < 4; Index++) {
-        xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
-          GnbHandle->Address.Address.Bus,
-          IOMMUL1x147000dc + (0x100000 * Index),
-          (uint32_t) ~(L1_FEATURE_SUP_CNTRL_L1_XT_SUP_W_MASK),
-          (1 << L1_FEATURE_SUP_CNTRL_L1_XT_SUP_W_OFFSET)
-          );
-      }
-      if (NbioIpBlockData->NbioConfigData.IommuSupport == true) {
+    Value = (NbioIpBlockData->NbioConfigData.AmdApicMode != xApicMode);
+    for (Index = 0; Index < 4; Index++) {
+      xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+        GnbHandle->Address.Address.Bus,
+        IOMMUL1x147000dc + (0x100000 * Index),
+        (uint32_t) ~(L1_FEATURE_SUP_CNTRL_L1_XT_SUP_W_MASK),
+        (Value << L1_FEATURE_SUP_CNTRL_L1_XT_SUP_W_OFFSET)
+        );
+    }
+    if (NbioIpBlockData->NbioConfigData.IommuSupport == true) {
+      IommuPciAddress = NbioGetHostPciAddress(GnbHandle);
+      IommuPciAddress.Address.Function = 0x2;
+      Value = 0;
+      Value = xUSLSmnRead(GnbHandle->Address.Address.Segment,
+        GnbHandle->Address.Address.Bus,
+        NBIO_SPACE(GnbHandle, SMN_IOMMU_MMIO_CONTROL0_W_ADDRESS)
+        );
 
-        IommuPciAddress = NbioGetHostPciAddress(GnbHandle);
-        IommuPciAddress.Address.Function = 0x2;
-        Value = 0;
-        Value = xUSLSmnRead(GnbHandle->Address.Address.Segment,
-          GnbHandle->Address.Address.Bus,
-          NBIO_SPACE(GnbHandle, SMN_IOMMU_MMIO_CONTROL0_W_ADDRESS)
-          );
-
+      if (NbioIpBlockData->NbioConfigData.AmdApicMode != xApicMode) {
         Value |= BIT_32(2);
-        xUSLSmnWrite(GnbHandle->Address.Address.Segment,
-          GnbHandle->Address.Address.Bus,
-          NBIO_SPACE(GnbHandle, SMN_IOMMU_MMIO_CONTROL0_W_ADDRESS),
-          Value
-          );
+      } else {
+        Value &= ~BIT_32(2);
       }
+      xUSLSmnWrite(GnbHandle->Address.Address.Segment,
+        GnbHandle->Address.Address.Bus,
+        NBIO_SPACE(GnbHandle, SMN_IOMMU_MMIO_CONTROL0_W_ADDRESS),
+        Value
+        );
     }
 
     GnbHandle = GnbGetNextHandle(GnbHandle);
