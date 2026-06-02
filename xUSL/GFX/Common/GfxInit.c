@@ -10,6 +10,7 @@
 #include <APOB/Common/ApobCmn.h>
 #include <APOB/ApobIp2Ip.h>
 #include <Nbio/NbioIp2Ip.h>
+#include <RcMgr/RcMgrIp2Ip.h>
 #include <GFX/GfxClass-api.h>
 #include "Gfx.h"
 #include "GfxDisplayPhySettings.h"
@@ -239,7 +240,6 @@ GetGfxDdiConfig (
   return (void *)GfxDdiInputData;
 }
 
-
 SIL_STATUS
 GetUmaInformation (
   SIL_CONTEXT *SilContext,
@@ -283,4 +283,27 @@ GetUmaInformation (
   }
 
   return SilNotFound;
+}
+
+SIL_STATUS
+GfxProgramVgaEn (
+  SIL_CONTEXT *SilContext
+  )
+{
+  SIL_STATUS       Status;
+  FABRIC_TARGET    Target;
+  RCMGR_IP2IP_API  *RcMgrIp2Ip;
+
+  if (SilGetIp2IpApi(SilContext, SilId_RcManager, (void **)(&RcMgrIp2Ip)) != SilPass) {
+    return SilNotFound;
+  }
+
+  Target.TgtType = TARGET_RB;
+  Target.SocketNum = 0;
+  Target.RbNum = 0;
+  Status = RcMgrIp2Ip->FabricEnableVgaMmio(SilContext, Target);
+
+  xUSLPciReadModifyWrite8(PCI_LIB_ADDRESS(0, 8, 1, 0x3E), 0xFF, BIT_8(2) + BIT_8(3)); 
+
+  return Status;
 }

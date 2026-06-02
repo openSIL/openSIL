@@ -68,8 +68,14 @@ typedef SIL_STATUS (*FABRIC_RESERVE_MMIO) (
   );
 
 
+typedef SIL_STATUS (*FABRIC_ENABLE_VGA_MMIO) (
+  SIL_CONTEXT            *SilContext,
+  FABRIC_TARGET          Target
+  );
+
 // Resource Manager Ip2Ip API
 
 typedef struct {
-  FABRIC_RESERVE_MMIO   FabricReserveMmio;
+  FABRIC_RESERVE_MMIO    FabricReserveMmio;
+  FABRIC_ENABLE_VGA_MMIO FabricEnableVgaMmio;
 } RCMGR_IP2IP_API;

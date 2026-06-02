@@ -47,3 +47,8 @@ GetUmaInformation (
   SIL_CONTEXT *SilContext,
   MEMORY_HOLE_DESCRIPTOR *UmaRange
   );
+
+SIL_STATUS
+GfxProgramVgaEn (
+  SIL_CONTEXT *SilContext
+  );

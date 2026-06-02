@@ -373,6 +373,11 @@ GfxInitPhx (
     }
   }
 
+  Status = GfxProgramVgaEn(SilContext);
+  if (Status != SilPass) {
+    GFX_TRACEPOINT(SIL_TRACE_ERROR, "Failed to program VgaEn register\n");
+  }
+
   GFX_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
 
   return SilPass;

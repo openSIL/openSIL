@@ -72,4 +72,9 @@ SIL_STATUS FabricReserveMmio (
   FABRIC_MMIO_ATTRIBUTE *Attributes
   );
 
+SIL_STATUS FabricEnableVgaMmio (
+  SIL_CONTEXT            *SilContext,
+  FABRIC_TARGET          Target
+  );
+
 #pragma pack (pop)
