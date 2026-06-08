@@ -12,7 +12,7 @@ SIL_STATUS InitializeSmuBrh (void);
 
 #define SIL_RESERVED_1761             0xD
 #define SIL_RESERVED_1762           0xF
-#define SIL_RESERVED_1760                 0x50
+#define SIL_RESERVED_1760                 0x54
 
 #define SIL_RESERVED_ADDR_0x3810A84    0x3810A84
 #define SIL_RESERVED_ADDR_0x3810A88    0x3810A88
