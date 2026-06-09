@@ -11,6 +11,10 @@
 
 #pragma once
 
+#ifndef asm
+#define asm __asm__
+#endif
+
 #include <stddef.h>
 #include <stdint.h>   // needed for declarations later in this file
 #include <stdbool.h>
