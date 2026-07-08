@@ -50,7 +50,7 @@ NbioSetTopOfMemory (void)
    TOP_OF_DRAM.Value = xUSLSmnRead (GnbHandle->Address.Address.Segment,
        GnbHandle->Address.Address.Bus,
        SMN_IOHUB0NBIO0_NB_TOP_OF_DRAM_SLOT1_ADDRESS);
-   TOP_OF_DRAM.Value = xUSLSmnRead (GnbHandle->Address.Address.Segment,
+   TOM2_LOWER_REG.Value = xUSLSmnRead (GnbHandle->Address.Address.Segment,
        GnbHandle->Address.Address.Bus,
        SMN_IOHUB0NBIO0_NB_LOWER_TOP_OF_DRAM2_ADDRESS);
   TOM2_UPPER_REG.Value = xUSLSmnRead (GnbHandle->Address.Address.Segment,
