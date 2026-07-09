@@ -204,9 +204,11 @@ SwapLogicalBridgeId (
       EngineList->Type.Port.LogicalBridgeId = Engine->Type.Port.LogicalBridgeId;
     }
     EngineList = (PCIe_ENGINE_CONFIG *) PcieConfigGetNextTopologyDescriptor(EngineList, DESCRIPTOR_TERMINATE_TOPOLOGY);
-    TempWrapper = (PCIe_WRAPPER_CONFIG *) NbioIp2Ip->PcieConfigGetParent(DESCRIPTOR_ALL_WRAPPERS,
-      &(EngineList->Header)
-      );
+    if (EngineList != NULL) {
+      TempWrapper = (PCIe_WRAPPER_CONFIG *) NbioIp2Ip->PcieConfigGetParent(DESCRIPTOR_ALL_WRAPPERS,
+        &(EngineList->Header)
+        );
+    }
   }
   Engine->Type.Port.LogicalBridgeId = NewBdgIdx;
 
