@@ -26,8 +26,11 @@
 #include <FCH/Tacoma/FchCore/FchHwAcpi/FchHwAcpiTc.h>
 #include <FCH/Tacoma/FchCore/FchUsb/FchUsbTc.h>
 #include <FCH/Tacoma/FchCore/FchIsa/FchIsaTc.h>
+#include <FCH/Tacoma/FchCore/FchSd/FchSdTc.h>
 #include <APOB/PHX/ApobPhx.h>
 #include <MEM/Phx/MemPhx.h>
+#include <PROM/PromClass-api.h>
+#include <PROM/Common/PromInit.h>
 
 
 /**
@@ -58,7 +61,7 @@
  *          - MPIO:   MPIO firmware initializes and trains the PCIe links
  *                    (required for CXL). Due to this dependency,
  *                    MPIO is initialized prior to CXL IP block.
- *          - CXL:    CXL is dependent on MPIO and is initialized after MPIO.
+ *          - PROM:   PROM is dependent on MPIO and is initialized after MPIO.
  */
 const SOC_IP_TABLE SocIpTblF19M70Tp1 = {
   AMD_FAMILY_19_PHX,     // This is the 'Client' F19M70  a.k.a. Phoenix
@@ -91,8 +94,8 @@ const SOC_IP_TABLE SocIpTblF19M70Tp1 = {
     },
     {
       SilId_SmuClass,
-      0,
-      NULL,
+      sizeof (SMUCLASS_INPUT_BLK),
+      SmuSetInputBlkPhx,
       NULL,
       InitializeApiSmuPhx
     },
@@ -109,13 +112,6 @@ const SOC_IP_TABLE SocIpTblF19M70Tp1 = {
       NbioSetInputBlkPhx,
       InitializeNbioPhxTp1,
       InitializeApiNbioPhx
-    },
-    {
-      SilId_CcxClass,
-      CCX_DATA_SIZE_ZEN4_PHX,
-      CcxSetInputBlkPhx,
-      InitializeCcxZen4PhxTp1,
-      InitializeApiZen4Phx
     },
     {
       SilId_FchClass,
@@ -160,6 +156,13 @@ const SOC_IP_TABLE SocIpTblF19M70Tp1 = {
       InitializeApiFchIsaTc
     },
     {
+      SilId_FchSd,
+      0,
+      NULL,
+      InitializeFchSdTcTp1,
+      NULL
+    },
+    {
       SilId_GfxClass,
       GFX_DATA_SIZE_PHX,
       GfxSetInputBlkPhx,
@@ -172,6 +175,20 @@ const SOC_IP_TABLE SocIpTblF19M70Tp1 = {
       MpioSetInputBlkPhx,
       InitializeMpioPhxTp1,
       InitializeApiMpioPhx
+    },
+    {
+      SilId_CcxClass,
+      CCX_DATA_SIZE_ZEN4_PHX,
+      CcxSetInputBlkPhx,
+      InitializeCcxZen4PhxTp1,
+      InitializeApiZen4Phx
+    },
+    {
+      SilId_PromClass,
+      PROMCLASS_DATA_SIZE,
+      PromClassSetInputBlock,
+      InitializePromTp1,
+      NULL,
     },
     {SilId_ListEnd, 0, NULL, NULL, NULL}  // End of list marker
   }

@@ -29,7 +29,6 @@ SilFchStall (
   uint16_t TimerAddr;
   uint32_t StartTime;
   uint32_t ElapsedTime;
-  FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
 
   SilFchReadPmio(FCH_PM_ACPIPMTMRBLK, AccessWidth16, (uint8_t *)&TimerAddr);
   if ((TimerAddr == 0) || (TimerAddr == 0xFFFF)) {
@@ -52,7 +51,6 @@ SilFchStall (
       }
     }
   }
-  FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
 }
 
 /**

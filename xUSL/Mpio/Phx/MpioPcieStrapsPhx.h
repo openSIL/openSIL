@@ -29,6 +29,8 @@
 
 #define MPIOSTRAPx21                            0x21  ///< Provides an override for STRAP_LTR_SUPPORTED
 
+#define MPIOSTRAPx22                      0x22  ///< STRAP_BIF_OBFF_SUPPORTED
+
 #define MPIOSTRAPx3E                   0x3e  ///< STRAP_BIF_LC_UPCONFIGURE_SUPPORT
 
 #define MPIOSTRAPx4A                              0x4a  ///< Provides an override for STRAP_ECRC_GEN_EN

@@ -26,6 +26,7 @@ subdir('Nbio')
 subdir('GFX')
 subdir('SMU')
 subdir('RcMgr')
+subdir('PROM')
 
 # Select the proper group of ASM files for this build
 if BUILD_IS_32BIT

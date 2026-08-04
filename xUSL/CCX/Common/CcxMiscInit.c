@@ -114,7 +114,12 @@ CcxSetMiscMsrs (
   bool            LocalEnableSvmX2AVIC;
   uint8_t         LocalMonMwaitDis;
   uint8_t         LocalDisableWcSpecConfig;
+  bool            LocalEnableFSRM;
+  bool            LocalEnableERMS;
+  bool            LocalEnableSCP;
+  uint8_t         LocalCpuPauseDelay;
   CCX_XFER_TABLE  *CcxXfer;
+
 
   if (SilGetCommon2RevXferTable(SilContext, SilId_CcxClass, (void **)(&CcxXfer)) != SilPass) {
     return;
@@ -130,6 +135,10 @@ CcxSetMiscMsrs (
   LocalEnableAvx512 = CcxInputBlock->EnableAvx512;
   LocalMonMwaitDis = CcxInputBlock->MonMwaitDis;
   LocalDisableWcSpecConfig = CcxInputBlock->DisableWcSpecConfig;
+  LocalEnableFSRM = CcxInputBlock->AmdEnableFSRM;
+  LocalEnableERMS = CcxInputBlock->AmdEnableERMS;
+  LocalEnableSCP = CcxInputBlock->AmdStatisticalCorrectPredictor;
+  LocalCpuPauseDelay = CcxInputBlock->AmdCpuPauseDelay;
 
   // Force recalc of TSC on all threads after loading patch
   LocalMsrRegister = xUslRdMsr(MSR_PSTATE_DEF_ADDRESS);
@@ -153,6 +162,19 @@ CcxSetMiscMsrs (
       LocalEnableAvx512 ? 0xD0230000 : 0
       );
   }
+
+  if (LocalEnableFSRM) {
+    xUslMsrOr (MSRxC00110DF, BIT_64(36));
+  } else {
+    xUslMsrAnd (MSRxC00110DF, ~BIT_64(36));
+  }
+
+  if (LocalEnableERMS) {
+    xUslMsrOr (MSRxC0011002, BIT_64(9));
+  } else {
+    xUslMsrAnd (MSRxC0011002, ~BIT_64(9));
+  }
+
 
   if (LocalEnableRMSS) {
     xUslMsrAnd(MSRxC0011000, ~((uint64_t) BIT_64(15)));
@@ -184,8 +206,40 @@ CcxSetMiscMsrs (
   }
 
   if (LocalDisableWcSpecConfig != 0xFF) {
-    xUslMsrAnd(MSR_LS_CFG, ~((uint64_t)  BIT_64(53)));
+    xUslMsrAnd(MSR_LS_CFG, ~BIT_64(53));
     xUslMsrAndThenOr(MSRxC00110E5, ~(uint64_t) 0x240000000, LocalDisableWcSpecConfig ? 0x240000000 : 0);
+  }
+
+  if (LocalEnableSCP) {
+    xUslMsrAnd (MSRxC001102E, ~BIT_64(35));
+  } else {
+    xUslMsrOr (MSRxC001102E, BIT_64(35));
+  }
+
+  switch (LocalCpuPauseDelay) {
+  case 0xff:
+    break;
+  case 0:
+    xUslMsrOr (MSR_DE_CFG, BIT_64(31));
+    break;
+  case 1:
+    xUslMsrAnd (MSR_DE_CFG, ~BIT_64(31));
+    xUslMsrAnd (MSRxC00110E3, ~(BIT_64(16) | BIT_64(17)));
+    break;
+  case 2:
+    xUslMsrAnd (MSR_DE_CFG, ~BIT_64(31));
+    xUslMsrAndThenOr (MSRxC00110E3, ~(BIT_64(16) | BIT_64(17)), BIT_64(16));
+    break;
+  case 3:
+    xUslMsrAnd (MSR_DE_CFG, ~BIT_64(31));
+    xUslMsrAndThenOr (MSRxC00110E3, ~(BIT_64(16) | BIT_64(17)), BIT_64(17));
+    break;
+  case 4:
+    xUslMsrAnd (MSR_DE_CFG, ~BIT_64(31));
+    xUslMsrAndThenOr (MSRxC00110E3, ~(BIT_64(16) | BIT_64(17)), BIT_64(16) | BIT_64(17));
+    break;
+  default:
+    break;
   }
 
   CcxXfer->SetMiscMsrs(CcxInputBlock);

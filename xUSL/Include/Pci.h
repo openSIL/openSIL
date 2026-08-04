@@ -12,8 +12,6 @@
 
 #include "stdint.h"
 
-#define PCIE_CAP_ID      0x10
-
 #define MAKE_SBDFO(Seg, Bus, Dev, Fun, Off) ((((uint32_t) (Seg)) << 28) | (((uint32_t) (Bus)) << 20) | \
         (((uint32_t)(Dev)) << 15) | (((uint32_t)(Fun)) << 12) | ((uint32_t)(Off)))
 
@@ -30,6 +28,19 @@ typedef enum ACCESS_WIDTH {
   AccessS3SaveWidth32,                                      ///< Save 32 bits data.
   AccessS3SaveWidth64,                                      ///< Save 64 bits data.
 } ACCESS_WIDTH;
+
+typedef enum PCIE_DEVICE_TYPE {
+  PcieDeviceEndPoint,                       ///< Endpoint (Type 00h Header)
+  PcieDeviceLegacyEndPoint,                 ///< Legacy endpointt (Type 00h Header)
+  PcieDeviceRootComplex = 4,                ///< Root complex (Type 01h Header)
+  PcieDeviceUpstreamPort,                   ///< Upstream port (Type 01h Header)
+  PcieDeviceDownstreamPort,                 ///< Downstream Port (Type 01h Header)
+  PcieDevicePcieToPcix,                     ///< PCIe to PCI/PCIx bridge (Type 01h Header)
+  PcieDevicePcixToPcie,                     ///< PCI/PCIx to PCIe bridge (Type 01h Header)
+  PCieDeviceRCiEP,                          ///< CXL RCiEP (Type 00h Header)
+  PcieDeviceRcec,                           ///< Root Complex Event Collector (Type 00h Header)
+  PcieNotPcieDevice = 0xff                  ///< unknown device
+} PCIE_DEVICE_TYPE;
 
 /// Extended PCI address format
 typedef struct {
@@ -74,3 +85,17 @@ void xUSLPciWrite (uint32_t Address, ACCESS_WIDTH Width, void *Value);
 #define PCI_HEADER_TYPE_REG       (0x0E)
 #define MULTI_FUNC_DEVICE_MASK    (BIT_32(7))
 #define PCI_REVISION_ID_REG       (0x08)
+
+//
+// PCI Express Capability Structure
+//
+#define PCIE_CAP_ID                           0x10
+
+#define PCIE_LINK_CAP_REG                     0x0C // Link Capabilities Register (Offset 0Ch)
+#define PCIE_LINK_CONTROL_REG                 0x10 // Link Control Register      (Offset 10h)
+#define PCIE_LINK_STATUS_REG                  0x12 // Link Status Register       (Offset 12h)
+#define PCIE_SLOT_STATUS_REG                  0x1A // Slot Status Register       (Offset 1Ah)
+
+#define PCIE_DEVICE_CAP2_REG                  0x24 // Device Capabilities 2 Register (Offset 24h)
+#define PCIE_DEVICE_CONTROL2_REG              0x28 // Device Control 2 Register      (Offset 28h)
+#define PCIE_LINK_CONTROL2_REG                0x30 // Link Control 2 Register        (Offset 30h)

@@ -7,7 +7,10 @@
  */
 
 #include <string.h>
+#include <APOB/Common/ApobCmn.h>
+#include <APOB/ApobIp2Ip.h>
 #include <Nbio/NbioIp2Ip.h>
+#include <RcMgr/RcMgrIp2Ip.h>
 #include <GFX/GfxClass-api.h>
 #include "Gfx.h"
 #include "GfxDisplayPhySettings.h"
@@ -181,40 +184,6 @@ GetGfxN6Config (
   return (void *)GfxN6InputData;
 }
 
-// Move to GfxInitPhx.c file
-void
-SilDumpDdiTable (
-  DDI_DESCRIPTOR         *DdiConfigData
-  )
-{
-  uint8_t index;
-
-  for (index = 0; index < 5; index++) {
-    GFX_TRACEPOINT(SIL_TRACE_INFO,
-      "SIL: Ddi ConnectorType 0x%x \n",
-      DdiConfigData[index].Ddi.ConnectorType
-      );
-    GFX_TRACEPOINT(SIL_TRACE_INFO,
-      "SIL: Ddi AuxInde 0x%x \n",
-      DdiConfigData[index].Ddi.AuxIndex
-      );
-    GFX_TRACEPOINT(SIL_TRACE_INFO,
-      "SIL: Ddi HdpIndex 0x%x \n",
-      DdiConfigData[index].Ddi.HdpIndex
-      );
-    GFX_TRACEPOINT(SIL_TRACE_INFO,
-      "SIL: Ddi LanePnInversionMask 0x%x \n",
-      DdiConfigData[index].Ddi.LanePnInversionMask
-      );
-    GFX_TRACEPOINT(SIL_TRACE_INFO,
-      "SIL: Ddi Flags 0x%x \n",
-      DdiConfigData[index].Ddi.Flags
-      );
-    GFX_TRACEPOINT(SIL_TRACE_INFO, "SIL: Flags 0x%x \n", DdiConfigData[index].Flags);
-  }
-
-}
-
 /**--------------------------------------------------------------------
  * GetGfxDdiConfig
  *
@@ -269,4 +238,72 @@ GetGfxDdiConfig (
 
   GFX_TRACEPOINT(SIL_TRACE_EXIT, "\n");
   return (void *)GfxDdiInputData;
+}
+
+SIL_STATUS
+GetUmaInformation (
+  SIL_CONTEXT *SilContext,
+  MEMORY_HOLE_DESCRIPTOR *UmaRange
+  )
+{
+  SIL_STATUS                          Status;
+  uint8_t                             MemRangeIndex;
+  APOB_SYSTEM_MEMORY_MAP_TYPE_STRUCT  *ApobEntry;
+  MEMORY_HOLE_DESCRIPTOR              *HoleMapPtr;
+  APOB_IP2IP_API                      *ApobIp2IpApi;
+
+  if (SilContext == NULL || UmaRange == NULL) {
+    return SilInvalidParameter;
+  }
+
+  Status = SilGetIp2IpApi(SilContext, SilId_ApobClass, (void **) &ApobIp2IpApi);
+  if ((Status != SilPass) || (ApobIp2IpApi == NULL)) {
+    assert(Status == SilPass);
+    return Status;
+  }
+
+  Status = ApobIp2IpApi->ApobAmdGetApobEntryInstance(SilContext,
+    APOB_FABRIC,
+    APOB_SYS_MAP_INFO_TYPE,
+    0,
+    0,
+    (APOB_TYPE_HEADER **) &ApobEntry
+    );
+  if (Status != SilPass) {
+    return Status;
+  }
+
+  /* Scan through all mem ranges to find the base address of UMA range. */
+  for (MemRangeIndex = 0; MemRangeIndex < ApobEntry->ApobSystemMap.NumberOfHoles; MemRangeIndex++) {
+    HoleMapPtr = &ApobEntry->ApobSystemMap.HoleInfo[MemRangeIndex];
+    if (HoleMapPtr->Type == UMA) {
+      memcpy(UmaRange, HoleMapPtr, sizeof(MEMORY_HOLE_DESCRIPTOR));
+      return SilPass;
+    }
+  }
+
+  return SilNotFound;
+}
+
+SIL_STATUS
+GfxProgramVgaEn (
+  SIL_CONTEXT *SilContext
+  )
+{
+  SIL_STATUS       Status;
+  FABRIC_TARGET    Target;
+  RCMGR_IP2IP_API  *RcMgrIp2Ip;
+
+  if (SilGetIp2IpApi(SilContext, SilId_RcManager, (void **)(&RcMgrIp2Ip)) != SilPass) {
+    return SilNotFound;
+  }
+
+  Target.TgtType = TARGET_RB;
+  Target.SocketNum = 0;
+  Target.RbNum = 0;
+  Status = RcMgrIp2Ip->FabricEnableVgaMmio(SilContext, Target);
+
+  xUSLPciReadModifyWrite8(PCI_LIB_ADDRESS(0, 8, 1, 0x3E), 0xFF, BIT_8(2) + BIT_8(3)); 
+
+  return Status;
 }

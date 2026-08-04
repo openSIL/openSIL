@@ -5,4 +5,7 @@
 
 xusl += files([ 'GfxDisplayPhySettings.c',
                 'GfxDisplayTypeSettings.c',
+                'GfxEnumConnectorsPhx.c',
+                'GfxInfoCollectionPhx.c',
+                'GfxInitPhx.c',
                 'GfxPhx.c' ])

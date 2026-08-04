@@ -24,6 +24,7 @@
 #include <APOB/ApobIp2Ip.h>
 #include <Nbio/NbioIp2Ip.h>
 #include <FCH/Common/FchCommon.h>
+#include <SMU/Common/SmuCmn2Rev.h>
 
 #define SNP_DISABLE                            0   // SNP is disable no need to allocate memory for RMP table
 #define SNP_ENTIRE_MEMORY_ENABLE               1   // SNP is enable need to allocate entire memory size for RMP table
@@ -111,6 +112,9 @@ static const CCXCLASS_DATA_BLK gCcxConfigData = {
     .AmdPstatePolicy = 0x0,
     .AmdSplitRmpTable = 0x0,
     .AmdCpuSpeculativeStoreMode = 0xFF,
+    .AmdEnableFSRM = true,
+    .AmdEnableERMS = true,
+    .AmdStatisticalCorrectPredictor = false,
     .CapsuleUpdateDetected = false,
     .SvmEnable = true,
     .SvmLock = true,
@@ -206,7 +210,7 @@ InitializeCcxAndLaunchAps (
   uint8_t            ApicMode;
   uint32_t           ApicId;
   uint32_t           ApNumBfLaunch = 0x0;
-  volatile uint16_t  *ApSyncFlag = NULL;
+  volatile uint32_t  *ApSyncFlag = NULL;
   uint8_t            i = 0;
   DF_IP2IP_API       *DfApi;
   NBIO_IP2IP_API     *NbioApi;
@@ -217,6 +221,7 @@ InitializeCcxAndLaunchAps (
   APOB_CCD_LOGICAL_TO_PHYSICAL_MAP_TYPE_STRUCT  ApobCcdLogToPhysMap;
   volatile AMD_CCX_AP_LAUNCH_GLOBAL_DATA ApLaunchGlobalData;
   CCX_DATA_BLOCK        *CcxDataBlk = NULL;
+  SMU_COMMON_2_REV_XFER_BLOCK  *SmuXfer;
 
   void              *ApStartupBuffer = NULL;
   uint8_t           MemoryContentCopy[AP_TEMP_BUFFER_SIZE];
@@ -419,7 +424,7 @@ InitializeCcxAndLaunchAps (
 
   if (ApLaunchGlobalData.SleepType == 3) {
     PspSmmHdrData = (PSP_SMM_HDR_DATA *)(uintptr_t)xUslRdMsr(MSR_SMM_ADDR); //SMMADDR_ADDRESS - Start of TSEG
-    ApSyncFlag = (volatile uint16_t *)&PspSmmHdrData->ApSyncFlag;
+    ApSyncFlag = (volatile uint32_t *)&PspSmmHdrData->ApSyncFlag;
     assert(ApSyncFlag != NULL);
     *ApSyncFlag = 0;
     PspSmmHdrData->ApStackTop = PspSmmHdrData->PspSmmRsmMemInfo.StackPtr + \
@@ -527,7 +532,7 @@ InitializeCcxAndLaunchAps (
         CcxConfigData,
         CcxDataBlk
         );
-      ApSyncFlag = (volatile uint16_t *)(uintptr_t) ApLaunchGlobalData.AllowToLaunchNextThreadLocation;
+      ApSyncFlag = (volatile uint32_t *)(uintptr_t) ApLaunchGlobalData.AllowToLaunchNextThreadLocation;
     }
   }
 
@@ -637,6 +642,12 @@ InitializeCcxAndLaunchAps (
       MemoryContentCopy,
       MemoryContentCopySize
       );
+  }
+
+  if (SilGetCommon2RevXferTable(SilContext, SilId_SmuClass, (void **)(&SmuXfer)) == SilPass) {
+    Status = SmuXfer->SmuInitAfterCcxDone(SilContext);
+  } else {
+    CCX_TRACEPOINT(SIL_TRACE_ERROR, "SMU Xfer table not found!!\n");
   }
 
   UpdateCcxOutputData(SilContext, CcxConfigData);
@@ -755,6 +766,7 @@ SIL_STATUS CcxClassSetInputBlk (
  * @brief Necessary register setting before launching next thread
  *
  */
+NASM_ABI
 void
 RegSettingBeforeLaunchingNextThread (
   volatile AMD_CCX_AP_LAUNCH_GLOBAL_DATA *ApLaunchGlobalData

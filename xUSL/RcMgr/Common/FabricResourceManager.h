@@ -33,6 +33,9 @@
 #define X86_LEGACY_IO_SIZE         0x1000     // IO size which is reserved for legacy devices
 #define RCMGR_IO_SIZE_MASK         0xFFFFF000ull
 
+// MMIO below 4G has 2 regions, first is MMIO Above PCIe Cfg, second is MMIO Below PCIe Cfg
+#define PRIMARY_RB_HAS_2ND_MMIO     1
+
 #define SIZE_16M_ALIGN             0xFFFFFFFFFF000000ull
 
 #define BOTTOM_OF_COMPAT           0xFEC00000ul // From BOTTOM_OF_COMPAT to 4G would be leaved as undescribed (COMPAT)
@@ -67,6 +70,11 @@ SIL_STATUS FabricReserveMmio (
   uint64_t              Alignment,
   FABRIC_TARGET         Target,
   FABRIC_MMIO_ATTRIBUTE *Attributes
+  );
+
+SIL_STATUS FabricEnableVgaMmio (
+  SIL_CONTEXT            *SilContext,
+  FABRIC_TARGET          Target
   );
 
 #pragma pack (pop)

@@ -6,8 +6,10 @@
  *
  */
 #include <RcMgrIp2Ip.h>
+#include <RcMgr/Common/FabricResourceManager.h>
 #include "RcMgrIp2IpPhx.h"
 
 RCMGR_IP2IP_API mRcMgrApiPhx = {
-  .FabricReserveMmio = FabricReserveMmio
+  .FabricReserveMmio = FabricReserveMmio,
+  .FabricEnableVgaMmio = FabricEnableVgaMmio
 };

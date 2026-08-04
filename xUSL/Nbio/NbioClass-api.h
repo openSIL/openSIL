@@ -46,6 +46,7 @@ typedef struct {
   bool IoApicMMIOAddressReservedEnable; ///< Enable Ioapic MMIO reserved from GNB driver. 0:Disable
   bool IoApicIdPreDefineEn;             ///< Enable assign IOAPIC ID
   uint8_t IoApicIdBase;                 ///< Base NBIO IOAPIC ID. ID assigned start from this value */
+  uint64_t CfgGnbIoapicAddress;         ///< Fixed Ioapic MMIO address if not reserved from RcMGr. 0:Disable
   uint8_t NbifMgcgHysteresis;           ///< NBIF MGCG HYSTERESIS for gating count
   uint8_t SyshubMgcgHysteresis;         ///< NBIF MGCG HYSTERESIS for gating count
   bool IohcNonPCIBarInitSmu;            ///< Configure non pci device bar for SMU
@@ -64,6 +65,9 @@ typedef struct {
   bool IommuAvicSupport;                ///< IOMMU General AVIC modes support
   bool IommuL2ClockGatingEnable;        ///< Enable/Disable IOMMU L2 clock gating support
   bool IommuL1ClockGatingEnable;        ///< Enable/Disable IOMMU L1 clock gating support
+  bool CfgIOMMUDynamicPgEnable;
+  bool CfgIOMMUL1MemoryPGEnable;
+  bool CfgIOMMUL2MemoryPGEnable;
   bool IOHCPgEnable;
   uint8_t NbioGlobalCgOverride;
   bool IommuSupport;
@@ -156,6 +160,25 @@ typedef struct {
   bool AmdCxlOnAllPorts;    ///< Toggle Cxl on all ports
   bool CfgPcieTbtSupport;
   bool CfgTbtCompleterEn;
+  uint8_t AmdNbioAudioSelect;
+  bool Pcie23DynPowerGating;
+  bool Usb4Rt0En;
+  bool Usb4Rt0PcieTnlEn;
+  bool Usb4Rt1En;
+  bool Usb4Rt1PcieTnlEn;
+  uint8_t UsbSysHubSelect;
+  uint8_t CfgIgpuControl;
+  uint8_t NbifPgHysteresis;
+  uint8_t SyshubMgcgHspClkHysteresis;
+  uint8_t SyshubGdcMgcgHysteresis;
+  bool CfgNbifPgClkGating;
+  bool SysHubPg;
+  bool EnableNbifOBFF;
+  bool EnableNbifDmaOBFF;
+  bool CfgSyshubGdcMgcgClkGating;
+  bool CfgSyshubMgcgHspClkGating;
+  bool CfgAzaliaEnable;
+  bool PcieSramWA;
 } NBIO_CONFIG_DATA;
 
 typedef struct {

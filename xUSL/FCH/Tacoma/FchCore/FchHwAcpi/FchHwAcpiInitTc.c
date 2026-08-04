@@ -38,6 +38,8 @@ static const REG8_MASK FchTcInitEnvHwAcpiPciTable[] =
 static const ACPI_REG_WRITE MmioEnvInitTableTc[] = {
   {00, 00, 0xB0, 0xAC},
   {PMIO_BASE >> 8, FCH_PM_ACPICONFIG + 2, BIT_8(1) + BIT_8(2), 0},
+  {PMIO_BASE >> 8, PMx000000BC, 0xFD, BIT_8(1)},
+  {PMIO_BASE >> 8, PMx000000C8, 0xFD, BIT_8(1)},
   {SMI_BASE >> 8, FCHSMI_56, 0, 11},
   {SMI_BASE >> 8, FCHSMI_57, 0, 11},
   {SMI_BASE >> 8, FCHSMI_37, 0, 11},

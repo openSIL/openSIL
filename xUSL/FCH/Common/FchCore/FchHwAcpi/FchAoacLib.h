@@ -27,6 +27,7 @@
 #define FCH_AOAC_UART2        0x10
 #define FCH_AOAC_UART3        0x1A
 #define FCH_AOAC_UART4        0x14
+#define FCH_AOAC_SD           0x19
 
 void
 FchAoacPowerOnDev (

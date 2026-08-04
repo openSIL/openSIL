@@ -35,7 +35,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -60,7 +60,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -85,7 +85,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                       //uint8_t tx_eq_post;
     0,                       //uint8_t tx_en_inv_pre;
     0,                       //uint8_t tx_en_inv_post;
-    0,                       //uint8_t reserved3;
+    0,                       //uint8_t tx_slew_ctrl_val;
     0,                       //uint32_t reserved4;
     0,                       //uint32_t reserved5;
     0,                       //uint32_t reserved6;
@@ -110,7 +110,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                      //uint8_t tx_eq_post;
     0,                      //uint8_t tx_en_inv_pre;
     0,                      //uint8_t tx_en_inv_post;
-    0,                      //uint8_t reserved3;
+    0,                      //uint8_t tx_slew_ctrl_val;
     0,                      //uint32_t reserved4;
     0,                      //uint32_t reserved5;
     0,                      //uint32_t reserved6;
@@ -135,7 +135,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     5,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -160,7 +160,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     6,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -185,7 +185,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     9,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -210,7 +210,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     11,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -235,7 +235,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     15,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -260,7 +260,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     20,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -285,7 +285,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -310,7 +310,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -335,7 +335,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -360,7 +360,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -385,7 +385,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     5,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -410,7 +410,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     6,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -435,7 +435,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     9,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -460,7 +460,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     11,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -485,7 +485,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     15,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -510,7 +510,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     20,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -535,7 +535,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -560,7 +560,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -585,7 +585,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -610,7 +610,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -635,7 +635,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     4,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -660,7 +660,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     6,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -685,7 +685,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     7,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -710,7 +710,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     9,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -735,7 +735,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     12,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -760,7 +760,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     16,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -785,7 +785,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -810,7 +810,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -835,7 +835,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -860,7 +860,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -885,7 +885,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     4,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -910,7 +910,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     6,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -935,7 +935,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     7,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -960,7 +960,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     9,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -985,7 +985,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     12,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1010,7 +1010,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     16,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1035,7 +1035,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1060,7 +1060,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     6,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1085,7 +1085,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     11,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1110,7 +1110,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     14,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1135,7 +1135,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     19,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1160,7 +1160,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1185,7 +1185,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     6,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1210,7 +1210,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     10,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1235,7 +1235,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     14,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1260,7 +1260,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     17,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1285,7 +1285,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1310,7 +1310,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     6,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1335,7 +1335,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     9,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1360,7 +1360,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     13,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1385,7 +1385,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1410,7 +1410,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     3,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1435,7 +1435,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1460,7 +1460,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1485,7 +1485,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1510,7 +1510,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1535,7 +1535,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     4,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1560,7 +1560,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     6,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1585,7 +1585,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     7,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1610,7 +1610,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     9,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1635,7 +1635,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     12,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1660,7 +1660,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     16,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1685,7 +1685,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1710,7 +1710,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1735,7 +1735,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1760,7 +1760,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1785,7 +1785,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     4,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1810,7 +1810,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     6,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1835,7 +1835,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     7,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1860,7 +1860,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     9,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1885,7 +1885,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     12,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1910,7 +1910,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     16,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1935,7 +1935,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1960,7 +1960,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -1985,7 +1985,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2010,7 +2010,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2035,7 +2035,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     4,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2060,7 +2060,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     6,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2085,7 +2085,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     7,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2110,7 +2110,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     9,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2135,7 +2135,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     12,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2160,7 +2160,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     16,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2185,7 +2185,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2210,7 +2210,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2235,7 +2235,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2260,7 +2260,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                       //uint8_t tx_eq_post;
     0,                       //uint8_t tx_en_inv_pre;
     0,                       //uint8_t tx_en_inv_post;
-    0,                       //uint8_t reserved3;
+    0,                       //uint8_t tx_slew_ctrl_val;
     0,                       //uint32_t reserved4;
     0,                       //uint32_t reserved5;
     0,                       //uint32_t reserved6;
@@ -2285,7 +2285,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     4,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2310,7 +2310,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     6,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2335,7 +2335,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     7,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2360,7 +2360,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     9,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2385,7 +2385,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     12,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2410,7 +2410,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     16,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2435,7 +2435,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2460,7 +2460,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2485,7 +2485,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2510,7 +2510,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                       //uint8_t tx_eq_post;
     0,                       //uint8_t tx_en_inv_pre;
     0,                       //uint8_t tx_en_inv_post;
-    0,                       //uint8_t reserved3;
+    0,                       //uint8_t tx_slew_ctrl_val;
     0,                       //uint32_t reserved4;
     0,                       //uint32_t reserved5;
     0,                       //uint32_t reserved6;
@@ -2535,7 +2535,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     4,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2560,7 +2560,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     6,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2585,7 +2585,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     7,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2610,7 +2610,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     9,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2635,7 +2635,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     12,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2660,7 +2660,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     16,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2685,7 +2685,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2710,7 +2710,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2735,7 +2735,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2760,7 +2760,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2785,7 +2785,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     4,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2810,7 +2810,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     6,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2835,7 +2835,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     7,                       //uint8_t tx_eq_post;
     0,                       //uint8_t tx_en_inv_pre;
     0,                       //uint8_t tx_en_inv_post;
-    0,                       //uint8_t reserved3;
+    0,                       //uint8_t tx_slew_ctrl_val;
     0,                       //uint32_t reserved4;
     0,                       //uint32_t reserved5;
     0,                       //uint32_t reserved6;
@@ -2860,7 +2860,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     9,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2885,7 +2885,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     12,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2910,7 +2910,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     16,                       //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2935,7 +2935,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2960,7 +2960,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -2985,7 +2985,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -3010,7 +3010,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -3035,7 +3035,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -3060,7 +3060,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     0,                        //uint8_t tx_eq_post;
     0,                        //uint8_t tx_en_inv_pre;
     0,                        //uint8_t tx_en_inv_post;
-    0,                        //uint8_t reserved3;
+    0,                        //uint8_t tx_slew_ctrl_val;
     0,                        //uint32_t reserved4;
     0,                        //uint32_t reserved5;
     0,                        //uint32_t reserved6;
@@ -3085,7 +3085,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     8,                            //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3110,7 +3110,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     10,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3135,7 +3135,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     13,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3160,7 +3160,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     16,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3185,7 +3185,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     8,                            //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3210,7 +3210,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     10,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3235,7 +3235,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     13,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3260,7 +3260,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     16,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3285,7 +3285,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     8,                            //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3310,7 +3310,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     10,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3335,7 +3335,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     13,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3360,7 +3360,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     16,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3385,7 +3385,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     8,                            //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3410,7 +3410,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     10,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3435,7 +3435,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     13,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3460,7 +3460,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     16,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3485,7 +3485,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     8,                            //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3510,7 +3510,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     10,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3535,7 +3535,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     13,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;
@@ -3560,7 +3560,7 @@ ATOM_N6_DISPLAY_PHY_TUNING_SET display_phy_tuning_info[] = {
     16,                           //uint8_t tx_eq_post;
     0,                            //uint8_t tx_en_inv_pre;
     0,                            //uint8_t tx_en_inv_post;
-    0,                            //uint8_t reserved3;
+    0,                            //uint8_t tx_slew_ctrl_val;
     0,                            //uint32_t reserved4;
     0,                            //uint32_t reserved5;
     0,                            //uint32_t reserved6;

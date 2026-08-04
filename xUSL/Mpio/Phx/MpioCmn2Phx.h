@@ -11,8 +11,8 @@
 
 #include <SilCommon.h>
 #include <Nbio/Common/GnbDxio.h>
+#include <Mpio/Common/MpioCmn2Rev.h>
 #include <Mpio/MpioClass-api.h>
-
 
 void
 MpioCfgGlobalConfigPhx (
@@ -124,6 +124,7 @@ void MpioConfigurePsppPhx (
 
 void
 PcieEarlyTrainFixupsPhx (
+  SIL_CONTEXT                 *SilContext,
   MPIOCLASS_COMMON_INPUT_BLK  *SilDataCommon,
   GNB_HANDLE                  *GnbHandle,
   MPIO_COMPLEX_DESCRIPTOR     *PcieTopologyData
@@ -195,4 +196,19 @@ MpioRemoveCxlLinksPhx (
   MPIOCLASS_COMMON_INPUT_BLK    *SilDataCommon,
   MPIO_COMPLEX_DESCRIPTOR       *PcieTopologyData,
   PCIe_PLATFORM_CONFIG          *Pcie
+  );
+
+SIL_STATUS
+MpioPcieSetSpeed (
+  SIL_CONTEXT                   *SilContext,
+  PCIe_PLATFORM_CONFIG          *Pcie,
+  uint8_t                       PciDevice,
+  uint8_t                       PciFunction,
+  uint8_t                       TargetSpeed
+  );
+
+SIL_STATUS
+MpioGetEarlyLinkConfig (
+  SIL_CONTEXT                   *SilContext,
+  EARLY_LINK_STATUS             *EarlyLinkStatus
   );

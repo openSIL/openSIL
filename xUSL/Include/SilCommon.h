@@ -76,6 +76,7 @@
 #define DEBUG_FILTER_CXL        0x00000200UL
 #define DEBUG_FILTER_RCMGR      0x00000800UL
 #define DEBUG_FILTER_GFX        0x00001000UL
+#define DEBUG_FILTER_PROM       0x00002000UL
 // set the default Module filter, allowing the Host to pre-define
 #ifndef SIL_DEBUG_MODULE_FILTER
   #define SIL_DEBUG_MODULE_FILTER      ( DEBUG_FILTER_APOB | \
@@ -88,7 +89,8 @@
           DEBUG_FILTER_FCH | \
           DEBUG_FILTER_CXL | \
           DEBUG_FILTER_RCMGR | \
-          DEBUG_FILTER_GFX )
+          DEBUG_FILTER_GFX | \
+          DEBUG_FILTER_PROM)
 #endif
 
 /** Message type enables

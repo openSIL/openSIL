@@ -15,6 +15,8 @@
 #include "MpioCmn2Rev.h"
 #include <Mpio/MpioClass-api.h>
 #include <Nbio/NbioIp2Ip.h>
+#include <FCH/Common/FchCore/FchUsb/FchUsbCmn2Rev.h>
+#include <SMU/Common/SmuCmn2Rev.h>
 
 extern MPIO_COMPLEX_DESCRIPTOR PcieComplex;
 
@@ -88,6 +90,8 @@ NbioInitializeDxio (
   MPIO_COMPLEX_DESCRIPTOR         *PcieTopologyData;
   NBIO_IP2IP_API                  *NbioIp2Ip;
   MPIO_COMMON_2_REV_XFER_BLOCK    *MpioXferTable;
+  SMU_COMMON_2_REV_XFER_BLOCK     *SmuXfer;
+  FCH_USB_XFER_TABLE              *FchUsbXfer;
 
   MPIO_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
 
@@ -112,7 +116,7 @@ NbioInitializeDxio (
 
   MpioCfgBeforeDxioInit(SilContext, Pcie, PcieTopologyData);
 
-  MpioXferTable->PcieEarlyTrainFixups(SilDataCommon, NbioIp2Ip->NbioGetHandle(Pcie), PcieTopologyData);
+  MpioXferTable->PcieEarlyTrainFixups(SilContext, SilDataCommon, NbioIp2Ip->NbioGetHandle(Pcie), PcieTopologyData);
 
   MpioXferTable->NbifDeviceEarlyControl(SilContext, NbioIp2Ip->NbioGetHandle(Pcie));
 
@@ -132,6 +136,21 @@ NbioInitializeDxio (
   PcieConfigureHotplugPorts(SilContext, Pcie);
   MpioVisibilityControl(SilContext);
   MpioXferTable->MpioHotplugConfigureUSB4(NbioIp2Ip->NbioGetHandle(Pcie));
+
+  if (SilGetCommon2RevXferTable(SilContext, SilId_SmuClass, (void **)(&SmuXfer)) == SilPass) {
+    Status = SmuXfer->SmuInitAfterPcieTrainingDone(SilContext);
+    if (Status != SilPass) {
+      MPIO_TRACEPOINT(SIL_TRACE_ERROR, "SMU after PCIe training failed! Status=%x\n", Status);
+    }
+  } else {
+    MPIO_TRACEPOINT(SIL_TRACE_ERROR, "SMU Xfer table not found!!\n");
+  }
+
+  if (SilGetCommon2RevXferTable(SilContext, SilId_FchUsb, (void **)(&FchUsbXfer)) == SilPass) {
+    FchUsbXfer->FchUsbAfterPcieTrainingDone(SilContext);
+  } else {
+    MPIO_TRACEPOINT(SIL_TRACE_ERROR, "FCH USB Xfer table not found!!\n");
+  }
 
   return SilPass;
 }

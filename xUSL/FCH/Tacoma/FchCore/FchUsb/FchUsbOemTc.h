@@ -11,44 +11,40 @@
 
 #pragma pack (push, 1)
 
-//
-// USB2 PHY
-//
+typedef struct {
+  uint8_t  COMPDISTUNE;       ///< COMPDISTUNE
+  uint8_t  PLLBTUNE;          ///< PLLBTUNE
+  uint8_t  PLLITUNE;          ///< PLLITUNE
+  uint8_t  PLLPTUNE;          ///< PLLPTUNE
+  uint8_t  SQRXTUNE;          ///< SQRXTUNE
+  uint8_t  TXFSLSTUNE;        ///< TXFSLSTUNE
+  uint8_t  TXPREEMPAMPTUNE;   ///< TXPREEMPAMPTUNE
+  uint8_t  TXPREEMPPULSETUNE; ///< TXPREEMPPULSETUNE
+  uint8_t  TXRISETUNE;        ///< TXRISETUNE
+  uint8_t  TXVREFTUNE;        ///< TXVREFTUNE
+  uint8_t  TXHSXVTUNE;        ///< TXHSXVTUNE
+  uint8_t  TXRESTUNE;         ///< TXRESTUNE
+} FCH_USB20_PHY;
 
 typedef struct {
-  uint8_t field0;
-  uint8_t field1;
-  uint8_t field2;
-  uint8_t field3;
-  uint8_t field4;
-  uint8_t field5;
-  uint8_t field6;
-  uint8_t field7;
-  uint8_t field8;
-  uint8_t field9;
-  uint8_t field10;
-  uint8_t field11;
-} SIL_RESERVED_STRUCT_0010;
+  uint8_t  TX_TERM_CTRL;     ///< tx_term_ctrl
+  uint8_t  RX_TERM_CTRL;     ///< rx_term_ctrl
+  uint8_t  TX_VBOOST_LVL_EN; ///< TX_VBOOST_LVL_EN
+  uint8_t  TX_VBOOST_LVL;    ///< TX_VBOOST_LVL
+} FCH_USB3_PHY;
 
 typedef struct {
-  uint8_t field0;
-  uint8_t field1;
-  uint8_t field2;
-  uint8_t field3;
-} SIL_RESERVED_STRUCT_0011;
-
-typedef struct {
-  uint8_t          field0;
-  uint8_t          field1;
-  uint8_t          field2;
-  uint8_t          field3;
-  SIL_RESERVED_STRUCT_0010 field4[8];
-  SIL_RESERVED_STRUCT_0011 field5[3];
-  uint8_t          field6;
-  uint8_t          field7;
-  uint8_t          field8[3];
-  uint8_t          field9[3];
-} SIL_RESERVED_STRUCT_0012;
+  uint8_t        Version_Major;            ///< USB IP version
+  uint8_t        Version_Minor;            ///< USB IP version
+  uint8_t        TableLength;              ///< TableLength
+  uint8_t        Reserved0;
+  FCH_USB20_PHY  Usb20PhyPort[8];          ///< USB 2.0 Driving Strength
+  FCH_USB3_PHY   Usb3PhyPort[3];           ///< USB3 PHY Adjustment
+  uint8_t        BatteryChargerEnable;     ///< bit[1:0]-Usb0 Port[1:0], bit[3:2]-Usb1 Port[1:0]
+  uint8_t        PhyP3CpmP4Support;        ///< bit[1:0]-Usb0 Port[1:0], bit[3:2]-Usb1 Port[1:0]
+  uint8_t        ComboPhyStaticConfig[3];  ///< 0-Type C, 1- USB only mode, 2- DP only mode, 3- USB + DP
+  uint8_t        Reserved1[3];
+} FCH_TC_USB_OEM_PLATFORM_TABLE;
 
 //
 // USB4 PHY

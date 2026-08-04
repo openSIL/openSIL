@@ -37,5 +37,7 @@ MPIO_COMMON_2_REV_XFER_BLOCK MpioXferPhx = {
   .MpioCfgGetStrapListSize = MpioCfgGetStrapListSizePhx,
   .MpioReleasePort = MpioReleasePortPhx,
   .MpioGetPortId = MpioGetPortIdPhx,
-  .MpioRemoveCxlLinks = MpioRemoveCxlLinksPhx
+  .MpioRemoveCxlLinks = MpioRemoveCxlLinksPhx,
+  .MpioPcieSetSpeed = MpioPcieSetSpeed,
+  .MpioGetEarlyLinkConfig = MpioGetEarlyLinkConfig
 };

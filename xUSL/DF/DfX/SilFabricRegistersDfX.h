@@ -112,6 +112,21 @@ typedef union {
   uint32_t  Value;
 } CFG_ADDRESS_CNTL_REGISTER;
 
+#define VGAEN_FUNC 0x0
+#define VGAEN_REG  0xC08
+
+typedef union {
+  struct {
+    uint32_t VE:1;
+    uint32_t NP:1;
+    uint32_t CpuDis:1;
+    uint32_t :1;
+    uint32_t DstFabricID:6;
+    uint32_t :22;
+  } Field;
+  uint32_t  Value;
+} VGAEN_REGISTER;
+
 #define CFGBASEADDRESS_0_FUNC 0x0
 #define CFGBASEADDRESS_0_REG  0xC80
 

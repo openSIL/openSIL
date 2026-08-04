@@ -107,5 +107,5 @@ const MPIOCLASS_COMMON_INPUT_BLK mMpioClassDflts = {
   .CfgSevTioSupport = true,
   .PcieIdeCapSup = true,
   .SafeRecoveryBER = false,
-  .PeriodicCal = false
+  .PeriodicCal = false,
 };

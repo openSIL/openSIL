@@ -65,6 +65,61 @@ FchXhciSmuService (
 }
 
 /**
+ * FchXhciUsbInitSmuService
+ *
+ * @brief Xhci UsbInit SMU Service Request
+ *
+ * @param SilContext            A context structure through which host firmware defined data
+ *                              can be passed to openSIL. The host firmware is responsible
+ *                              for initializing the SIL_CONTEXT structure.
+ * @param DieBusNum             Bus Number on Current Die.
+ * @param RequestId             Request ID.
+ * @param UsbInitData           USB Init Parameters to be passed to the SMU
+ *
+ * @retval Status SMC_RESULT Bios-Smu Command response.
+ *
+ */
+SMC_RESULT FchXhciUsbInitSmuService (
+  SIL_CONTEXT    *SilContext,
+  uint32_t       DieBusNum,
+  uint32_t       RequestId,
+  USB_INIT_DATA  *UsbInitData
+  )
+{
+  SMC_RESULT    Status;
+  PCI_ADDR      PciAddress;
+  uint32_t      SmuArg[6];
+  uint32_t      *SmuArgPtr;
+  SMU_IP2IP_API *SmuApi;
+  USB_INIT_DATA LocalUsbInitData;
+
+  FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+
+  Status = SMC_Result_Failed;
+
+  if (SilGetIp2IpApi(SilContext, SilId_SmuClass, (void **)&SmuApi) != SilPass) {
+    FCH_TRACEPOINT(SIL_TRACE_ERROR, "Smu API not found!\n");
+    assert(false);
+  }
+
+  memcpy(&LocalUsbInitData, UsbInitData, sizeof(USB_INIT_DATA));
+  FCH_TRACEPOINT(SIL_TRACE_INFO, "USB_INIT_DATA @ %x\n", &LocalUsbInitData);
+
+  SmuApi->SmuServiceInitArguments(SmuArg);
+  SmuArgPtr = (uint32_t *)&LocalUsbInitData;
+  SmuArg[0] = SmuArgPtr[0];
+  SmuArg[1] = SmuArgPtr[1];
+  SmuArg[2] = SmuArgPtr[2];
+  SmuArg[3] = SmuArgPtr[3];
+
+  PciAddress.AddressValue = MAKE_SBDFO(DF_GET_SEGMENT(DieBusNum), DF_GET_BUS(DieBusNum), 0, 0, 0);
+  Status = SmuApi->SmuServiceRequest(PciAddress, RequestId, SmuArg, 0);
+  FCH_TRACEPOINT(SIL_TRACE_EXIT, "Status=%d.\n", Status);
+
+  return Status;
+}
+
+/**
  * FchXhciSmuUsbConfigUpdate
  *
  * @brief Xhci Smu Usb Config Update

@@ -47,6 +47,10 @@
 
 // SPI
 #define SPI_BASE                          0xFEC10000ul
+#define FCH_HFP_BASE_ADDRESS              0xFEC11000ul
+#define FCH_HID2_BASE_ADDRESS             0xFEC12000ul
+#define FCH_HID_BASE_ADDRESS              0xFEC13000ul
+#define HID_CONTROLLER_STEP               0x1000
 
 // RSMU
 #define FCH_SMN_RSMU_BASE                 0x02D00000ul

@@ -334,15 +334,16 @@ typedef enum {
   ConnectorTypeDualLinkDVI,                               ///< Dual  Link DVI-D
   ConnectorTypeHDMI,                                      ///< HDMI
   ConnectorTypeDpToVga,                                   ///< DP-to-VGA
-  ConnectorTypeReserved1,                                 ///< Reserved
-  ConnectorTypeReserved2,                                 ///< Reserved
+  ConnectorTypeDpToLvds,                                  ///< DP-to-LVDS
+  ConnectorTypeNutmegDpToVga,                             ///< Hudson-2 NutMeg DP-to-VGA
   ConnectorTypeSingleLinkDviI,                            ///< Single Link DVI-I
   ConnectorTypeDpWithTypeC,                               ///< DP with USB type C
+  ConnectorTypeDpWithTypeCWithoutRetimer,                 ///< DP with USB type C without Retimer
   ConnectorTypeDpWithoutTypeC,                            ///< DP without USB type C
-  ConnectorTypeReserved3,                                 ///< Reserved
-  ConnectorTypeReserved4,                                 ///< Reserved
-  ConnectorTypeAutoDetect,                                ///< VBIOS auto detect connector type
-  UnusedType,                                             ///< UnusedType
+  ConnectorTypeEDPToLvds,                                 ///< 3rd party common eDP-to-LVDS translator chip without AMD SW init
+  ConnectorTypeEDPToLvdsSwInit,                           ///< 3rd party eDP-to-LVDS translator which requires AMD SW init
+  ConnectorTypeAutoDetect,                                ///< VBIOS auto detect connector type (native LVDS, eDP or DP-to-LVDS)
+  UnusedType,                                              ///< UnusedType
   MaxConnectorType                                        ///< Not valid value, used to verify input
 } PCIE_CONNECTOR_TYPE;
 

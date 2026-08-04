@@ -410,6 +410,162 @@ FabricReserveMmio (
   return Status;
 }
 
+/**
+ * FabricEnableVgaMmio
+ *
+ * @brief Set VGA Enable register
+ *
+ * @param   SilContext         A context structure through which host firmware defined data
+ *                             can be passed to openSIL. The host firmware is responsible
+ *                             for initializing the SIL_CONTEXT structure.
+ * @param   Target             PCI bus number/Rb number of the requestor.
+ *
+ * @retval  SIL_STATUS   SilPass     - Success to set VGA enable registers
+ *                       SilAborted  - Can't find destination
+ */
+SIL_STATUS
+FabricEnableVgaMmio (
+  SIL_CONTEXT            *SilContext,
+  FABRIC_TARGET          Target
+  )
+{
+  uint8_t                     i;
+  uint8_t                     j;
+  uint8_t                     Socket;
+  uint8_t                     Rb;
+  uint8_t                     NumberOfBusRegions;
+  uint32_t                    DstFabricID;
+  uint32_t                    CfgAddrMapIndex;
+  uint32_t                    SocketNumber;
+  uint32_t                    RbPerDieCount;
+  uint32_t                    RbPerSktCount;
+  uint32_t                    CfgLimitNumLimit;
+  CFG_BASE_ADDRESS_REGISTER   CfgBase;
+  VGAEN_REGISTER              VgaEn;
+  DF_IP2IP_API                *DfIp2IpApi;
+  SIL_STATUS                  Status;
+  APOB_IP2IP_API              *ApobIp2IpApi;
+  APOB_SOC_DIE_INFO           SocMaxDieInfo;
+
+  RCMGR_TRACEPOINT(SIL_TRACE_INFO, "  openSIL FabricEnableVgaMmio\n");
+
+  Status = SilGetIp2IpApi(SilContext, SilId_DfClass, (void **) &DfIp2IpApi);
+  assert(Status == SilPass);
+
+  Status = SilGetIp2IpApi(SilContext, SilId_ApobClass, (void **) &ApobIp2IpApi);
+  if ((Status != SilPass) || (ApobIp2IpApi == NULL)) {
+    assert(Status == SilPass);
+    return Status;
+  }
+
+  NumberOfBusRegions = DfIp2IpApi->DfGetNumberOfBusRegions ();
+  SocketNumber = DfIp2IpApi->DfGetNumberOfProcessorsPresent(SilContext);
+  RbPerDieCount = DfIp2IpApi->DfGetNumberOfRootBridgesOnDie(SilContext, 0, 0);
+  RbPerSktCount = DfIp2IpApi->DfGetNumberOfRootBridgesOnSocket(SilContext, 0);
+  ApobIp2IpApi->ApobGetMaxDieInfo(SilContext, &SocMaxDieInfo);
+
+  // Find out DstFabricIDSysOffset
+  DstFabricID = 0xFFFFFFFF;
+  Socket = 0xFF;
+  Rb = 0xFF;
+  if (Target.TgtType == TARGET_PCI_BUS) {
+    for (CfgAddrMapIndex = 0; CfgAddrMapIndex < NumberOfBusRegions; CfgAddrMapIndex++) {
+      DfIp2IpApi->DfAbstractRegAcc(SilContext,
+        (uint8_t) CFG_LIMIT_ADDRESS0_BusNumLimit,
+        0,
+        CfgAddrMapIndex,
+        FABRIC_REG_ACC_BC,
+        0,
+        DF_ABSTRACT_REG_READ,
+        0,
+        &CfgLimitNumLimit
+        );
+
+      CfgBase.Value = DfIp2IpApi->DfFabricRegisterAccRead(SilContext,
+        0,
+        0,
+        CFGBASEADDRESS_0_FUNC,
+        (uint32_t)(CFGBASEADDRESS_0_REG + (CfgAddrMapIndex * (CFGBASEADDRESS_1_REG - CFGBASEADDRESS_0_REG))),
+        FABRIC_REG_ACC_BC
+        );
+      if ((CfgBase.Field.RE == 1) && (CfgBase.Field.WE == 1) && (CfgLimitNumLimit >= Target.PciBusNum) &&
+        (CfgBase.Field.BusNumBase <= Target.PciBusNum) && (CfgBase.Field.SegmentNum == Target.PciSegNum)) {
+        DfIp2IpApi->DfAbstractRegAcc(SilContext,
+          (uint8_t) CFG_LIMIT_ADDRESS0_DstFabricID,
+          0,
+          CfgAddrMapIndex,
+          FABRIC_REG_ACC_BC,
+          0,
+          DF_ABSTRACT_REG_READ,
+          0,
+          &DstFabricID
+          );
+        break;
+      }
+    }
+
+    if (CfgAddrMapIndex >= NumberOfBusRegions) {
+      return SilAborted;
+    }
+    assert(DstFabricID != 0xFFFFFFFF);
+    for (i = 0; i < SocketNumber; i++) {
+      for (j = 0; j < RbPerSktCount; j++) {
+        if (DfIp2IpApi->DfGetHostBridgeSystemFabricID(SilContext,
+          i,
+          (j / RbPerDieCount),
+          (j % RbPerDieCount)
+          ) == DstFabricID) {
+          Socket = i;
+          Rb = j;
+          break;
+        }
+      }
+    }
+    assert(Socket != 0xFF);
+    assert(Rb != 0xFF);
+  } else {
+    Socket = (uint8_t) (Target.SocketNum);
+    Rb = (uint8_t) (Target.RbNum);
+    // This is for combo support for multi/single NBIO in one IOD
+    if (Rb >= RbPerSktCount) {
+      Rb = (uint8_t) (RbPerSktCount - 1);
+    }
+
+    DstFabricID = DfIp2IpApi->DfGetHostBridgeSystemFabricID(SilContext,
+                    Target.SocketNum,
+                    Target.RbNum / RbPerDieCount,
+                    Target.RbNum % RbPerDieCount
+                    );
+  }
+
+  if ((Socket >= SocMaxDieInfo.MaxSocSocketsSupportedValue) || (Rb >= RCMGR_MAX_RBS_PER_SOCKET)) {
+    assert(false);
+    return SilAborted;
+  }
+
+  for (i = 0; i < SocketNumber; i++) {
+    VgaEn.Value = DfIp2IpApi->DfFabricRegisterAccRead(SilContext,
+                    i,
+                    0,
+                    VGAEN_FUNC,
+                    VGAEN_REG,
+                    FABRIC_REG_ACC_BC
+                    );
+    VgaEn.Field.VE = 1;
+    VgaEn.Field.CpuDis = 0;
+    VgaEn.Field.DstFabricID = DstFabricID;
+    DfIp2IpApi->DfFabricRegisterAccWrite(SilContext,
+      i,
+      0,
+      VGAEN_FUNC,
+      VGAEN_REG,
+      FABRIC_REG_ACC_BC,
+      VgaEn.Value
+      );
+  }
+
+  return SilPass;
+}
 
 /**
  * SilInitMmioEqually4
@@ -848,11 +1004,11 @@ SilInitMmioEqually4 (
 
   //   4. if there's a spare MMIO register pair, try to set undescribed space (above or below PCIe Configuration)
   //      as primary RootBridge's 2nd MMIO
-  if (SystemRbNumber < MaxSystemRbCount) {
+  if (SystemRbNumber < MaxSystemRbCount + PRIMARY_RB_HAS_2ND_MMIO) {
     if ((AbovePcieCfgIsTooSmall && (SizeAbovePcieCfg != 0)) ||
       ((SizeBelowPcieCfg != 0) && (BelowPcieCfgIsTooSmall || (SystemRbNumber == 1)))) {
       for (i = 0; i < RCMGR_MAX_SOCKETS; i++) {
-        for (j = 0; j < SilData->RbsPerSocket; j++) {
+        for (j = 0; j < SilData->RbsPerSocket + PRIMARY_RB_HAS_2ND_MMIO; j++) {
           if (SilData->RbsPerSocket > PROJ_MAX_RBS_PER_SOCKET) {
             return SilOutOfBounds;
           }

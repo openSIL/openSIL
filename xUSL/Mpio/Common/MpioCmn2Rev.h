@@ -96,6 +96,7 @@ typedef void (*MPIO_CONFIGURE_PSPP) (
   );
 
 typedef void (*PCIE_EARLY_TRAIN_FIXUPS) (
+  SIL_CONTEXT                     *SilContext,
   MPIOCLASS_COMMON_INPUT_BLK      *SilDataCommon,
   GNB_HANDLE                      *GnbHandle,
   MPIO_COMPLEX_DESCRIPTOR         *PcieTopologyData
@@ -159,6 +160,28 @@ typedef void (*MPIO_REMOVE_CXL_LINKS) (
   PCIe_PLATFORM_CONFIG          *Pcie
   );
 
+typedef SIL_STATUS (*MPIO_PCIE_SET_SPEED) (
+  SIL_CONTEXT                   *SilContext,
+  PCIe_PLATFORM_CONFIG          *Pcie,
+  uint8_t                       PciDevice,
+  uint8_t                       PciFunction,
+  uint8_t                       TargetSpeed
+  );
+
+typedef struct {
+  bool      EarlyLinkStatus;
+  uint8_t   PhysicalRootBridge;
+  uint8_t   LogicalRootBridge;
+  uint8_t   RootPortBus;
+  uint8_t   RootPortDevice;
+  uint8_t   RootPortFunction;
+} EARLY_LINK_STATUS;
+
+typedef SIL_STATUS (*MPIO_GET_EARLY_LINK_CONFIG) (
+  SIL_CONTEXT                   *SilContext,
+  EARLY_LINK_STATUS             *EarlyLinkStatus
+  );
+
 // Define the Cmn2Rev xfer table containing pointers to these functions
 
 typedef struct {
@@ -190,4 +213,6 @@ typedef struct {
   MPIO_RELEASE_PORT                 MpioReleasePort;
   MPIO_GET_PORT_ID                  MpioGetPortId;
   MPIO_REMOVE_CXL_LINKS             MpioRemoveCxlLinks;
+  MPIO_PCIE_SET_SPEED               MpioPcieSetSpeed;
+  MPIO_GET_EARLY_LINK_CONFIG        MpioGetEarlyLinkConfig;
 } MPIO_COMMON_2_REV_XFER_BLOCK;

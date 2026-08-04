@@ -201,6 +201,7 @@ typedef union {
 
 #define MSRxC00110DF      0xC00110DFul
 #define MSRxC00110E2                         0xC00110E2ul
+#define MSRxC00110E3                         0xC00110E3ul
 
 #define MSRxC00110E5                         0xC00110E5ul
 #define MSRxC00110E6                         0xC00110E6ul

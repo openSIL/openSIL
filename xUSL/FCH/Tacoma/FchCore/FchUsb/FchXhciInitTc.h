@@ -23,10 +23,10 @@ FchUsbOemUsb20PhyConfigurePerPortTc (
   uint32_t          DieBusNum,
   uint32_t          Controller,
   uint8_t           Port,
-  SIL_RESERVED_STRUCT_0010  *Usb2Phy
+  FCH_USB20_PHY     *Usb2Phy
   );
 
 bool
 FchUsbCheckOemTableValidTc (
-  SIL_RESERVED_STRUCT_0012 *PlatformUsbConfigureTable
+  FCH_TC_USB_OEM_PLATFORM_TABLE *PlatformUsbConfigureTable
   );

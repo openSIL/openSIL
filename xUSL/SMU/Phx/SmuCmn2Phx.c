@@ -11,5 +11,7 @@
 #include "SmuCmn2Phx.h"
 
 SMU_COMMON_2_REV_XFER_BLOCK mSmuXferPhx = {
-  .SmuServiceRequest = SmuServiceRequestPhx
+  .SmuServiceRequest = SmuServiceRequestPhx,
+  .SmuInitAfterCcxDone = SmuInitAfterCcxDonePhx,
+  .SmuInitAfterPcieTrainingDone = SmuInitAfterPcieTrainingDonePhx
 };

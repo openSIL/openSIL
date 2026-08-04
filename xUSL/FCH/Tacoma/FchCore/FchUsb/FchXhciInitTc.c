@@ -15,6 +15,7 @@
 #include <FCH/Common/Fch.h>
 #include <IP/FchXhciIp.h>
 #include <SMU/SmuIp2Ip.h>
+#include "FchUsbCmn2Tc.h"
 #include "FchUsbRegTc.h"
 #include "FchXhciInitTc.h"
 
@@ -124,7 +125,7 @@ FchXhciPortForceGen1Tc (
  */
 bool
 FchUsbCheckOemTableValidTc (
-  SIL_RESERVED_STRUCT_0012 *PlatformUsbConfigureTable
+  FCH_TC_USB_OEM_PLATFORM_TABLE *PlatformUsbConfigureTable
   )
 {
   if (PlatformUsbConfigureTable == NULL) {
@@ -134,19 +135,19 @@ FchUsbCheckOemTableValidTc (
   }
 
   if (
-    PlatformUsbConfigureTable->field0 != FCH_XHCI_VERSION_MAJOR_TC
-    || PlatformUsbConfigureTable->field1 != FCH_XHCI_VERSION_MINOR_TC
-    || PlatformUsbConfigureTable->field2 != sizeof (SIL_RESERVED_STRUCT_0012)
+    PlatformUsbConfigureTable->Version_Major != FCH_XHCI_VERSION_MAJOR_TC
+    || PlatformUsbConfigureTable->Version_Minor != FCH_XHCI_VERSION_MINOR_TC
+    || PlatformUsbConfigureTable->TableLength != sizeof (FCH_TC_USB_OEM_PLATFORM_TABLE)
     ) {
     FCH_TRACEPOINT(SIL_TRACE_ERROR, "PlatformUsbConfigureTable = 0x%x\n", PlatformUsbConfigureTable);
     FCH_TRACEPOINT(SIL_TRACE_ERROR,
       "Version_Major = 0x%x (Exp: 0x%x) Version_Minor = 0x%x (Exp: 0x%x) TableLength = 0x%x (Exp: 0x%x)\n",
-      PlatformUsbConfigureTable->field0,
+      PlatformUsbConfigureTable->Version_Major,
       FCH_XHCI_VERSION_MAJOR_TC,
-      PlatformUsbConfigureTable->field1,
+      PlatformUsbConfigureTable->Version_Minor,
       FCH_XHCI_VERSION_MINOR_TC,
-      PlatformUsbConfigureTable->field2,
-      sizeof (SIL_RESERVED_STRUCT_0012)
+      PlatformUsbConfigureTable->TableLength,
+      sizeof (FCH_TC_USB_OEM_PLATFORM_TABLE)
       );
     return false;
   }
@@ -173,7 +174,7 @@ FchUsbOemUsb20PhyConfigurePerPortTc (
   uint32_t          DieBusNum,
   uint32_t          Controller,
   uint8_t           Port,
-  SIL_RESERVED_STRUCT_0010  *Usb2Phy
+  FCH_USB20_PHY     *Usb2Phy
   )
 {
   uint32_t DW0_Index;
@@ -184,16 +185,16 @@ FchUsbOemUsb20PhyConfigurePerPortTc (
   // Param0
   DW0_Index = FCH_XHCI_USB_20LANEPARACTL0_CNTR0 + 0x400 * Port;
   DW1_Mask = 0xF3FFFFDF;
-  DW2_Data = (uint32_t) ((Usb2Phy->field0 & 0x0F)
-    | ((Usb2Phy->field1 & 0x01) << 4)
-    | ((Usb2Phy->field2 & 0x03) << 6)
-    | ((Usb2Phy->field3 & 0x0F) << 8)
-    | ((Usb2Phy->field4 & 0x0F) << 12)
-    | ((Usb2Phy->field5 & 0x0F) << 16)
-    | ((Usb2Phy->field6 & 0x07) << 20)
-    | ((Usb2Phy->field7 & 0x01) << 23)
-    | ((Usb2Phy->field8 & 0x03) << 24)
-    | ((Usb2Phy->field9 & 0x0F) << 28));
+  DW2_Data = (uint32_t) ((Usb2Phy->COMPDISTUNE & 0x0F) +
+                        ((Usb2Phy->PLLBTUNE & 0x01) << 4) +
+                        ((Usb2Phy->PLLITUNE & 0x03) << 6) +
+                        ((Usb2Phy->PLLPTUNE & 0x0F) << 8) +
+                        ((Usb2Phy->SQRXTUNE & 0x0F) << 12) +
+                        ((Usb2Phy->TXFSLSTUNE & 0x0F) << 16) +
+                        ((Usb2Phy->TXPREEMPAMPTUNE & 0x07) << 20) +
+                        ((Usb2Phy->TXPREEMPPULSETUNE & 0x01) << 23) +
+                        ((Usb2Phy->TXRISETUNE & 0x03) << 24) +
+                        ((Usb2Phy->TXVREFTUNE & 0x0F) << 28));
   DW3_OpGroup = GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup1);
 
   FchXhciSmuUsbConfigUpdate(SilContext,
@@ -207,8 +208,8 @@ FchUsbOemUsb20PhyConfigurePerPortTc (
   // Param1
   DW0_Index = FCH_XHCI_USB_20LANEPARACTL1_CNTR0 + 0x400 * Port;
   DW1_Mask = 0x0000000F;
-  DW2_Data = (uint32_t) ((Usb2Phy->field10 & 0x03)
-    | ((Usb2Phy->field11 & 0x03) << 2));
+  DW2_Data = (uint32_t) ((Usb2Phy->TXHSXVTUNE & 0x03)
+    | ((Usb2Phy->TXRESTUNE & 0x03) << 2));
 
 
   FchXhciSmuUsbConfigUpdate(SilContext,
@@ -240,7 +241,7 @@ static void
 FchUsbOemUsb20PhyTc (
   SIL_CONTEXT *SilContext,
   uint32_t DieBusNum,
-  SIL_RESERVED_STRUCT_0012 *PlatformUsbConfigureTable
+  FCH_TC_USB_OEM_PLATFORM_TABLE *PlatformUsbConfigureTable
   )
 {
   uint8_t  Port;
@@ -253,7 +254,7 @@ FchUsbOemUsb20PhyTc (
       DieBusNum,
       0,
       Port,
-      &(PlatformUsbConfigureTable->field4[Port])
+      &(PlatformUsbConfigureTable->Usb20PhyPort[Port])
       );
   }
   // HC1 (1 USB2): Port0
@@ -261,7 +262,7 @@ FchUsbOemUsb20PhyTc (
     DieBusNum,
     1,
     0,
-    &(PlatformUsbConfigureTable->field4[5])
+    &(PlatformUsbConfigureTable->Usb20PhyPort[5])
     );
 
   FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
@@ -286,7 +287,7 @@ FchUsbOemUsb3PhyConfigurePerPortTc (
   uint32_t          DieBusNum,
   uint32_t          Controller,
   uint8_t           Port,
-  SIL_RESERVED_STRUCT_0011  *Usb3Phy
+  FCH_USB3_PHY      *Usb3Phy
   )
 {
   uint32_t DW0_Index;
@@ -296,8 +297,8 @@ FchUsbOemUsb3PhyConfigurePerPortTc (
 
   DW0_Index = FCHUSBx168028 + 0x400 * Port;
   DW1_Mask = 0x00000707;
-  DW2_Data = (uint32_t) ((Usb3Phy->field1 & 0x07)
-    | ((Usb3Phy->field0 & 0x07) << 8));
+  DW2_Data = (uint32_t) ((Usb3Phy->TX_TERM_CTRL & 0x07) |
+                        ((Usb3Phy->RX_TERM_CTRL & 0x07) << 8));
   DW3_OpGroup = GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup1);
 
   FchXhciSmuUsbConfigUpdate(SilContext,
@@ -328,7 +329,7 @@ FchUsbOemUsb3PhyConfigureInternalPerPortTc (
   uint32_t          DieBusNum,
   uint32_t          Controller,
   uint8_t           Port,
-  SIL_RESERVED_STRUCT_0011  *Usb3Phy
+  FCH_USB3_PHY      *Usb3Phy
   )
 {
   uint32_t DW0_Index;
@@ -337,24 +338,13 @@ FchUsbOemUsb3PhyConfigureInternalPerPortTc (
   uint32_t DW3_OpGroup;
 
   // Port control PHY select
-  DW0_Index = FCHOFSTx00180000 + USB0CFGx00180130;
-  DW1_Mask = 0x0000F000;
-  DW2_Data = Port << 12;
-  DW3_OpGroup = GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup1);
-
-  FchXhciSmuUsbConfigUpdate(SilContext,
-    DieBusNum,
-    DW0_Index,
-    DW1_Mask,
-    DW2_Data,
-    DW3_OpGroup
-    );
+  FchUsb31PhySwitchPort(SilContext, DieBusNum, Controller, Port);
 
   // PHY internal register
   DW0_Index = FCHOFSTx00120000 + USB0CFGx00140088;
   DW1_Mask = 0xF0;
-  DW2_Data = (uint32_t) (((Usb3Phy->field2 & 0x01) << 7)
-    | ((Usb3Phy->field3 & 0x07) << 4));
+  DW2_Data = (uint32_t) (((Usb3Phy->TX_VBOOST_LVL_EN & 0x01) << 7) |
+                         ((Usb3Phy->TX_VBOOST_LVL & 0x07) << 4));
   DW3_OpGroup = GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup2);
 
   FchXhciSmuUsbConfigUpdate(SilContext,
@@ -385,7 +375,7 @@ static void
 FchUsbOemUsb3PhyTc (
   SIL_CONTEXT *SilContext,
   uint32_t DieBusNum,
-  SIL_RESERVED_STRUCT_0012 *PlatformUsbConfigureTable,
+  FCH_TC_USB_OEM_PLATFORM_TABLE *PlatformUsbConfigureTable,
   uint32_t XhciUsb3PortDisable
   )
 {
@@ -396,27 +386,27 @@ FchUsbOemUsb3PhyTc (
     DieBusNum,
     0,
     0,
-    &(PlatformUsbConfigureTable->field5[0])
+    &(PlatformUsbConfigureTable->Usb3PhyPort[0])
     );
   FchUsbOemUsb3PhyConfigurePerPortTc(SilContext,
     DieBusNum,
     0,
     1,
-    &(PlatformUsbConfigureTable->field5[1])
+    &(PlatformUsbConfigureTable->Usb3PhyPort[1])
     );
 
   FchUsbOemUsb3PhyConfigureInternalPerPortTc(SilContext,
     DieBusNum,
     0,
     0,
-    &(PlatformUsbConfigureTable->field5[0])
+    &(PlatformUsbConfigureTable->Usb3PhyPort[0])
     );
   if ((XhciUsb3PortDisable & BIT_32(1)) == 0) {
     FchUsbOemUsb3PhyConfigureInternalPerPortTc(SilContext,
       DieBusNum,
       0,
       1,
-      &(PlatformUsbConfigureTable->field5[1])
+      &(PlatformUsbConfigureTable->Usb3PhyPort[1])
       );
   }
 
@@ -425,14 +415,14 @@ FchUsbOemUsb3PhyTc (
     DieBusNum,
     1,
     0,
-    &(PlatformUsbConfigureTable->field5[2])
+    &(PlatformUsbConfigureTable->Usb3PhyPort[2])
     );
 
   FchUsbOemUsb3PhyConfigureInternalPerPortTc(SilContext,
     DieBusNum,
     1,
     0,
-    &(PlatformUsbConfigureTable->field5[2])
+    &(PlatformUsbConfigureTable->Usb3PhyPort[2])
     );
 
   FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
@@ -455,11 +445,11 @@ FchXhciOemConfigureTc (
   FCHUSB_INPUT_BLK *FchUsbData
   )
 {
-  SIL_RESERVED_STRUCT_0012 *PlatformUsbConfigureTable;
+  FCH_TC_USB_OEM_PLATFORM_TABLE *PlatformUsbConfigureTable;
 
   FCH_TRACEPOINT(SIL_TRACE_INFO, "sizeof (uintptr_t) = 0x%x\n", sizeof (uintptr_t));
 
-  PlatformUsbConfigureTable = (SIL_RESERVED_STRUCT_0012 *)(uintptr_t) FchUsbData->OemUsbConfigurationTable;
+  PlatformUsbConfigureTable = (FCH_TC_USB_OEM_PLATFORM_TABLE *)(uintptr_t) FchUsbData->OemUsbConfigurationTable;
 
   if (FchUsbCheckOemTableValidTc(PlatformUsbConfigureTable)) {
     FchUsbOemUsb20PhyTc(SilContext, DieBusNum, PlatformUsbConfigureTable);
@@ -723,6 +713,233 @@ FchXhciPdInterruptModeTc (
 }
 
 /**
+ * FchXhciDisablePortTc -  Xhci Disable Port Control
+ *
+ * @param SilContext            A context structure through which host firmware defined data
+ *                              can be passed to openSIL. The host firmware is responsible
+ *                              for initializing the SIL_CONTEXT structure.
+ * @param DieBusNum             Bus Number for Current Die
+ * @param FchUsbData            Fch Usb configuration structure pointer.
+ *
+ */
+static void
+FchXhciDisablePortTc (
+  SIL_CONTEXT      *SilContext,
+  uint32_t         DieBusNum,
+  FCHUSB_INPUT_BLK *FchUsbData
+  )
+{
+  uint32_t DW0_Index;
+  uint32_t DW1_Mask;
+  uint32_t DW2_Data;
+  uint32_t DW3_OpGroup;
+
+  FCH_TRACEPOINT(SIL_TRACE_ENTRY, "XhciUsb2PortDisable: %x, XhciUsb3PortDisable %x\n",
+                 FchUsbData->XhciUsb2PortDisable, FchUsbData->XhciUsb3PortDisable);
+
+  // HC0 (2 USB3 + 5 USB2): Port0-4
+  DW0_Index = FCHOFSTx00180000 + USB0CFGx0018012c;
+  DW1_Mask = 0x0003001F;
+  DW2_Data = (FchUsbData->XhciUsb2PortDisable & 0x1F) +
+              ((FchUsbData->XhciUsb3PortDisable & 0x3) << 16);
+  DW3_OpGroup = GET_USB_OP_GROUP(0, FchUsbConfigRegGroup1);
+
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    DW0_Index,
+    DW1_Mask,
+    DW2_Data,
+    DW3_OpGroup
+    );
+
+  FCH_TRACEPOINT(SIL_TRACE_INFO, "xHC0 PortDisable: %x\n",
+                 xUSLSmnRead(0,
+                   DieBusNum,
+                   FCH_TC_USB0_SMN_BASE+ FCHOFSTx00180000 + USB0CFGx0018012c
+                   ));
+
+  // HC1 (1 USB3 + 1 USB2): Port0-1
+  DW0_Index = FCHOFSTx00180000 + USB0CFGx0018012c;
+  DW1_Mask = 0x00010001;
+  DW2_Data = ((FchUsbData->XhciUsb2PortDisable >> 5) & 0x1) +
+              (((FchUsbData->XhciUsb3PortDisable >> 2) & 0x1) << 16);
+  DW3_OpGroup = GET_USB_OP_GROUP(1, FchUsbConfigRegGroup1);
+
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    DW0_Index,
+    DW1_Mask,
+    DW2_Data,
+    DW3_OpGroup
+    );
+
+  FCH_TRACEPOINT(SIL_TRACE_INFO, "xHC1 PortDisable: %x\n",
+                 xUSLSmnRead(0,
+                   DieBusNum,
+                   FCH_TC_USB1_SMN_BASE+ FCHOFSTx00180000 + USB0CFGx0018012c
+                   ));
+
+  FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
+}
+
+static void
+FchPlatformIndependentRegConfigPerControllerTc (
+  SIL_CONTEXT       *SilContext,
+  uint32_t          DieBusNum,
+  FCHUSB_INPUT_BLK  *FchUsbData,
+  uint32_t          Controller
+  )
+{
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHOFSTx00180000 + USB0CFGx00180118,
+    BIT_32(8),
+    BIT_32(8),
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup1)
+    );
+
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBx168000,
+    BIT_32(0),
+    BIT_32(0),
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup1)
+    );
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBx168000 + 0x400,
+    BIT_32(0),
+    BIT_32(0),
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup1)
+    );
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBx168040,
+    BIT_32(20),
+    BIT_32(20),
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup1)
+    );
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBx168040 + 0x400,
+    BIT_32(20),
+    BIT_32(20),
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup1)
+    );
+
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHOFSTx00180000 + USB0CFGx00180130,
+    0x0000F000,
+    0x00000000,
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup2)
+    );
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBx12478C,
+    BIT_32(0),
+    BIT_32(0),
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup2)
+    );
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBx124790,
+    BIT_32(20),
+    BIT_32(0),
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup2)
+    );
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBx124B8C,
+    BIT_32(20),
+    BIT_32(0),
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup2)
+    );
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBx124B90,
+    BIT_32(20),
+    BIT_32(0),
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup2)
+    );
+
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBx124788,
+    BIT_32(3),
+    BIT_32(3),
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup2)
+    );
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBx124B88,
+    BIT_32(3),
+    BIT_32(3),
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup2)
+    );
+
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBxC1B0,
+    BIT_32(29),
+    BIT_32(29),
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup3)
+    );
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBxC12C,
+    BIT_32(18),
+    0x00000000,
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup3)
+    );
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBxC608,
+    0xFFFC0000,
+    0x30140000,
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup3)
+    );
+  FchXhciSmuUsbConfigUpdate(SilContext,
+    DieBusNum,
+    FCHUSBxC604,
+    BIT_32(2),
+    BIT_32(2),
+    GET_USB_OP_GROUP(Controller, FchUsbConfigRegGroup3)
+    );
+}
+
+/**
+ * FchXhciCommonRegInitTc  -  Xhci Platform independant register Configuration.
+ *
+ * @param SilContext            A context structure through which host firmware defined data
+ *                              can be passed to openSIL. The host firmware is responsible
+ *                              for initializing the SIL_CONTEXT structure.
+ * @param DieBusNum             Bus Number for Current Die
+ * @param FchUsbData            Fch Usb configuration structure pointer.
+ *
+ */
+static void
+FchXhciCommonRegInitTc (
+  SIL_CONTEXT      *SilContext,
+  uint32_t         DieBusNum,
+  FCHUSB_INPUT_BLK *FchUsbData
+  )
+{
+
+  FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+
+  if (FchUsbData->Xhci0Enable) {
+    FchPlatformIndependentRegConfigPerControllerTc(SilContext, DieBusNum, FchUsbData, 0);
+  }
+
+  if (FchUsbData->Xhci1Enable) {
+    FchPlatformIndependentRegConfigPerControllerTc(SilContext, DieBusNum, FchUsbData, 1);
+  }
+
+  FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
+}
+
+/**
  * FchXhciPassParameterTc
  *
  * @brief Xhci Pass Parameters
@@ -745,6 +962,8 @@ static void FchXhciPassParameterTc (
 {
   FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
 
+  FchXhciCommonRegInitTc(SilContext, DieBusNum, FchUsbData);
+  FchXhciDisablePortTc(SilContext, DieBusNum, FchUsbData);
   FchXhciOverCurrentTc(SilContext, DieBusNum, FchUsbData);
   FchXhciOCPolarityTc(SilContext, DieBusNum, FchUsbData);
   FchXhciDeviceRemovableTc(SilContext, DieBusNum, FchUsbData);
@@ -790,6 +1009,48 @@ static void FchXhciInitS3ExitProgramTc (
 }
 
 /**
+ * FchTCXhciSmuServiceUsbInit  -  Xhci SMU Service USB Init Request parameters
+ *
+ * @param DieBusNum             IOHC bus number on current Die.
+ * @param FchUsbData            Fch Usb configuration structure pointer.
+ *
+ */
+static void
+FchXhciSmuServiceUsbInitTc (
+  SIL_CONTEXT       *SilContext,
+  uint32_t          DieBusNum,
+  FCHUSB_INPUT_BLK  *FchUsbData
+  )
+{
+  FCH_TC_USB_OEM_PLATFORM_TABLE *PlatformUsbConfigureTable;
+  USB_INIT_DATA *UsbInitData = &FchUsbData->UsbInitData;
+
+  PlatformUsbConfigureTable = (FCH_TC_USB_OEM_PLATFORM_TABLE *)FchUsbData->OemUsbConfigurationTable;
+
+  UsbInitData->Enable.usb_init_combined = 1;
+
+  if (FchUsbData->Xhci0Enable) {
+    UsbInitData->Enable.usb_hc_0 = 1;
+    if (PlatformUsbConfigureTable != NULL) {
+      UsbInitData->ComboPhyStaticConfig.usb_hc_0 =
+        PlatformUsbConfigureTable->ComboPhyStaticConfig[0] & 0x0F;
+    }
+    if (FchUsbData->XhciUsb3PortDisable & BIT_32(0)) {
+      UsbInitData->UsbControllerConfig.usb_hc_0_ss_port0_disable = 1;
+    }
+    if (FchUsbData->XhciUsb3PortDisable & BIT_32(1)) {
+      UsbInitData->UsbControllerConfig.usb_hc_0_ss_port1_disable = 1;
+    }
+  }
+  if (FchUsbData->Xhci1Enable) {
+    UsbInitData->Enable.usb_hc_1 = 1;
+    if (FchUsbData->XhciUsb3PortDisable & BIT_32(2)) {
+      UsbInitData->UsbControllerConfig.usb_hc_1_ss_port0_disable = 1;
+    }
+  }
+}
+
+/**
  * FchXhciInitBootProgramTc
  *
  * @brief Config Xhci controller during Power-On
@@ -827,6 +1088,7 @@ static void FchXhciInitBootProgramTc (
   FchXhciDdiModeEnableTc(SilContext, DieBusNum, FchUsbData);
   FchUsbDbgClkDisable(SilContext, DieBusNum, FchUsbData);
   FchXhciPdInterruptModeTc(SilContext, DieBusNum, FchUsbData);
+  FchXhciSmuServiceUsbInitTc(SilContext, DieBusNum, FchUsbData);
 
   FCH_TRACEPOINT(SIL_TRACE_EXIT, "Bus 0x%x\n", DieBusNum);
 }
@@ -863,6 +1125,24 @@ FchInitResetXhciTc (
   FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
 }
 
+/**
+ * FchTCXhciInitSsid - Update Xhci SSID
+ *
+ *
+ * @param[in] DieBusNum  IOCH bus number on current Die.
+ * @param[in] Ssid       The SSID value to be updated
+ *
+ */
+static void
+FchXhciInitSsid (
+  uint32_t DieBusNum,
+  uint32_t Ssid
+  )
+{
+  xUSLSmnWrite(0, DieBusNum, FCH_USB0_SMN_PCICFG_TC + 0x4C, Ssid);
+  xUSLSmnWrite(0, DieBusNum, FCH_USB0_SMN_PCICFG_TC + 0x4C, Ssid);
+}
+
 /*
  * FchInitPrePcieXhciTc
  *
@@ -883,7 +1163,51 @@ FchInitPrePcieXhciTc (
   FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
 
   FchInitResetXhciTc(SilContext, FchUsbData);
+  if (FchUsbData->XhciSsid != 0) {
+    FchXhciInitSsid(FchUsbData->DieBusNum, FchUsbData->XhciSsid);
+  }
   FchXhciIohcPmeDisable(FchUsbData->DieBusNum, true);
+
+  /* FchInitEnvUsb */
+  FchXhciSmuService(SilContext, FchUsbData->DieBusNum, 0);
+
+  FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
+}
+
+void FchUsbAfterPcieTrainingDoneTc (
+  SIL_CONTEXT *SilContext
+  )
+{
+  FCH_BIOSSMC_MSG_INPUT_BLK *FchBiosSmcMsg;
+  FCHUSB_INPUT_BLK *FchUsbData;
+
+  FCH_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+
+  FchBiosSmcMsg = (FCH_BIOSSMC_MSG_INPUT_BLK *) xUslFindStructure(SilContext,
+    SilId_FchUsb,
+    FCH_BIOSSMC_MSG_INPUT_BLK_INSTANCE
+    );
+
+  if (FchBiosSmcMsg == NULL) {
+    assert(false);
+    return;
+  }
+
+  FchUsbData = (FCHUSB_INPUT_BLK *) xUslFindStructure(SilContext,
+    SilId_FchUsb,
+    FCHUSB_INPUT_BLK_INSTANCE
+    );
+
+  if (FchUsbData == NULL) {
+    assert(false);
+    return;
+  }
+
+  FchXhciUsbInitSmuService(SilContext,
+    FchUsbData->DieBusNum,
+    FchBiosSmcMsg->UsbInit,
+    &FchUsbData->UsbInitData
+    );
 
   FCH_TRACEPOINT(SIL_TRACE_EXIT, "\n");
 }

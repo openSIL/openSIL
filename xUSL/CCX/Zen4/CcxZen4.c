@@ -32,25 +32,9 @@ Zen4SetMiscMsrs (
   CCXCLASS_INPUT_BLK *CcxInputBlock
   )
 {
-  uint8_t     DisableWcSpecConfig;
-  uint8_t     SpeculativeStoreMode;
-
-  DisableWcSpecConfig = CcxInputBlock->DisableWcSpecConfig;
-  SpeculativeStoreMode = CcxInputBlock->AmdCpuSpeculativeStoreMode;
-
   CCX_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
 
-  if (DisableWcSpecConfig != 0xFF) {
-    xUslMsrAnd(MSR_LS_CFG, ~((uint64_t) BIT_64(53)));
-    xUslMsrAndThenOr(MSRxC00110E5,
-      ~(uint64_t) 0x240000000,
-      DisableWcSpecConfig ? 0x240000000 : 0
-      );
-  }
-
-  xUslMsrOr(MSRxC001102E, (uint64_t) BIT_64(35));
-
-  switch (SpeculativeStoreMode) {
+  switch (CcxInputBlock->AmdCpuSpeculativeStoreMode) {
   case 0:
     // Balanced
     xUslMsrOr(MSRxC00110E5, (uint64_t) BIT_64(26));

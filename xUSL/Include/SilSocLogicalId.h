@@ -157,13 +157,53 @@ SocCheck (
 
 /// Family 19 package type
 #define ZEN4_PKG_AM5                0
+#define ZEN4_PKG_FP8                1
+#define ZEN4_PKG_FP7                4
+#define ZEN4_PKG_FP7r2              5
 
+#define F19_RPL_RAW_ID         0x00A60F00ul
 #define F19_PHX_RAW_ID         0x00A70F00ul
+#define F19_PHX_N4_RAW_ID      0x00A70F40ul
+#define F19_PHX_HPT_RAW_ID     0x00A70F50ul
 #define F19_PHX2_RAW_ID        0x00A70F80ul
+#define F19_HPT2_RAW_ID        0x00A70FC0ul
 
+#define STEPPING_A1       0x1
+
+// Check if it is Phoenix1
+#define ISSOCPHX1        (SocCheck(F19_PHX_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ANY_PKG_TYPE)) || \
+                          SocCheck(F19_PHX_N4_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ANY_PKG_TYPE)) || \
+                          SocCheck(F19_PHX_HPT_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ZEN4_PKG_AM5)))
 // Check for Phoenix AM5, Phoenix2 AM5
 #define ISSOCPHXAM5      (SocCheck(F19_PHX_RAW_ID, (FIXED_EXT_MODEL | ANY_BASE_MODEL | ANY_STEPPING | ZEN4_PKG_AM5)))
 // Check for Phoenix2
 #define ISSOCPHX2        (SocCheck(F19_PHX2_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ANY_PKG_TYPE)))
+// Check if it is Phoenix1 AM5
+#define ISSOCPHX1AM5     (SocCheck(F19_PHX_HPT_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ZEN4_PKG_AM5)))
+// Check if it is Phoenix2 AM5
+#define ISSOCPHX2AM5     (SocCheck(F19_PHX2_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ZEN4_PKG_AM5)))
+// Check if it is Phoenix PP8, Phoenix2 FP8, Hawk Point 1 FP8, Hawk Point 2 FP8
+#define ISSOCPHXFP8      (SocCheck (F19_PHX_RAW_ID, (FIXED_EXT_MODEL | ANY_BASE_MODEL | ANY_STEPPING | ZEN4_PKG_FP8)))
+// Check if it is Phoenix FP7, Phoenix2 FP7
+#define ISSOCPHXFP7      (SocCheck (F19_PHX_RAW_ID, (FIXED_EXT_MODEL | ANY_BASE_MODEL | ANY_STEPPING | ZEN4_PKG_FP7)))
+// Check if it is Phoenix PP7r2, Phoenix2 FP7r2, Hawk Point 1 FP7r2, Hawk Point 2 FP7r2
+#define ISSOCPHXFP7R2    (SocCheck (F19_PHX_RAW_ID, (FIXED_EXT_MODEL | ANY_BASE_MODEL | ANY_STEPPING | ZEN4_PKG_FP7r2)))
+// Check if it is Hawk Point 1 (FP7 & FP7r2)
+#define ISSOCHPT1        (SocCheck(F19_PHX_HPT_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ZEN4_PKG_FP7)) || \
+                          SocCheck(F19_PHX_HPT_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ZEN4_PKG_FP7r2)))
+// Check if it is Hawk Point 2
+#define ISSOCHPT2        (SocCheck (F19_HPT2_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ANY_PKG_TYPE)))
+// Check if it is Phoenix2 FP7
+#define ISSOCPHX2FP7     (SocCheck (F19_PHX2_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ZEN4_PKG_FP7)))
+// Check if it is Phoenix2 FP7r2
+#define ISSOCPHX2FP7R2   (SocCheck (F19_PHX2_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ZEN4_PKG_FP7r2)))
+// Check if it is Hawk Point 2 FP7
+#define ISSOCHPT2FP7     (SocCheck (F19_HPT2_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ZEN4_PKG_FP7)))
+// Check if it is Hawk Point 2 FP7r2
+#define ISSOCHPT2FP7R2   (SocCheck (F19_HPT2_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ZEN4_PKG_FP7r2)))
+
+#define ISSOCPHXR5UA1    (SocCheck (F19_PHX_N4_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | STEPPING_A1 | ANY_PKG_TYPE)))
+#define ISSOCPHXR5U      (SocCheck (F19_PHX_N4_RAW_ID, (FIXED_EXT_MODEL | FIXED_BASE_MODEL | ANY_STEPPING | ANY_PKG_TYPE)))
+
 
 #pragma pack (pop)

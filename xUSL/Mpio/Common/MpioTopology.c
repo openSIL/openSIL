@@ -36,8 +36,11 @@ MpioUserDescriptorConfigDump (
       (EngineDescriptor->EngineData.EngineType == MpioUnusedEngine) ? "Unused" : "Invalid")
     );
   MPIO_TRACEPOINT(SIL_TRACE_INFO,
-    "    Start Phy Lane - %d\n    End   Phy Lane - %d\n",
-    EngineDescriptor->EngineData.StartLane,
+    "    Start Phy Lane - %d\n",
+    EngineDescriptor->EngineData.StartLane
+    );
+  MPIO_TRACEPOINT(SIL_TRACE_INFO,
+    "    End   Phy Lane - %d\n",
     EngineDescriptor->EngineData.EndLane
     );
   MPIO_TRACEPOINT(SIL_TRACE_INFO, "    Hotplug - %d\n", EngineDescriptor->EngineData.HotPluggable);

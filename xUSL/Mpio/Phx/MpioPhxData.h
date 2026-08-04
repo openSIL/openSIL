@@ -57,4 +57,6 @@ typedef struct {
   bool        CfgACSEnable; ///< Enable/disable Access Control Services (ACS)
   bool        CfgPCIeLTREnable;
   bool        PcieEcrcEnablement; ///< Specifies the state of the NBIO ECRC feature
+  bool        CfgCombinTrainingEnable;
+  bool        AmdAdvertiseEqToHighRateSupport;
 } MPIOCLASS_PHX_INPUT_BLK;

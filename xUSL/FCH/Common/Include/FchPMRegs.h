@@ -26,8 +26,10 @@
 #define FCH_PM_ACPIPM1EVTBLK                                                   0x60
 #define FCH_PM_ACPIPM1CNTBLK                                                   0x62
 #define FCH_PM_ACPIPMTMRBLK                                                    0x64
+#define FCH_PM_ACPICPUCNTBLK                                                   0x66
 #define FCH_PM_ACPIGPE0BLK                                                     0x68
 #define FCH_PM_ACPISMICMD                                                      0x6A
+#define FCH_PM_ACPIPM2CNTBLK                                                   0x6C
 #define FCH_PM_ACPIPMACNTBLK                                                   0x6E
 #define PMx00000070                                   0x70
 #define FCH_PM_ACPICONFIG                                                      0x74
@@ -36,9 +38,11 @@
 #define FCH_PM_VIRTUALWIRE                                                     0xA8
 #define FCH_PM_TPRESET2                                                        0xB8
 #define FCH_PM_S_STATECONTROL                                                  0xBA
+#define PMx000000BC                                                            0xBC
 #define FCH_PM_RESETCONTROL2                                                   0xBF
 #define FCH_PM_S5_RESET_STATUS                                                 0xC0
 #define FCH_PM_RESETCOMMAND                                                    0xC4
+#define PMx000000C8                                                            0xC8
 #define FCH_PM_PMIODEBUG                                                       0xD2
 #define FCH_PM_ABREGBAR                                                        0xE0
 #define FCH_PM_USBGATING                                                       0xED

@@ -76,7 +76,11 @@ FCHCLASS_INPUT_BLK InitEnvCfgDefault =
   // FCH_GCPU
   .Gcpu = {
     .AcDcMsg = 0,
-    .TimerTickTrack = 0
+    .TimerTickTrack = 0,
+    .OhciTrafficHanding = 0,
+    .EhciTrafficHanding = 0,
+    .GcpuMsgCMultiCore = 0,
+    .GcpuMsgCStage = 0
   },
 
   // FCH_IMC

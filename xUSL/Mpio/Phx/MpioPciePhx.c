@@ -17,6 +17,7 @@
 #include "MpioPcieStrapsPhx.h"
 #include "MpioCmn2Phx.h"
 #include "MpioIp2IpPhx.h"
+#include "MpioPhx.h"
 
 #define GPP0_SLOT_CTL_STS_ADDRESS                 0x11100068
 
@@ -668,15 +669,23 @@ PcieHotplugInitPhx (
  */
 void
 PcieEarlyTrainFixupsPhx (
+  SIL_CONTEXT                      *SilContext,
   MPIOCLASS_COMMON_INPUT_BLK       *SilDataCommon,
   GNB_HANDLE                       *GnbHandle,
   MPIO_COMPLEX_DESCRIPTOR          *PcieTopologyData
   )
 {
+  MPIOCLASS_PHX_INPUT_BLK   *SilDataPhx;
+
   MPIO_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+
+  SilDataPhx = (MPIOCLASS_PHX_INPUT_BLK *)xUslFindStructure(SilContext, SilId_MpioClass, MPIOCLASS_PHX_INSTANCE);
 
   if (ISSOCPHXAM5) {
     SilDataCommon->CfgSkipPspMessage = 0;
+    if (SilDataPhx) {
+      SilDataPhx->CfgDxioPmaPowerGating = 0;
+    }
   }
 
   PcieTopologyData->BmcLinkLocation = 0xFF;

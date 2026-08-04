@@ -51,7 +51,8 @@ typedef union {
     uint32_t ForceMpmMeventPath:1;           ///< Set to 1 to force MPM M-event path (X86 not released)
     uint32_t SkipUSBCodeInSBIOS:1;           ///< Bit 14 Set to 1 to skip USB code in SBIOS
     uint32_t Port80Redirect:1;               ///< When Bit 15 =1 and Bit 18 =0, Redirect the port80 writes to NBCFG_SCRATCH_0
-    uint32_t :2;                             ///< Reserved
+    uint32_t :1;                             ///< Reserved
+    uint32_t SimNowCRBBSD:1;                 ///< Bit 17 Set to 1 to indicate the Environment is SimNow CRB BSD
     uint32_t Port80Redirect2:1;              ///< Bit 18 =1 Redirect the port80 writes to MSR
     uint32_t SkipESPICode:1;                 ///< Bit 19 Set to 1 to skip eSPI code
     uint32_t :12;                            ///< Reserved
@@ -59,6 +60,39 @@ typedef union {
   uint32_t  Value;
 } MPIO_PRESIL_CTRL0;
 
+
+typedef union {
+  struct {
+    uint32_t DisableMemtest:1;               ///< Disable the memory test.  Replaces UmcCfgEco[16] force.  DEPRECATING: Will move to APCB
+    uint32_t DisableMemclear:1;              ///< Disable the memory clear.  Replaces DF scratch 30[31] force.  DEPRECATING: Already in APCB
+    uint32_t DisableMemSetReg:1;             ///< Controls logging of UMC/PMU register writes.  Replaces UmcCfgEco[17] force.  DEPRECATING: Will create a filter in APCB
+    uint32_t DisableMemtestVerbose:1;        ///< Controls logging of memtest.  Replaces UmcCfgEco[17] force.  DEPRECATING: Will create a filter in APCB
+    uint32_t DisableExtSpd:1;                ///< Disable SPD read attempts across SMBus.  Replaces UmcCfgEco[20] force.  DEPRECATING: Will move to APCB
+    uint32_t DisableRrwMemtest:1;            ///< Disable reliable read-write memtest.  Replaces UmcCfgEco[21] force.  DEPRECATING: Will move to APCB
+    uint32_t DisableSettingUnusedChannel:1;  ///< Disable accesses to mem channels other than 0.  Replaces UmcCfgEco[22] force.  DEPRECATING: Will consume harvest fuses
+    uint32_t DisableDxioPhyFwLoad:1;         ///< Disable MP0 DXIO phy firmware loading process.  Replaces DF scratch 30[31] force.  DEPRECATING: Will try to move to APCB
+    uint32_t DisableMemToUseDvSettings:1;    ///< Design verification settings.  Replaces UmcCfgEco[23] force.  DEPRECATING: Will be a build time switch
+    uint32_t EnableAblVerboseMessaging:1;    ///< verbose message control; 0- no override (controlled by build config), 1- enable>
+    uint32_t DisableSerialOut:1;             ///< serial out control; 0- no override (controlled by build config), 1- disable>
+    uint32_t EnableIoRedirect:1;             ///< Port 80 control. Replaces C2PMSG_82[31] force; 0- no override (controlled by build config), 1- enable>
+    uint32_t FASTSIM_GIO:1;                  ///< FASTSIM_GIO
+    uint32_t FASTSIM_DXIO:1;                 ///< FASTSIM_DXIO
+    uint32_t FASTSIM_DFLT_TBL:1;             ///< FASTSIM_DFLT_TBL
+    uint32_t FASTSIM_SMU_MSGS:1;             ///< FASTSIM_SMU_MSGS
+    uint32_t FASTSIM_PWR_MSGS:1;             ///< FASTSIM_PWR_MSGS
+    uint32_t FASTSIM_PEI_LOG:1;              ///< FASTSIM_PEI_LOG
+    uint32_t FASTSIM_DXE_LOG:1;              ///< FASTSIM_DXE_LOG
+    uint32_t UseUmcHardcode:1;               ///< Use Hardcoded UMC Settings
+    uint32_t UseDdrPhyHardcode:1;            ///< Use Hardcoded DDR PHY Settings
+    uint32_t EmulatorType:2;                 ///< Emulator Type. 00 - Palladium. 01 - Veloce.
+    uint32_t UseDfHardcode:1;                ///< Use Hardcoded DV DF settings
+    uint32_t DisableMp1DxioPhyFwLoad:1;      ///< Disable phy FW loading for MP1
+    uint32_t EnableCharPrintSocket1:1;       ///< Enable Socket 1 CharPrint to C2P_MSG_99
+    uint32_t ForceFeatureEnForPMMTest:2;     ///< Feature Enablement for PMM Testing
+    uint32_t :4;                             ///< Reserved
+  } Field;
+  uint32_t  Value;
+} MPIO_PRESIL_CTRL1;
 
 ///MPIO Link Capabilities
 typedef struct {
