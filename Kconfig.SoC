@@ -26,7 +26,7 @@ source "Kconfig.Skt"
 ##if  (PLAT_SOCKET_TYPE = "SP5")
 if (SKT_TYPE_SP5)
 config SOC_F19M10
-    boolean "F19M10 (Genoa) Support"
+    bool "F19M10 (Genoa) Support"
     select HAVE_SOC_COMMON
     select HAVE_DF_DFX
     select HAVE_CCX_ZEN4
