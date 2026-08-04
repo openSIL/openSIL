@@ -25,7 +25,7 @@ source "Kconfig.Skt"
 # Several SoCs may use the same IP-version
 
 config SOC_F1AM00
-    boolean "F1AM00 (Turin) Support"
+    bool "F1AM00 (Turin) Support"
     select HAVE_SOC_COMMON
     select HAVE_DF_DFX
     select HAVE_CCX_ZEN5
