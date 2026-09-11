@@ -429,6 +429,9 @@ typedef enum {
                               ///< set to WB DRAM and cannot be used as MMIO.
   ReservedCpuTmr,             ///< DRAM reserved for CPU TMR
   ReservedRasEinj,            ///< DRAM reserved for RAS EINJ
+  ReservedBelow4GB,           ///< DRAM reserved for Below 4GB to make sure T-SEG is 256MB aligned.
+  ReservedPspTrustedOs,       ///< DRAM reserved for PSP Trusted OS.
+  ReservedBdat,               ///< DRAM reserved for ACPI BDAT
   MaxMemoryHoleTypes,         ///< Not a valid type.  Used for validating the others.
 } MEMORY_HOLE_TYPES;
 

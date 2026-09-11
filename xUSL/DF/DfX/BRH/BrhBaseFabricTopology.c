@@ -183,6 +183,13 @@ SilPrepareTopologyMap (
   NumberOfBusRegions = SIL_RESERVED_0205;
   GetSocLogicalIdOnCurrentCore(&LogicalId);
 
+  if (IS_SOC_BRH_Ax) {
+    NumberOfBusRegions = SIL_RESERVED_0206;
+    if (BrhGetNumberOfProcessorsPresent() > 1) {
+      IsIodBrhAxWA = true;
+    }
+  }
+
   // Get the total instance count
   TypeCount = 0;
 

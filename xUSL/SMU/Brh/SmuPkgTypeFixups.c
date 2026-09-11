@@ -36,11 +36,16 @@ SmuFixupPlatformConfigSP5 (
 
   SMU_TRACEPOINT (SIL_TRACE_ENTRY, "\n");
 
-  // TODO: SMU feature defaults for BRHD
   GnbHandle = GetGnbHandle ();
   if (GnbHandle == NULL) {
     SMU_TRACEPOINT(SIL_TRACE_ERROR, "Failed to find GNB handle\n");
     return;
+  }
+
+  if (ISSOCBRHD) {
+    SmuInputBlock->SmuFeatureControl = 0x7add4fff;
+    SMU_TRACEPOINT(SIL_TRACE_INFO, "Turin Dense SmuFeatureControlDefines set to 0x%x\n",
+      SmuInputBlock->SmuFeatureControl);
   }
 
   SilReserved = xUSLSmnRead(
@@ -82,6 +87,11 @@ SmuFixupPlatformConfigSP5 (
     Value32 &= ~BIT_32(23);
     Value32 |= Value8 ? BIT_32(23) : 0;
     SmuInputBlock->SmuFeatureControl = Value32;
+  }
+
+  //Disable GMI Folding for SP6
+  if(ISSOCBRHDSP6 || ISSOCBRHSP6) {
+    SmuInputBlock->SmuFeatureControl &= ~BIT_32(23);
   }
 
   // PC6

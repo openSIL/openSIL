@@ -1149,6 +1149,13 @@ SilInitIoEqually4 (
     // minus one to be sure we have IO on last RB
     MinIoRbCnt = ((X86IO_LIMIT - LegacyIoSize) / IoSize) - 1;
     assert(MinIoRbCnt < (uint32_t) (SilData->SocketNumber * SilData->RbsPerSocket));
+  } else {
+    // On 1P TUrin systems, the I/O space would be divided unevenly,
+    // leaving 0x8000 to the last RB. Avoid that by rounding the IoSize up to 0x2000.
+    // The last RB will get 0x1000 of IO space, but others will have 0x2000
+    if (MinIoRbCnt <= 8) {
+      IoSize = (X86IO_LIMIT / MinIoRbCnt) & RCMGR_IO_SIZE_MASK;
+    }
   }
 
   // Get base & size for primary RootBridge

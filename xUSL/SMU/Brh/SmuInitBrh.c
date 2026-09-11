@@ -7,6 +7,7 @@
  */
 
 #include <SilCommon.h>
+#include <SilSocLogicalId.h>
 #include <SMU/Common/SmuCommon.h>
 #include <Utils.h>
 #include <CommonLib/CpuLib.h>
@@ -164,7 +165,11 @@ SmuGetOpnCorePresenceExBrh (
       }
     }
 
-    MaxCoresPerCcx = CCX_MAX_CORES_PER_COMPLEX / 2;
+    if (ISSOCBRHD) {
+      MaxCoresPerCcx = CCX_MAX_CORES_PER_COMPLEX;
+    } else {
+      MaxCoresPerCcx = CCX_MAX_CORES_PER_COMPLEX / 2;
+    }
 
     if (CoreDisMap != NULL) {
       *CoreDisMapBufferSize = sizeof (CoreDisMap[0]) * MAX_CCDS_PER_IOD;
@@ -290,7 +295,11 @@ SmuGetOpnCorePresenceBrh (
     DisCoresMap = 0;
     DisCoresCount = 0;
 
-    MaxCoresPerCcx = CCX_MAX_CORES_PER_COMPLEX / 2;
+    if (ISSOCBRHD) {
+      MaxCoresPerCcx = CCX_MAX_CORES_PER_COMPLEX;
+    } else {
+      MaxCoresPerCcx = CCX_MAX_CORES_PER_COMPLEX / 2;
+    }
 
     for (CcdIndex = 0; CcdIndex < SIL_ARRAY_SIZE(Mp5CoreDisableList); CcdIndex++) {
       Status = ApobIp2IpApi->ApobGetApcbUpdate(ApobEntry, Mp5CoreDisableList[CcdIndex], &Mp5CoreDisListValue);
@@ -953,15 +962,19 @@ PopulatePPTable (
   PPTable.ThrottlerMode = SmuInputBlock->ThrottlerMode == 0xF ? 0 : SmuInputBlock->ThrottlerMode;
   //Cclk Mode
   PPTable.CclkMode = SmuInputBlock->CfgPerRailFreqControl;
+  //Adjust GB
+  PPTable.AdjustGB = SmuInputBlock->CfgAdjustGB;
+  //One Cppc Max
+  PPTable.OneCppcMax = SmuInputBlock->CfgOneCppcMax;
 }
 
 static void
 DumpPPTable (void)
 {
-  SMU_TRACEPOINT (SIL_TRACE_INFO, "\nSMU BIOS INTERFACE TABLE VALUES\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "SMU BIOS INTERFACE TABLE VALUES\n");
 
   //DEFAULT INFRASTRUCTURE LIMITS
-  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nDEFAULT INFRASTRUCTURE LIMITS\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "DEFAULT INFRASTRUCTURE LIMITS\n");
   SMU_TRACEPOINT (SIL_TRACE_INFO, "TDP = 0x%x\n", PPTable.TDP);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "PPT = 0x%x\n", PPTable.PPT);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "TDC = 0x%x\n", PPTable.TDC);
@@ -969,7 +982,7 @@ DumpPPTable (void)
   SMU_TRACEPOINT (SIL_TRACE_INFO, "TjMax = 0x%x\n", PPTable.TjMax);
 
   //PLATFORM INFRASTRUCTURE LIMITS
-  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nPLATFORM INFRASTRUCTURE LIMITS\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "PLATFORM INFRASTRUCTURE LIMITS\n");
   SMU_TRACEPOINT (SIL_TRACE_INFO, "TDP_PlatformLimit = 0x%x\n", PPTable.TDP_PlatformLimit);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "PPT_PlatformLimit = 0x%x\n", PPTable.PPT_PlatformLimit);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "TDC_PlatformLimit = 0x%x\n", PPTable.TDC_PlatformLimit);
@@ -983,7 +996,7 @@ DumpPPTable (void)
   SMU_TRACEPOINT (SIL_TRACE_INFO, "ThrottlerMode = 0x%x\n", PPTable.ThrottlerMode);
 
   //DF CSTATE CONFIG
-  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nDF CSTATE CONFIG\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "DF CSTATE CONFIG\n");
   SMU_TRACEPOINT (SIL_TRACE_INFO, "DfCstateConfigOverride = 0x%x\n", PPTable.DfCstateConfigOverride);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "DfCstateClkPwrDnEn = 0x%x\n", PPTable.DfCstateClkPwrDnEn);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "DfCstateSelfRefrEn = 0x%x\n", PPTable.DfCstateSelfRefrEn);
@@ -991,14 +1004,14 @@ DumpPPTable (void)
   SMU_TRACEPOINT (SIL_TRACE_INFO, "DfCstateGopPwrDnEn = 0x%x\n", PPTable.DfCstateGopPwrDnEn);
 
   //xGMI CONFIGURATION
-  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nxGMI CONFIGURATION\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "xGMI CONFIGURATION\n");
   SMU_TRACEPOINT (SIL_TRACE_INFO, "xGMIMaxLinkWidthEn = 0x%x\n", PPTable.xGMIMaxLinkWidthEn);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "xGMIMaxLinkWidth = 0x%x\n", PPTable.xGMIMaxLinkWidth);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "xGMIForceLinkWidthEn = 0x%x\n", PPTable.xGMIForceLinkWidthEn);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "xGMIForceLinkWidth = 0x%x\n", PPTable.xGMIForceLinkWidth);
 
   //TELEMETRY
-  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nTELEMETRY\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "TELEMETRY\n");
   SMU_TRACEPOINT (SIL_TRACE_INFO, "TelemetryCurrentGuardband = 0x%x\n", PPTable.TelemetryCurrentGuardband);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "Svi3SvcSpeed = 0x%x\n", PPTable.Svi3SvcSpeed);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "PccLimit = 0x%x\n", PPTable.PccLimit);
@@ -1010,13 +1023,13 @@ DumpPPTable (void)
   SMU_TRACEPOINT (SIL_TRACE_INFO, "I3cSdaHold[3] = 0x%x\n", PPTable.I3cSdaHold[3]);
 
   //PRECISE AND DIRECT OVERCLOCKING CONFIG
-  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nPRECISE AND DIRECT OVERCLOCKING CONFIG\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO,  "PRECISE AND DIRECT OVERCLOCKING CONFIG\n");
   SMU_TRACEPOINT (SIL_TRACE_INFO, "OC_DISABLE = 0x%x\n", PPTable.OC_DISABLE);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "OC_MAXVID = 0x%x\n", PPTable.OC_MAXVID);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "OC_FREQMAX = 0x%x\n", PPTable.OC_FREQMAX);
 
   //CCLK FREQUENCY FORCE
-  SMU_TRACEPOINT (SIL_TRACE_INFO,  "\nCCLK FREQUENCY FORCE\n");
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "CCLK FREQUENCY FORCE\n");
   SMU_TRACEPOINT (SIL_TRACE_INFO, "ForceCclkFrequency = 0x%x\n", PPTable.ForceCclkFrequency);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "FmaxOverride = 0x%x\n", PPTable.FmaxOverride);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "APBDIS_DfPstate = 0x%x\n", PPTable.APBDIS_DfPstate);
@@ -1033,6 +1046,8 @@ DumpPPTable (void)
   SMU_TRACEPOINT (SIL_TRACE_INFO, "XgmiPstateRangeMax = 0x%x\n", PPTable.XgmiPstateRangeMax);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "XgmiPstateRangeSpare = 0x%x\n", PPTable.XgmiPstateRangeSpare);
   SMU_TRACEPOINT (SIL_TRACE_INFO, "CclkMode = 0x%x\n", PPTable.CclkMode);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "AdjustGB = 0x%x\n", PPTable.AdjustGB);
+  SMU_TRACEPOINT (SIL_TRACE_INFO, "OneCppcMax = 0x%x\n", PPTable.OneCppcMax);
 
   SMU_TRACEPOINT (SIL_TRACE_INFO, "Sending this to the SMU...\n");
   xUslDumpBuffer((void *)&PPTable, sizeof (PPTable_t), 1);
@@ -1133,6 +1148,14 @@ InitializeSmuBrh (void)
         0
         );
 
+      SmuServiceInitArgumentsCommon(SmuArg);
+      SmuArg[0] = SmuInputBlock->BalanceAlphaTempFilter;
+      SmuServiceRequestBrh(GnbHandle->Address,
+        SIL_SMU_RESERVED_0x54,
+        SmuArg,
+        0
+        );
+
       // Cxl Speed Notification Msg Argument
       //  - [7:0]  Cxl Present: 0 or 1
       //  - [15:8] CxlSpeedGen5: 0 or 1
@@ -1148,7 +1171,7 @@ InitializeSmuBrh (void)
         0
         );
 
-      if (IS_SOC_BRH) {
+      if (ISSOCBRH) {
         if (SmuInputBlock->AmdSmuDsmClkCtrl) {
           // Send DSM Clock Enable
           SMU_TRACEPOINT (SIL_TRACE_INFO, "SMU EnableDSMWorkaround on socket %d\n", GnbHandle->SocketId);
