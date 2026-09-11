@@ -27,12 +27,14 @@
 #pragma once
 
 #include <Mpio/Common/MpioInitLib.h>
+#include <Mpio/Common/MpioServerHotplug.h>
 #include <APOB/Common/ApobCmn.h>
 
 ///  MPIO openSIL Input Block
 typedef struct {
   MPIO_COMPLEX_DESCRIPTOR PlatformData[PROJ_MAX_SOCKETS_SUPPORTED];
   MPIO_PORT_DESCRIPTOR    PortList[MAX_PORTS_SUPPORTED];
+  MPIO_HOTPLUG_DESCRIPTOR HotplugPortList[MAX_HOTPLUG_PCIE_PORTS];
 } PCIe_PLATFORM_TOPOLOGY;
 typedef struct {
   bool        CfgDxioClockGating;               ///< Configure clock gating
@@ -110,6 +112,12 @@ typedef struct {
   bool        CxlTempGen5AdvertAltPtcl;        ///< User configurable
   uint8_t     AmdPresenceDetectSelectMode;     ///< Select hot plug presence detection mode
   uint8_t     AmdHotPlugNvmeDefaultMaxPayload; ///< Set max payload size for hot plug ports
+  bool        AmdHotPlugDisBridgeDis;
+  bool        HotPlugSurpriseMechanism;
+  uint8_t     HotplugSlotIndex;
+  uint8_t     HotplugI2cAddress;
+  uint8_t     AmdHotPlugNVMESkipHPStatUpdate;
+  uint8_t     CfgHotplugMode;
   uint8_t     LinkDisableAtPowerOffDelay;
   bool        Enable2SpcGen4;
   bool        Enable2SpcGen5;
@@ -133,10 +141,14 @@ typedef struct {
   uint32_t    PcieLaneEqPresetMask32Gt;       ///< Gen5 Preset Mask
   bool        Master7bitSteeringTag;          ///< 7-bit Steering Tag in SDP ReqAddr for writes with TPH
   uint8_t     AmdCXlEarlyLinkTraining;        ///< Enable/Disable Early CXL Link Training
-  bool        AmdHotPlugPDSettle;             ///< Includes presence detect state in hot plug settling time.
+  uint8_t     AmdHotPlugSettleTime;           ///< Hot plug port settling time in ms
+  uint8_t     AmdHotPlugSettleTimeMultiplier; ///< Hot plug port settling multiplier
+  uint8_t     AmdHotPlugDLPDSyncCount;        ///< Hot plug port sync time retry count
+  bool        AmdHotPlugPDSettle;             ///< Includes presence detect state in hot plug settling time
   uint8_t     AmdHotplugPortReset;            ///< Controls Hotplug Port Reset mode
   bool        AmdAllowComplianceForHpPort;    ///< Enable PCIe Hot-plug port to enter Polling Compliance state
   uint8_t     TargetPcieGenSpeed;             ///< Targets the GEN Speed for all PCIe Links
+  bool        AmdDisableInbandPDSupport;
   uint8_t     AmdDlfCapEnV2;
   uint8_t     AmdDlfExEnV2;
   uint16_t    CxlQosNormalLimit;

@@ -673,6 +673,7 @@ PcieHotplugInitBrh (
   MPIO_PORT_DESCRIPTOR        *TopologyEntry;
   uint8_t                     PortParamIndex;
   MPIOCLASS_INPUT_BLK         *SilData;
+  NBIOCLASS_DATA_BLOCK        *NbioData;
   NBIO_IP2IP_API              *NbioIp2Ip;
 
   MPIO_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
@@ -687,11 +688,24 @@ PcieHotplugInitBrh (
     return;
   }
 
+  NbioData = (NBIOCLASS_DATA_BLOCK *)xUslFindStructure(SilId_NbioClass, 0);
+  if (SilData == NULL) {
+    MPIO_TRACEPOINT(SIL_TRACE_ERROR, "Unable to get NBIO Block Data.\n");
+    assert(SilData != NULL);
+    return;
+  }
+
   if (SilGetIp2IpApi(SilId_NbioClass, (void **)(&NbioIp2Ip)) != SilPass) {
     MPIO_TRACEPOINT(SIL_TRACE_ERROR, " NBIO API is not found.\n");
     assert(SilData == SilPass);
     return;
   }
+
+  /* Sync MPIO block with NBIO block */
+  SilData->AmdHotPlugSettleTime = NbioData->NbioConfigData.AmdHotPlugSettleTime;
+  SilData->AmdHotPlugSettleTimeMultiplier = NbioData->NbioConfigData.AmdHotPlugSettleTimeMultiplier;
+  SilData->AmdHotPlugDLPDSyncCount = NbioData->NbioConfigData.AmdHotPlugDLPDSyncCount;
+  SilData->AmdHotPlugPDSettle = NbioData->NbioConfigData.AmdHotPlugPDSettle;
 
   /*
    * Get PCIe topology from platform BIOS
@@ -739,21 +753,31 @@ PcieHotplugInitBrh (
       1 << SIL_RESERVED_1575
       );
 
-    if (Wrapper->WrapId == 0) {
-      xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
-        GnbHandle->Address.Address.Bus,
-        (SIL_RESERVED_1495 + (GnbHandle->RBIndex << 20)),
-        (uint32_t) ~(SIL_RESERVED_1246),
-        1 << SIL_RESERVED_1247
-        );
-    } else {
-      xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
-        GnbHandle->Address.Address.Bus,
-        SIL_RESERVED_0775,
-        (uint32_t) ~(SIL_RESERVED_1246),
-        1 << SIL_RESERVED_1247
-        );
-    }
+    xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+      GnbHandle->Address.Address.Bus,
+      PORT_SPACE(GnbHandle, Wrapper, (Engine->Type.Port.PortId), SIL_RESERVED_1631),
+      (uint32_t) ~(SIL_RESERVED_1599),
+      (SilData->AmdDisableInbandPDSupport << SIL_RESERVED_1600)
+      );
+
+    xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+      GnbHandle->Address.Address.Bus,
+      NBIO_SPACE(GnbHandle, SIL_RESERVED_1495),
+      (uint32_t) ~(SIL_RESERVED_1246),
+      1 << SIL_RESERVED_1247
+      );
+    xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+      GnbHandle->Address.Address.Bus,
+      NBIO_SPACE(GnbHandle, SIL_RESERVED_0775),
+      (uint32_t) ~(SIL_RESERVED_1246),
+      1 << SIL_RESERVED_1247
+      );
+    xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+      GnbHandle->Address.Address.Bus,
+      NBIO_SPACE(GnbHandle, SIL_RESERVED_1496),
+      (uint32_t) ~(SIL_RESERVED_1246),
+      1 << SIL_RESERVED_1247
+      );
 
     if ((Value = SilData->AmdPresenceDetectSelectMode) != 0xFF) {
       MpioSmnPrivateRegRMW(GnbHandle,
@@ -777,10 +801,10 @@ PcieHotplugInitBrh (
           (SIL_RESERVED_1416) |
           (SIL_RESERVED_1418)),
           ((0 << SIL_RESERVED_1413) |
-          (0 << SIL_RESERVED_1415) |
-          (1 << SIL_RESERVED_1407) |
-          (1 << SIL_RESERVED_1417) |
-          (1 << SIL_RESERVED_1419)),
+           (0 << SIL_RESERVED_1415) |
+           (1 << SIL_RESERVED_1407) |
+           (1 << SIL_RESERVED_1417) |
+           (1 << SIL_RESERVED_1419)),
           0
           );
       }
@@ -793,23 +817,19 @@ PcieHotplugInitBrh (
         (SIL_RESERVED_1416) |
         (SIL_RESERVED_1418)),
         ((0 << SIL_RESERVED_1413) |
-        (0 << SIL_RESERVED_1415) |
-        (1 << SIL_RESERVED_1407) |
-        (0 << SIL_RESERVED_1417) |
-        (0 << SIL_RESERVED_1419)),
+         (0 << SIL_RESERVED_1415) |
+         (1 << SIL_RESERVED_1407) |
+         (0 << SIL_RESERVED_1417) |
+         (0 << SIL_RESERVED_1419)),
         0
         );
     }
 
     MpioSmnPrivateRegRMW(GnbHandle,
-      PORT_SPACE(GnbHandle,
-      Wrapper,
-      (Engine->Type.Port.PortId),
-      SIL_RESERVED_1520
-      ),
+      PORT_SPACE(GnbHandle, Wrapper, (Engine->Type.Port.PortId), SIL_RESERVED_1520),
       (uint32_t) ~(SIL_RESERVED_1517),
       0 << SIL_RESERVED_1518,
-        0
+      0
       );
 
     MpioSmnPrivateRegRMW(GnbHandle,
@@ -1031,32 +1051,26 @@ PcieHotplugInitBrh (
             GnbHandle->Address.Address.Bus,
             IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RESERVED_0748),
             (uint32_t) ~(SIL_RESERVED_0605),
-            (1 << SIL_RESERVED_0606)
+            (uint32_t)((!SilData->AmdHotPlugDisBridgeDis) << SIL_RESERVED_0606)
             );
           MPIO_TRACEPOINT(SIL_TRACE_INFO,
-            "No ep - BridgeDis: %08x\n",
-            IOHC_BRIDGE_SPACE(GnbHandle,
-            Engine,
-            SIL_RESERVED_0748
-            )
+            "No ep - BridgeDis: %08x = %u\n",
+            IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RESERVED_0748),
+            !SilData->AmdHotPlugDisBridgeDis
             );
         } else {
           xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
             GnbHandle->Address.Address.Bus,
             IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RSVD_ADDR_1D431004),
             (uint32_t) ~(SIL_RESERVED_0605),
-            (1 << SIL_RESERVED_0606)
+            (uint32_t)((!SilData->AmdHotPlugDisBridgeDis) << SIL_RESERVED_0606)
             );
           MPIO_TRACEPOINT(SIL_TRACE_INFO,
-            "No ep - BridgeDis: %08x\n",
-            IOHC_BRIDGE_SPACE(GnbHandle,
-            Engine,
-            SIL_RSVD_ADDR_1D431004
-            )
+            "No ep - BridgeDis: %08x = %u\n",
+            IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RSVD_ADDR_1D431004),
+            !SilData->AmdHotPlugDisBridgeDis
             );
         }
-
-
 
         Value = (uint8_t) SilData->AmdHotPlugNvmeDefaultMaxPayload;
         if (Value != 0xFF) {
@@ -1173,29 +1187,25 @@ PcieHotplugInitBrh (
             GnbHandle->Address.Address.Bus,
             IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RESERVED_0748),
             (uint32_t) ~(SIL_RESERVED_0605),
-            (1 << SIL_RESERVED_0606)
+            (uint32_t)((!SilData->AmdHotPlugDisBridgeDis) << SIL_RESERVED_0606)
             );
 
           MPIO_TRACEPOINT(SIL_TRACE_INFO,
-            "No ep - BridgeDis: %08x\n",
-            IOHC_BRIDGE_SPACE(GnbHandle,
-            Engine,
-            SIL_RESERVED_0748
-            )
+            "No ep - BridgeDis: %08x = %u\n",
+            IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RESERVED_0748),
+            !SilData->AmdHotPlugDisBridgeDis
             );
         } else {
           xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
             GnbHandle->Address.Address.Bus,
             IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RSVD_ADDR_1D431004),
             (uint32_t) ~(SIL_RESERVED_0605),
-            (1 << SIL_RESERVED_0606)
+            (uint32_t)((!SilData->AmdHotPlugDisBridgeDis) << SIL_RESERVED_0606)
             );
           MPIO_TRACEPOINT(SIL_TRACE_INFO,
-            "No ep - BridgeDis: %08x\n",
-            IOHC_BRIDGE_SPACE(GnbHandle,
-            Engine,
-            SIL_RSVD_ADDR_1D431004
-            )
+            "No ep - BridgeDis: %08x = %u\n",
+            IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RSVD_ADDR_1D431004),
+            !SilData->AmdHotPlugDisBridgeDis
             );
         }
       } else {
@@ -1208,25 +1218,21 @@ PcieHotplugInitBrh (
             );
 
           MPIO_TRACEPOINT(SIL_TRACE_INFO,
-            "Found ep - BridgeDis: %08x\n",
-            IOHC_BRIDGE_SPACE(GnbHandle,
-            Engine,
-            SIL_RESERVED_0748
-            )
+            "Found ep - BridgeDis: %08x = %u\n",
+            IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RESERVED_0748),
+            0
             );
         } else {
           xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
             GnbHandle->Address.Address.Bus,
             IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RSVD_ADDR_1D431004),
             (uint32_t) ~(SIL_RESERVED_0605),
-            (1 << SIL_RESERVED_0605)
+            0
             );
           MPIO_TRACEPOINT(SIL_TRACE_INFO,
-            "No ep - BridgeDis: %08x\n",
-            IOHC_BRIDGE_SPACE(GnbHandle,
-            Engine,
-            SIL_RSVD_ADDR_1D431004
-            )
+            "No ep - BridgeDis: %08x = %u\n",
+            IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RSVD_ADDR_1D431004),
+            0
             );
         }
       }
@@ -1372,22 +1378,32 @@ PcieHotplugInitBrh (
         );
 
       if ((Value & (uint32_t) (1 << (SIL_RESERVED_1251 + 16))) == 0) {
-        xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
-          GnbHandle->Address.Address.Bus,
-          IOHC_BRIDGE_SPACE(GnbHandle,
-          Engine,
-          SIL_RSVD_ADDR_13B3C004
-          ),
-          (uint32_t) ~(SIL_RESERVED_0605),
-          (1 << SIL_RESERVED_0606)
-          );
-        MPIO_TRACEPOINT(SIL_TRACE_INFO,
-          "No ep - BridgeDis: %08x\n",
-          IOHC_BRIDGE_SPACE(GnbHandle,
-          Engine,
-          SIL_RSVD_ADDR_13B3C004
-          )
-          );
+        if (GnbHandle->RBIndex < 4) {
+          xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+            GnbHandle->Address.Address.Bus,
+            IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RESERVED_0748),
+            (uint32_t) ~(SIL_RESERVED_0605),
+            (uint32_t)((!SilData->AmdHotPlugDisBridgeDis) << SIL_RESERVED_0606)
+            );
+
+          MPIO_TRACEPOINT(SIL_TRACE_INFO,
+            "No ep - BridgeDis: %08x = %u\n",
+            IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RESERVED_0748),
+            !SilData->AmdHotPlugDisBridgeDis
+            );
+        } else {
+          xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
+            GnbHandle->Address.Address.Bus,
+            IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RSVD_ADDR_1D431004),
+            (uint32_t) ~(SIL_RESERVED_0605),
+            (uint32_t)((!SilData->AmdHotPlugDisBridgeDis) << SIL_RESERVED_0606)
+            );
+          MPIO_TRACEPOINT(SIL_TRACE_INFO,
+            "No ep - BridgeDis: %08x = %u\n",
+            IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RSVD_ADDR_1D431004),
+            !SilData->AmdHotPlugDisBridgeDis
+            );
+        }
       }
 
       if (SilData->AmdAllowComplianceForHpPort == true) {
@@ -1514,7 +1530,7 @@ PcieHotplugInitBrh (
           ),
           AccessWidth32,
           (uint32_t) ~(SIL_RESERVED_1584),
-          (0 << SIL_RESERVED_1585)
+          (SilData->HotPlugSurpriseMechanism << SIL_RESERVED_1585)
           );
       }
 
@@ -1557,42 +1573,31 @@ PcieHotplugInitBrh (
           if (GnbHandle->RBIndex < 4) {
             xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
               GnbHandle->Address.Address.Bus,
-              IOHC_BRIDGE_SPACE(GnbHandle,
-              Engine,
-              SIL_RESERVED_0748
-              ),
+              IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RESERVED_0748),
               (uint32_t) ~((SIL_RESERVED_0605) |
               (SIL_RESERVED_0608) |
               (SIL_RESERVED_0607)),
-              (1 << SIL_RESERVED_0606)
+              (uint32_t)((!SilData->AmdHotPlugDisBridgeDis) << SIL_RESERVED_0606)
               );
 
             MPIO_TRACEPOINT(SIL_TRACE_INFO,
-              "No ep - BridgeDis: %08x\n",
-              IOHC_BRIDGE_SPACE(GnbHandle,
-              Engine,
-              SIL_RESERVED_0748
-              )
+              "No ep - BridgeDis: %08x = %u\n",
+              IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RESERVED_0748),
+              !SilData->AmdHotPlugDisBridgeDis
               );
           } else {
             xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
               GnbHandle->Address.Address.Bus,
-              IOHC_BRIDGE_SPACE(GnbHandle,
-              Engine,
-              SIL_RSVD_ADDR_1D431004
-              ),
+              IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RSVD_ADDR_1D431004),
               (uint32_t) ~((SIL_RESERVED_0605) |
               (SIL_RESERVED_0608) |
               (SIL_RESERVED_0607)),
-              (1 << SIL_RESERVED_0606)
+              (uint32_t)((!SilData->AmdHotPlugDisBridgeDis) << SIL_RESERVED_0606)
               );
-
             MPIO_TRACEPOINT(SIL_TRACE_INFO,
-              "No ep - BridgeDis: %08x\n",
-              IOHC_BRIDGE_SPACE(GnbHandle,
-              Engine,
-              SIL_RSVD_ADDR_1D431004
-              )
+              "No ep - BridgeDis: %08x = %u\n",
+              IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RSVD_ADDR_1D431004),
+              !SilData->AmdHotPlugDisBridgeDis
               );
           }
         }
@@ -1600,9 +1605,7 @@ PcieHotplugInitBrh (
         if (SilData->AmdHotPlugHandlingMode == 5) {
           MPIO_TRACEPOINT(SIL_TRACE_INFO,
             "No ep SFI Mode - Set SFI_PD_STATE_MASK, SFI_DLL_STATE_MASK, SFI_DRS_MASK: %08x\n",
-            PORT_SPACE(GnbHandle,
-            Wrapper,
-            (Engine->Type.Port.PortId),
+            PORT_SPACE(GnbHandle, Wrapper, (Engine->Type.Port.PortId),
             SIL_RESERVED_1631
             )
             );
@@ -1679,42 +1682,30 @@ PcieHotplugInitBrh (
           if (GnbHandle->RBIndex < 4) {
             xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
               GnbHandle->Address.Address.Bus,
-              IOHC_BRIDGE_SPACE(GnbHandle,
-              Engine,
-              SIL_RESERVED_0748
-              ),
+              IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RESERVED_0748),
               (uint32_t) ~((SIL_RESERVED_0605) |
               (SIL_RESERVED_0608) |
               (SIL_RESERVED_0607)),
               0
               );
-
             MPIO_TRACEPOINT(SIL_TRACE_INFO,
-              "Ep found - BridgeDis: %08x\n",
-              IOHC_BRIDGE_SPACE(GnbHandle,
-              Engine,
-              SIL_RESERVED_0748
-              )
+              "Ep found - BridgeDis: %08x = %u\n",
+              IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RESERVED_0748),
+              0
               );
           } else {
             xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
               GnbHandle->Address.Address.Bus,
-              IOHC_BRIDGE_SPACE(GnbHandle,
-              Engine,
-              SIL_RSVD_ADDR_1D431004
-              ),
+              IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RSVD_ADDR_1D431004),
               (uint32_t) ~((SIL_RESERVED_0605) |
               (SIL_RESERVED_0608) |
               (SIL_RESERVED_0607)),
               0
               );
-
             MPIO_TRACEPOINT(SIL_TRACE_INFO,
-              "No ep - BridgeDis: %08x\n",
-              IOHC_BRIDGE_SPACE(GnbHandle,
-              Engine,
-              SIL_RSVD_ADDR_1D431004
-              )
+              "No ep - BridgeDis: %08x = %u\n",
+              IOHC_BRIDGE_SPACE(GnbHandle, Engine, SIL_RSVD_ADDR_1D431004),
+              0
               );
           }
         }

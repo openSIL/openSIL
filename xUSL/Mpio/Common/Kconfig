@@ -1233,7 +1233,7 @@ config LINK_DISABLE_AT_POWER_OFF_DELAY
 # ------------------------------ PcdEnable2SpcGen4 --------------------------
 config MPIO_ENABLE_2SPC_GEN4
     int  "PcdEnable2SpcGen4 [1/0]"
-    default 0
+    default 1
     range 0 1
     help
         todo: Add help text for this setting.

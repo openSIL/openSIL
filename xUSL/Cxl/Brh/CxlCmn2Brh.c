@@ -15,5 +15,6 @@
 CXL_COMMON_2_REV_XFER_BLOCK CxlXferBrh = {
   .CxlAssignResources = CxlAssignResourcesBrh,
   .CxlFindPorts = CxlFindPortsBrh,
-  .CxlDevListGenerate = CxlDevListGenerateBrh
+  .CxlDevListGenerate = CxlDevListGenerateBrh,
+  .CxlHotPlugSlotReset = CxlHotPlugSlotResetBrh
 };

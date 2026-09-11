@@ -96,7 +96,11 @@ MpioEnablePortBrh (
 
   while (Engine != NULL) {
     Wrapper = (PCIe_WRAPPER_CONFIG *) NbioIp2Ip->PcieConfigGetParent(DESCRIPTOR_ALL_WRAPPERS, &(Engine->Header));
-    if (Engine->InitStatus == INIT_STATUS_PCIE_TRAINING_SUCCESS) {
+    if ((Engine->InitStatus == INIT_STATUS_PCIE_TRAINING_SUCCESS) ||
+        ((Engine->Type.Port.PortData.LinkHotplug != PcieHotplugDisabled) &&
+         (Engine->Type.Port.PortData.LinkHotplug != PcieHotplugInboard)) ||
+        PcieConfigCheckPortStatus (Engine, INIT_STATUS_PCIE_PORT_ALWAYS_EXPOSE)
+       ) {
       MPIO_TRACEPOINT(SIL_TRACE_INFO,
         "%a Enabling port %d, RBIndex %d, Wrapper %d\n",
         Engine->Type.Port.LogicalBridgeId,

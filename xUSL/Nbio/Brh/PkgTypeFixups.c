@@ -172,6 +172,14 @@ static void PcieEnginePlatformConfigDefault (
     NbioConfigData.AmdHotPlugPDSettle = false;
   }
 
+  if (NbioConfigData.AmdHotPlugSettleTimeMultiplier == 0xFF) {  //Set defaults for hot plug port settle multiplier
+    NbioConfigData.AmdHotPlugSettleTimeMultiplier = 0;
+  }
+
+  if (NbioConfigData.AmdHotPlugDLPDSyncCount == 0xFF) {  //Set defaults for hot plug port sync retry
+    NbioConfigData.AmdHotPlugDLPDSyncCount = 3;
+  }
+
   Value16 = NbioConfigData.FchAcpiDeviceInvisibeMapEx;
   if (!(Value16 & BIT_16(4))) {  // Hiding I2C 4 in ACPI
     Value16 |= BIT_16(4);

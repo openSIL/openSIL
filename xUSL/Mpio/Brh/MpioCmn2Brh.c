@@ -25,5 +25,6 @@ MPIO_COMMON_2_REV_XFER_BLOCK MpioXferBrh = {
   .PcieHotplugInit = PcieHotplugInitBrh,
   .MpioIsEverTriedTraining = MpioIsEverTriedTrainingBrh,
   .MpioCfgAfterDxioInit = MpioCfgAfterDxioInitBrh,
-  .MpioGetC2pmsgDoorbellAddress = MpioGetC2pmsgDoorbellAddressBrh
+  .MpioGetC2pmsgDoorbellAddress = MpioGetC2pmsgDoorbellAddressBrh,
+  .MpioServerHotplugInit = MpioServerHotplugInitBrh
 };

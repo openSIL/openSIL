@@ -55,7 +55,7 @@ PcieEarlyTrainFixups (
   MPIO_COMPLEX_DESCRIPTOR   *PcieTopologyData
   );
 
-void
+SIL_STATUS
 PcieConfigureHotplugPorts (
   PCIe_PLATFORM_CONFIG  *Pcie
   );
@@ -65,4 +65,4 @@ MpioCleanUpEarlyBridge (
   PCI_ADDR    Endpoint
   );
 
-void MpioVisibilityControl (void);
+void MpioVisibilityControl (bool Hide);

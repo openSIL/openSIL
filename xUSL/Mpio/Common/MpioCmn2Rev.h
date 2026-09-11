@@ -100,6 +100,10 @@ typedef void (*MPIO_CFG_AFTER_DXIO_INIT) (
   PCIe_PLATFORM_CONFIG                 *Pcie
   );
 
+typedef SIL_STATUS (*MPIO_SERVER_HOTPLUG_INIT) (
+  PCIe_PLATFORM_CONFIG                 *Pcie
+  );
+
 // Define the Cmn2Rev xfer table containing pointers to these functions
 
 typedef struct {
@@ -119,4 +123,5 @@ typedef struct {
   MPIO_ISEVER_TRIED_TRAINING        MpioIsEverTriedTraining;
   MPIO_CFG_AFTER_DXIO_INIT          MpioCfgAfterDxioInit;
   MPIO_GET_C2PMSG_DOORBELL_ADDRESS  MpioGetC2pmsgDoorbellAddress;
+  MPIO_SERVER_HOTPLUG_INIT          MpioServerHotplugInit;
 } MPIO_COMMON_2_REV_XFER_BLOCK;

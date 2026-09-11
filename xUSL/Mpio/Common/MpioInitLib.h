@@ -932,6 +932,16 @@ typedef union {
  * @{
  */
 #define MAX_HOTPLUG_PCIE_PORTS 160
+
+#define BIOS_MPIO_MSG_Param_HotplugSkipHpStatUpdate       0x01
+#define BIOS_MPIO_MSG_Param_HotplugForceA0Mode            0x04
+#define BIOS_MPIO_MSG_Param_HotplugDisableSMI             0x80
+#define BIOS_MPIO_MSG_Param_HotplugPolling                0x0010 //MpioArg[0]
+#define BIOS_MPIO_MSG_Param_HotplugPlatformFirst          0x0020 //MpioArg[0]
+#define BIOS_MPIO_MSG_Param_HotplugPortReset              0x0040 //MpioArg[0]
+#define BIOS_MPIO_MSG_Param_HotplugSFI                    0x0080 //MpioArg[0]
+#define BIOS_MPIO_MSG_Param_HotplugAllowSynchronousFF     0x0100 //MpioArg[0]
+
 /** @} */
 
 typedef struct {

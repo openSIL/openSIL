@@ -94,6 +94,8 @@ NbioInitializeDxio (
     return SilNotFound;
   }
 
+  MpioVisibilityControl (false);
+
   PcieTopologyData = (MPIO_COMPLEX_DESCRIPTOR *)&SilData->PcieTopologyData;
 
   if (SilData->AmdCXlEarlyLinkTraining) {
@@ -119,8 +121,8 @@ NbioInitializeDxio (
   }
 
   MpioXferTable->MpioCfgAfterDxioInit(Pcie);
-  PcieConfigureHotplugPorts(Pcie);
-  MpioVisibilityControl ();
+  Status = PcieConfigureHotplugPorts(Pcie);
+  MpioVisibilityControl (true);
 
-  return SilPass;
+  return Status;
 }

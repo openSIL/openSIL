@@ -96,11 +96,12 @@ PcieEarlyTrainFixups (
  * @param[in]  GnbHandle           Pointer to the Silicon Descriptor for this node
  * @param[in]  PortDevMap          Pointer to PortDevMap
  */
-void
+SIL_STATUS
 PcieConfigureHotplugPorts (
   PCIe_PLATFORM_CONFIG  *Pcie
   )
 {
+  SIL_STATUS                    Status;
   MPIO_COMMON_2_REV_XFER_BLOCK  *MpioXferTable;
   NBIO_IP2IP_API                *NbioIp2Ip;
 
@@ -110,14 +111,14 @@ PcieConfigureHotplugPorts (
    */
   if (SilGetCommon2RevXferTable(SilId_MpioClass, (void **)(&MpioXferTable)) != SilPass) {
     MPIO_TRACEPOINT(SIL_TRACE_ERROR, " NBIO API is not found.\n");
-    return;
+    return SilNotFound;
   }
   /*
    * Get NBIO Ip2Ip API
    */
   if (SilGetIp2IpApi(SilId_NbioClass, (void **)(&NbioIp2Ip)) != SilPass) {
     MPIO_TRACEPOINT(SIL_TRACE_ERROR, " NBIO API is not found.\n");
-    return;
+    return SilNotFound;
   }
 
   NbioIp2Ip->PcieConfigRunProcForAllEngines(DESCRIPTOR_ALLOCATED | DESCRIPTOR_PCIE_ENGINE,
@@ -132,7 +133,11 @@ PcieConfigureHotplugPorts (
     Pcie
     );
 
+  Status = MpioXferTable->MpioServerHotplugInit(Pcie);
+
   MPIO_TRACEPOINT(SIL_TRACE_EXIT, "\n");
+
+  return Status;
 }
 
 /**

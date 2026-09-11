@@ -46,6 +46,7 @@ typedef struct {
   uint8_t CxlIoArbWeights;              //Pcd
   uint8_t CxlCaMemArbWeights;           //Pcd
   uint8_t CnliTokenAdvertisement;       //Pcd
+  uint8_t CxlHotPlugSlotTimeOut;        //Pcd
   uint8_t AmdCxlProtocolErrorReporting; //Pcd
   uint8_t AmdPcieAerReportMechanism;    //Pcd
   bool CxlCamemRxOptimization;          //Pcd

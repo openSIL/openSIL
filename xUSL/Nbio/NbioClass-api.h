@@ -137,6 +137,8 @@ typedef struct {
   uint32_t PcieLaneEqPresetMask32Gt;      ///< Gen5 Preset Mask
   bool NbifDev0F1AtomicRequestEn;         ///< NBIF Endpoint device
   uint8_t AmdHotPlugSettleTime;           ///< Hot plug port settling time in ms
+  uint8_t AmdHotPlugSettleTimeMultiplier; ///< Hot plug port settling multiplier
+  uint8_t AmdHotPlugDLPDSyncCount;        ///< Hot plug port sync time retry count
   bool AmdHotPlugPDSettle;                ///< Includes presence detect state in hot plug settling time
   uint8_t AmdPresenceDetectSelectMode;    ///< Selects hot plug presence detection mode
   uint16_t FchAcpiDeviceInvisibeMapEx;    ///< Selects which  ACPI FCH devices is invisible in ACPI

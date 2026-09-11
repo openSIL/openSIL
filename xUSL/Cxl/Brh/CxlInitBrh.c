@@ -8,6 +8,8 @@
 
 #include <SilCommon.h>
 #include <string.h>
+#include <CommonLib/SmnAccess.h>
+#include <FCH/Common/FchCommon.h>
 #include <Mpio/MpioIp2Ip.h>
 #include <Mpio/Brh/MpioPcieStrapsBrh.h>
 #include <Mpio/Common/MpioInitLib.h>
@@ -19,6 +21,7 @@
 #include <Cxl/Common/CxlInit.h>
 #include <Cxl/CxlClass-api.h>
 #include <Cxl/CxlIp2Ip.h>
+#include "CxlCmn2Brh.h"
 #include "CxlCmn2Rev.h"
 #include "CxlBrh.h"
 #include "CxlIp2IpBrh.h"
@@ -452,8 +455,8 @@ CxlFindPortsBrh (
   PCIe_WRAPPER_CONFIG                          *Wrapper;
   CXLCLASS_DATA_BLK                            *SilData;
   GNB_HANDLE                                   *GnbHandle;
-  SIL_RESERVED_UNION_0032      LinkStatus;
-  SIL_RESERVED_UNION_0013            PortStatus;
+  SIL_RESERVED_UNION_0032                      LinkStatus;
+  SIL_RESERVED_UNION_0013                      PortStatus;
   uint32_t                                     Value;
   MPIO_IP2IP_API                               *MpioApi;
   size_t                                       Status;
@@ -965,4 +968,122 @@ GetCxlLinkSpeedBrh (
       );
 
   return;
+}
+
+/**
+ * Trigger warm reset if hot plug slot CXL is not detected in PEI.
+ *
+ * @param  GnbHandle  Pointer to GnbHandle
+ * @param  Engine     Pointer to engine config descriptor
+ *
+ * @return SIL_STATUS
+ * @retval SilPass                  If no action required
+ * @retval SilResetRequestWarmImm   To trigger warm reset for early CXL discovery
+ */
+SIL_STATUS
+CxlHotPlugSlotResetBrh (
+  GNB_HANDLE            *GnbHandle,
+  PCIe_ENGINE_CONFIG    *Engine
+  )
+{
+  uint32_t                                  Value32;
+  uint16_t                                  LinkStatus;
+  bool                                     LinkTrained;
+  uint8_t                                  DelayCount;
+  SIL_RESERVED_UNION_0032                  CxlLinkStatus;
+  PCIe_WRAPPER_CONFIG                      *Wrapper;
+  CXLCLASS_DATA_BLK                        *SilData;
+  MPIO_IP2IP_API                           *MpioApi;
+  SIL_STATUS                               Status;
+
+  Status = SilPass;
+  CXL_TRACEPOINT (SIL_TRACE_ENTRY, "\n");
+
+  Status = SilGetIp2IpApi(SilId_MpioClass, (void **)&MpioApi);
+  if (Status != SilPass) {
+    CXL_TRACEPOINT (SIL_TRACE_INFO, "MPIO APIs not found \n");
+    return Status;
+  }
+
+  /*
+   * Get IP block data
+   */
+  SilData = (CXLCLASS_DATA_BLK *)SilFindStructure (SilId_CxlClass,  0);
+  if (SilData == NULL) {
+    // Could not find the IP input block
+    Status = SilNotFound;
+    CXL_TRACEPOINT (SIL_TRACE_INFO, "CXL IP block not found \n");
+    return Status;
+  }
+
+  DelayCount = 0;
+  LinkTrained = false;
+
+  DelayCount = SilData->CxlInputBlock.CxlHotPlugSlotTimeOut;
+  if (DelayCount == 0) {
+    // Do not need to check CXL on hot plug slot
+    return SilPass;
+  }
+
+  if (PcieConfigIsCxlEngine(Engine)) {
+    // Link was recognized as CXL at power on
+    return SilPass;
+  }
+
+  Wrapper = PcieConfigGetParentWrapper(Engine);
+
+  CXL_TRACEPOINT(SIL_TRACE_INFO,
+    "Enter for RB %d Wrapper %d Port %d Segment %d Bus 0x%x Device %d Function %d\n",
+    GnbHandle->RBIndex,
+    Wrapper->WrapId,
+    Engine->Type.Port.PortId,
+    GnbHandle->Address.Address.Segment,
+    GnbHandle->Address.Address.Bus,
+    Engine->Type.Port.PortData.DeviceNumber,
+    Engine->Type.Port.PortData.FunctionNumber
+    );
+
+  CXL_TRACEPOINT(SIL_TRACE_INFO, "Check Link Active ");
+  do {
+    // Check if link trained
+    Value32 = xUSLSmnRead (
+      GnbHandle->Address.Address.Segment,
+      GnbHandle->Address.Address.Bus,
+      PORT_SPACE(GnbHandle, Wrapper, (Engine->Type.Port.PortId), SIL_RESERVED_1619)
+      );
+
+    LinkStatus = (uint16_t) ((Value32 >> 16) & BIT_16(13));
+    if (LinkStatus == 0) {
+      SilFchStall(1000000);  // 1 sec delay
+    } else {
+      LinkTrained = true;
+      CXL_TRACEPOINT(SIL_TRACE_INFO, "\nLink active, LinkStatus = 0x%x\n", LinkStatus);
+      break;
+    }
+    CXL_TRACEPOINT(SIL_TRACE_RAW, "*");
+  } while (--DelayCount);    // default 10 seconds timeout
+
+  if (!LinkTrained) {
+    CXL_TRACEPOINT(SIL_TRACE_INFO, "\nError: Link NOT trained!\n");
+    return SilPass;
+  }
+
+  MpioApi->MpioSmnPrivateRegisterRead(GnbHandle,
+    PORT_SPACE(GnbHandle,
+    Wrapper,
+    (Engine->Type.Port.PortId),
+    SIL_RESERVED_1465
+    ),
+    &CxlLinkStatus.Value
+    );
+
+  CXL_TRACEPOINT(SIL_TRACE_INFO, "Alternate Protocol: %08x\n", CxlLinkStatus.Field.field_bits_12_to_13);
+
+  if (CxlLinkStatus.Field.field_bits_12_to_13 == 3) {
+    CXL_TRACEPOINT(SIL_TRACE_INFO, "CXL in hot plug Slot: Triggering Warm-Reset for early CXL discovery!\n");
+
+    return SilResetRequestWarmImm;
+  }
+
+  return SilPass;
 }

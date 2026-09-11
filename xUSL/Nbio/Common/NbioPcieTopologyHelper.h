@@ -76,6 +76,8 @@ PCIe_DESCRIPTOR_HEADER * PcieConfigGetParent (uint32_t Type, PCIe_DESCRIPTOR_HEA
         ((Descriptor != NULL) ? ((Descriptor->Header.DescriptorFlags & DESCRIPTOR_PCIE_ENGINE) != 0) : false)
 #define PcieConfigIsSbPcieEngine(Engine) \
         ((Engine != NULL) ? ((bool) (Engine->Type.Port.PortData.MiscControls.SbLink)) : false)
+#define PcieConfigIsCxlEngine(Descriptor) \
+         ((Descriptor != NULL) ? ((Descriptor->Header.DescriptorFlags & DESCRIPTOR_CXL_ENGINE) != 0) : false)
 #define PcieConfigIsEngineAllocated(Descriptor) \
         ((Descriptor != NULL) ? ((Descriptor->Header.DescriptorFlags & DESCRIPTOR_ALLOCATED) != 0) : false)
 #define PcieConfigResetDescriptorFlags(Descriptor, ResetDescriptorFlags) \
@@ -89,6 +91,7 @@ PCIe_DESCRIPTOR_HEADER * PcieConfigGetParent (uint32_t Type, PCIe_DESCRIPTOR_HEA
         (GNB_HANDLE *) PcieConfigGetNextTopologyDescriptor(Descriptor, DESCRIPTOR_TERMINATE_TOPOLOGY)
 #define PcieConfigGetNextDataDescriptor(Descriptor) \
         ((Descriptor->Flags & DESCRIPTOR_TERMINATE_LIST) != 0 ? NULL : (Descriptor + 1))
+
 
 GNB_HANDLE * NbioGetNextSocket (GNB_HANDLE *GnbHandle);
 GNB_HANDLE * NbioGetHandle (PCIe_PLATFORM_CONFIG *Pcie);
