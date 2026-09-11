@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  xPrfRasServices.c
  * @brief Platform Reference Firmware - exposes Platform specific features for
@@ -34,6 +34,7 @@
  *                              xPrfCollectDimmMap, used in address translation
  *
  * @return  SIL_STATUS
+ * @retval  SilUnsupported  Translation is not implemented; outputs are unchanged
  *
  */
 SIL_STATUS
@@ -44,21 +45,8 @@ xPrfMcaErrorAddrTranslate (
   SIL_ADDR_DATA           *AddrData
   )
 {
-  SIL_STATUS    Status;
-  RAS_IP2IP_API *RasApi;
-
-  Status = SilGetIp2IpApi(SilId_RasClass, (void **)&RasApi);
-  if (Status != SilPass) {
-    XPRF_TRACEPOINT(SIL_TRACE_ERROR, "RAS API not found!\n");
-    return Status;
-  }
-
-  if (0xffffffffffffffff == *SystemMemoryAddress) {
-    // Return with SilInvalidParameter on invalid system address
-    return SilInvalidParameter;
-  }
-
-  return SilPass;
+  // No implementation currently produces a system address or DIMM information.
+  return SilUnsupported;
 }
 
 /*
@@ -90,6 +78,11 @@ xPrfTranslateSysAddrToCS (
   if (Status != SilPass) {
     XPRF_TRACEPOINT(SIL_TRACE_ERROR, "RAS API not found!\n");
     return Status;
+  }
+
+  if (RasApi->CalcNormAddr == NULL) {
+    XPRF_TRACEPOINT(SIL_TRACE_ERROR, "RAS CalcNormAddr not implemented!\n");
+    return SilUnsupported;
   }
 
   RasApi->CalcNormAddr(*SystemMemoryAddress, NormalizedAddress);
@@ -127,6 +120,11 @@ xPrfMcaIpIdInstanceIdInit (
     return Status;
   }
 
+  if (RasApi->ProgramCoreMcaIpIdInstanceId == NULL) {
+    XPRF_TRACEPOINT(SIL_TRACE_ERROR, "RAS ProgramCoreMcaIpIdInstanceId not implemented!\n");
+    return SilUnsupported;
+  }
+
   RasApi->ProgramCoreMcaIpIdInstanceId(RasCpuInfo);
 
   return SilPass;
@@ -157,6 +155,13 @@ xPrfProgramCoreMcaConfigUmc (
     XPRF_TRACEPOINT(SIL_TRACE_ERROR, "RAS API not found!\n");
     return Status;
   }
+
+  if (RasApi->ProgramCoreMcaConfigUmc == NULL) {
+    XPRF_TRACEPOINT(SIL_TRACE_ERROR, "RAS ProgramCoreMcaConfigUmc not implemented!\n");
+    return SilUnsupported;
+  }
+
+  RasApi->ProgramCoreMcaConfigUmc(EnableFruText);
 
   return SilPass;
 }
@@ -196,6 +201,11 @@ xPrfSetIpMcaCtlMask (
     return Status;
   }
 
+  if (RasApi->SetIpMcaCtlMask == NULL) {
+    XPRF_TRACEPOINT(SIL_TRACE_ERROR, "RAS SetIpMcaCtlMask not implemented!\n");
+    return SilUnsupported;
+  }
+
   RasApi->SetIpMcaCtlMask(HardwareId,
     McaType,
     IpMcaPolicyCfg
@@ -219,8 +229,7 @@ xPrfSetIpMcaCtlMask (
  *
  * @return SIL_STATUS
  *
- * @retval SilNotFound        RAS API was not found in the API list
- * @retval SilPass            Address translated successfully
+ * @retval SilUnsupported     DPA translation is not implemented; outputs are unchanged
  */
 SIL_STATUS
 xPrfTranslateSysAddrToDpa (
@@ -229,27 +238,8 @@ xPrfTranslateSysAddrToDpa (
   SIL_ADDR_DATA *AddrData
   )
 {
-  SIL_NORMALIZED_ADDRESS NormalizedAddress;
-  SIL_DIMM_INFO          DimmInfo;
-  SIL_STATUS             Status;
-  RAS_IP2IP_API          *RasApi;
-
-  Status = SilGetIp2IpApi(SilId_RasClass, (void **)&RasApi);
-  if (Status != SilPass) {
-    XPRF_TRACEPOINT(SIL_TRACE_ERROR, "RAS API not found!\n");
-    return Status;
-  }
-
-  memset(&NormalizedAddress, 0, sizeof (SIL_NORMALIZED_ADDRESS));
-  memset(&DimmInfo, 0, sizeof (SIL_DIMM_INFO));
-
-  xPrfTranslateSysAddrToCS(SystemMemoryAddress,
-    &NormalizedAddress,
-    &DimmInfo,
-    AddrData
-    );
-
-  return SilPass;
+  // A normalized address alone is not a DIMM physical address.
+  return SilUnsupported;
 }
 
 /*

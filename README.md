@@ -79,6 +79,26 @@ The AMD blog "[Empowering The Industry with Open System Firmware - AMD openSIL](
 | Server              | F1AM00                           | UEFI     | Purico                        |
 
 
+## Turin integration limits
+
+The expanded Turin port is a proof of concept. Validation covers a
+single-socket Purico system using coreboot and the AGESA-v9 EDKII integration.
+Two-socket configurations and CXL hardware need separate validation.
+
+Fabric, locality, CXL and SMU consumers should include the public `xPrf*.h`
+headers in `Include`. These headers do not require internal SoC dimensions.
+Fabric topology uses fixed-width `XPRF_*` types; hosts using native-width
+fields must convert them instead of redeclaring the provider structures.
+
+CXL NUMA construction supports one domain per socket. Separate domains for
+each device address range are unsupported; the AGESA host must not select
+`PcdAmdFabricCxlNumaNodes = 2`. The per-DPA domain extension is not populated.
+
+`xPrfMcaErrorAddrTranslate` and `xPrfTranslateSysAddrToDpa` return
+`SilUnsupported` without changing output buffers. RAS API registration does
+not imply that address translation or error injection has been implemented
+or validated.
+
 ## Forthcoming items:
 
    * Formal documentation to be published to this repository.

@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file FchPMRegs.h
  *
@@ -122,6 +122,7 @@
 /** PM S5 Reset Status Register
  * Reg(FCH::PM::S5_RESET_STATUS)
  */
+#define FCH_PM_RESETCONTROL1                                                   0xBE
 #define FCH_PM_S5_RESET_STATUS                                                 0xC0
 
 /** PM Reset Command Register

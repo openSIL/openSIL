@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2023 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  SmuIp2IpBrh.c
  * @brief OpenSIL SMU BRH I2I API Table
@@ -31,5 +31,6 @@ SMU_IP2IP_API mSmuBrhApi = {
   .SmuRegisterRMWDie = SmuRegisterRMWDie,
   .SmuDisableSmt = SmuDisableSmtCommon,
   .SmuGetOpnCorePresence = SmuGetOpnCorePresenceBrh,
-  .SmuGetOpnCorePresenceEx = SmuGetOpnCorePresenceExBrh
+  .SmuGetOpnCorePresenceEx = SmuGetOpnCorePresenceExBrh,
+  .SmuEnableNvmSelfRefresh = SmuEnableNvmSelfRefreshBrh
 };

@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2023 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  DfInitBrh.h
  * @brief Data fabric silicon init definitions for BRH.
@@ -11,6 +11,7 @@
 #include <DF/DfClass-api.h>
 #include <stdint.h>
 #include <DF/Common/SilBaseFabricTopologyLib.h>
+#include <DF/Common/DfCmn2Rev.h>
 
 // Base Fabric Topology functions for the I2I Api
 
@@ -22,6 +23,9 @@ BrhGetNumberOfRootBridgesOnDie (
 
 uint32_t
 BrhGetNumberOfProcessorsPresent (void);
+
+SIL_STATUS
+BrhRefreshTopologyCache (void);
 
 uint32_t
 BrhGetDieSystemOffset (
@@ -122,4 +126,25 @@ bool
 BrhGetSystemComponentRootBridgeLocation (
   COMPONENT_TYPE Component,
   ROOT_BRIDGE_LOCATION *Location
+  );
+
+// Functions from BrhAcpiLocality.c
+uint32_t
+BrhGetNumberOfDramRegions (void);
+
+SIL_STATUS
+BrhCollectDramMap (
+  bool             OneTbRemapEnabled,
+  uint32_t         MaxRegions,
+  DF_DRAM_REGION   *Regions,
+  uint32_t         *HoistCount,
+  DF_HOIST_REGION  *HoistRegions
+  );
+
+SIL_STATUS
+BrhGetPxmDomains (
+  uint32_t  BusBase,
+  uint32_t  MaxCount,
+  uint32_t  *Count,
+  uint32_t  *Domains
   );

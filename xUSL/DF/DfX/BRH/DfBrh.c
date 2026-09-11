@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  DfBrh.c
  * @brief Ip2Ip API and Cmn2Rev xfer table setting and entrypoints for BRH data fabric
@@ -77,7 +77,24 @@ DfInitApiBrh (void)
   }
 
   // Set Ip2Ip API for DF
-  return SilInitIp2IpApi(SilId_DfClass, (void *) &DfIp2IpApiBrh);
+  Status = SilInitIp2IpApi(SilId_DfClass, (void *) &DfIp2IpApiBrh);
+  if (Status != SilPass) {
+    return Status;
+  }
+
+  //
+  // Fill this instance's fabric topology cache. The API is registered as soon
+  // as the instance starts, so callers can arrive well before the instance's
+  // time point init runs -- in DXE, SilFwDataInit registers the API at driver
+  // entry while TP2 init waits for PCI enumeration to complete. Refreshing
+  // here keeps every fabric query answerable on demand.
+  //
+  // SilNotFound is expected at TP1, where InitializeDataFabricTp1Brh has yet
+  // to build the block; it does the copy itself.
+  //
+  BrhRefreshTopologyCache ();
+
+  return SilPass;
 }
 
 /**

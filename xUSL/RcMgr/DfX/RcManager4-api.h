@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved.  */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved.  */
 /**
  * @file  RcManager-api.h
  * @brief openSIL-Host Resource Manager IP interface
@@ -45,9 +45,9 @@
 
 #pragma pack(push, 1)
 
-#define RCMGR_MAX_SOCKETS               2   ///< Max number of sockets supported by DFX input block.
-                                            ///< This value is defined by resource manager and does not represent
-                                            ///< the value for any SOC.
+#define RCMGR_MAX_SOCKETS               4   ///< Max number of sockets supported by DFX input block.
+                                            ///< Must cover the maximum socket dimension of every host-facing
+                                            ///< resource-manager compatibility structure.
 #define RCMGR_MAX_RBS_PER_SOCKET        20  ///< Max number of root bridges per socket supported by DFX input block.
                                             ///< This value is defined by resource manager and does not represent
                                             ///< the value for any SOC.

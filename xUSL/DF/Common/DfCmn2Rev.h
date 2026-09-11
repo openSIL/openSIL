@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2023 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  DfCmn2Rev.h
  * This file defines the types of all functions contained within DF's Cmn2Rev
@@ -153,6 +153,48 @@ typedef bool (*DF_GET_SYS_COMPONENT_RB_LOC) (
   ROOT_BRIDGE_LOCATION *Location
   );
 
+// --- ACPI locality data ---
+
+/// Hoisted ranges the DRAM map skips: VGA, the MMIO hole below 4GB, and 1TB
+#define DF_MAX_HOIST_REGIONS  3
+
+/// Upper bound on DRAM address map ranges across the supported DF revisions
+#define DF_MAX_DRAM_REGIONS  20
+
+/// One entry of the fabric DRAM address map, addresses in units of 64KB
+typedef struct {
+  uint32_t  NormalizedMap;  ///< Bitmap of CSs this range interleaves across
+  uint32_t  RawBase;        ///< Range base
+  uint32_t  RawLimit;       ///< Range limit, exclusive
+  uint32_t  RawSize;        ///< Range size with any legacy MMIO hole removed
+} DF_DRAM_REGION;
+
+/// An address window the DRAM map hoists over, addresses in units of 64KB
+typedef struct {
+  uint32_t  Base;
+  uint32_t  Limit;
+  bool      MemoryLost;     ///< True when the hoisted window consumes DRAM
+} DF_HOIST_REGION;
+
+typedef uint32_t (*DF_GET_NUMBER_OF_DRAM_REGIONS) (
+  void
+  );
+
+typedef SIL_STATUS (*DF_COLLECT_DRAM_MAP) (
+  bool             OneTbRemapEnabled,
+  uint32_t         MaxRegions,
+  DF_DRAM_REGION   *Regions,
+  uint32_t         *HoistCount,
+  DF_HOIST_REGION  *HoistRegions
+  );
+
+typedef SIL_STATUS (*DF_GET_PXM_DOMAINS) (
+  uint32_t  BusBase,
+  uint32_t  MaxCount,
+  uint32_t  *Count,
+  uint32_t  *Domains
+  );
+
 // Define the Cmn2Rev xfer table containing pointers to these functions
 typedef struct {
   DF_FABRIC_REGISTER_ACC_READ           DfFabricRegisterAccRead;
@@ -177,4 +219,7 @@ typedef struct {
   DF_GET_SYS_COMPONENT_RB_LOC           DfGetSystemComponentRootBridgeLocation;
   DF_HAS_FCH                            DfHasFch;
   DF_HAS_SMU                            DfHasSmu;
+  DF_GET_NUMBER_OF_DRAM_REGIONS         DfGetNumberOfDramRegions;
+  DF_COLLECT_DRAM_MAP                   DfCollectDramMap;
+  DF_GET_PXM_DOMAINS                    DfGetPxmDomains;
 } DF_COMMON_2_REV_XFER_BLOCK;

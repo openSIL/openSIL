@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2023 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  DfCmn2Brh.c
  * @brief Declaration of data fabric BRH Cmn2Rev xfer table
@@ -38,5 +38,8 @@ DF_COMMON_2_REV_XFER_BLOCK DfCmn2RevBrhXfer = {
   .DfBuildCcdInfo = BrhBuildCcdInfo,
   .DfGetSystemComponentRootBridgeLocation = BrhGetSystemComponentRootBridgeLocation,
   .DfHasFch = BrhHasFch,
-  .DfHasSmu = BrhHasSmu
+  .DfHasSmu = BrhHasSmu,
+  .DfGetNumberOfDramRegions = BrhGetNumberOfDramRegions,
+  .DfCollectDramMap = BrhCollectDramMap,
+  .DfGetPxmDomains = BrhGetPxmDomains
 };

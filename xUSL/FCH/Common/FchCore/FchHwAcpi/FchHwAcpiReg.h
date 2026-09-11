@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  FchHwAcpiReg.h
  * @brief FCH HW ACPI registers definition
@@ -27,6 +27,10 @@ typedef struct _ACPI_REG_WRITE {
 #define FCH_SMI_GEVENT5                0x45 // SCIMAP5
 #define FCH_SMI_GEVENT6                0x46 // SCIMAP6
 #define FCH_SMI_GEVENT8                0x48 // SCIMAP8
+
+// BIT[12:10] slp_typ in FCH_PM_PMCONTROL
+#define SLP_TYPE_BIT_SHIFT             10
+#define SLP_TYPE_VALUE_MASK            0x7
 
 #define FCH_SMI_SCIMAP0                0x40
 #define FCH_SMI_TWRN                   (FCH_SMI_SCIMAP0 + 48)

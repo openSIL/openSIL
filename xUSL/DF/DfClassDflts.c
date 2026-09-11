@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  DfClassDflts.c
  * @brief DF Class IP input defaults
@@ -19,4 +19,5 @@ const DFCLASS_INPUT_BLK mDfClassDflts = {
   .AmdFabricCcxAsNumaDomain = false,
   .AmdPciExpressBaseAddress = 0xE0000000,
   .AmdLongModePageTables = 0,
+  .AmdFabricSlitDistancePcdCtrl = 1,
 };

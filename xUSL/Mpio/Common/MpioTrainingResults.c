@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 
 /**
  *  @file MpioTrainingResults.c
@@ -9,15 +9,6 @@
 #include <xSIM.h>
 #include "MpioLibLocal.h"
 #include "MpioCmn2Rev.h"
-
-/*
- * All of the #defines enumerated below should be removed from the code.
- * Each #define below represent a section of code that is not enabled or must
- * be converted to OpenSIL conventions.  IDS functions are the majority.
- * PPI functions are also the bulk.  Some are memory allocation related too.
- */
-//#define ENABLE_MPIO_PCIE_AUTH_AFTER_TRAIN_FUNC_BODY_1 // Uncomment to enable code for testing.  Currently omitted due
-// to build issues.
 
 /**--------------------------------------------------------------------
  *

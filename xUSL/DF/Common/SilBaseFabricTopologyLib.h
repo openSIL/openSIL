@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved.
  *
  */
 /**
@@ -16,6 +16,7 @@
 #include <BaseSocLogicalIdXlat.h>
 #include <CommonLib/CpuLib.h>
 #include <ProjSocConst.h>
+#include <xPrfFabricTypes.h>
 
 #pragma pack (push, 1)
 
@@ -29,11 +30,7 @@
 #define DF_GET_BUS(a)                          (a % MAX_PCI_BUS_NUMBER_PER_SEGMENT)
 
 /// Root Bridge location
-typedef struct {
-  uint32_t       Socket;
-  uint32_t       Die;
-  uint32_t       Index;
-} ROOT_BRIDGE_LOCATION;
+typedef XPRF_ROOT_BRIDGE_LOCATION ROOT_BRIDGE_LOCATION;
 
 /// Fabric Device Types
 typedef enum {
@@ -56,32 +53,31 @@ typedef struct {
 
 /// Fabric Device Types
 typedef enum {
-  Ccm,                         ///< Processor Family Specific Workarounds which are @b not
-                               ///< practical using the other types.
-  Gcm,                         ///< Processor Config Space registers via SMN.
-  Ncs,                         ///< Processor Config Space registers via SMN.
-  Ncm,                         ///< Processor Config Space registers via SMN.
-  Pie,                         ///< Processor Config Space registers via SMN.
-  Ioms,                        ///< Processor Config Space registers via SMN.
-  Cs,                          ///< Processor Config Space registers via SMN.
-  Tcdx,                        ///< Processor Config Space registers via SMN.
-  Cake,                        ///< Processor Config Space registers via SMN.
-  CsUmc,                       ///< Processor Config Space registers via SMN.
-  CsCcix,                      ///< Processor Config Space registers via SMN.
-  CsCmp,                       ///< Processor Config Space registers via SMN.
-  Acm,                         ///< Processor Config Space registers via SMN.
-  Iom,                         ///< Processor Config Space registers via SMN.
-  Ios,                         ///< Processor Config Space registers via SMN.
-  Icng,                        ///< Processor Config Space registers via SMN.
-  Cnli,                        ///< Processor Config Space registers via SMN.
-  Pfx,                         ///< Processor Config Space registers via SMN.
-  Spf,                         ///< Processor Config Space registers via SMN.
-  NcmIommu,                    ///< Processor Config Space registers via SMN.
-  Giom,                        ///< Processor Config Space registers via SMN.
-  Htdm,                        ///< Processor Config Space registers via SMN.
-  Htds,                        ///< Processor Config Space registers via SMN.
-  Xgmi,                        ///< Processor Config Space registers via SMN.
-  FabricDeviceTypeMax          ///< Not a valid entry type, use for limit checking.
+  Ccm = XprfFabricCcm,
+  Gcm = XprfFabricGcm,
+  Ncs = XprfFabricNcs,
+  Ncm = XprfFabricNcm,
+  Pie = XprfFabricPie,
+  Ioms = XprfFabricIoms,
+  Cs = XprfFabricCs,
+  Tcdx = XprfFabricTcdx,
+  Cake = XprfFabricCake,
+  CsUmc = XprfFabricCsUmc,
+  CsCcix = XprfFabricCsCcix,
+  CsCmp = XprfFabricCsCmp,
+  Acm = XprfFabricAcm,
+  Iom = XprfFabricIom,
+  Ios = XprfFabricIos,
+  Icng = XprfFabricIcng,
+  Cnli = XprfFabricCnli,
+  Pfx = XprfFabricPfx,
+  Spf = XprfFabricSpf,
+  NcmIommu = XprfFabricNcmIommu,
+  Giom = XprfFabricGiom,
+  Htdm = XprfFabricHtdm,
+  Htds = XprfFabricHtds,
+  Xgmi = XprfFabricXgmi,
+  FabricDeviceTypeMax = XprfFabricDeviceTypeMax
 } FABRIC_DEVICE_TYPE;
 
 
@@ -93,10 +89,7 @@ typedef struct {
 } DEVICE_MAP;
 
 /// Device ID structure
-typedef struct {
-  uint32_t   FabricID;           ///< Fabric ID
-  uint32_t   InstanceID;         ///< Instance ID
-} DEVICE_IDS;
+typedef XPRF_FABRIC_DEVICE_IDS DEVICE_IDS;
 
 /// Processor neighbor information
 typedef struct {
@@ -104,11 +97,7 @@ typedef struct {
 } AMD_FABRIC_TOPOLOGY_PROCESSOR_NEIGHBOR_INFO;
 
 /// Fabric topology structure
-typedef struct {
-  FABRIC_DEVICE_TYPE   Type;          ///< Type
-  uint32_t             Count;         ///< Count
-  const DEVICE_IDS     *IDs;          ///< Device IDs
-} AMD_FABRIC_TOPOLOGY_DIE_DEVICE_MAP;
+typedef XPRF_FABRIC_DEVICE_MAP AMD_FABRIC_TOPOLOGY_DIE_DEVICE_MAP;
 
 /// Fabric topology neighbor information structure
 typedef struct {
@@ -142,6 +131,23 @@ typedef struct {
                                                                                                   ///< the device map
   DEVICE_IDS                    DeviceIds[PROJ_MAX_IO_DIES_PER_SOCKET][MAX_NUMBER_OF_DEVICE_IDS]; ///< The buffer for
                                                                                                   ///< the device IDs
-} SIL_RESERVED_STRUCT_0009;
+  } SIL_RESERVED_STRUCT_0009;
 
 #pragma pack (pop)
+
+/*
+ * Keep the internal aliases compatible with the public topology layout.
+ */
+_Static_assert (
+  sizeof (ROOT_BRIDGE_LOCATION) == 3 * sizeof (uint32_t),
+  "ROOT_BRIDGE_LOCATION must stay three uint32_t fields"
+  );
+_Static_assert (
+  sizeof (DEVICE_IDS) == 2 * sizeof (uint32_t),
+  "DEVICE_IDS must stay two uint32_t fields"
+  );
+_Static_assert (
+  sizeof (AMD_FABRIC_TOPOLOGY_DIE_DEVICE_MAP) ==
+    2 * sizeof (uint32_t) + sizeof (const DEVICE_IDS *),
+  "AMD_FABRIC_TOPOLOGY_DIE_DEVICE_MAP gained padding or a field"
+  );

@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file FchSMIRegs.h
  *
@@ -32,4 +32,5 @@
 /** SMI Control Register 5
  * Reg(FCH::SMI::SMICONTROL5)
  */
+#define FCH_SMI_SMICONTROL4                                                    0xB0
 #define FCH_SMI_SMICONTROL5                                                    0xB4

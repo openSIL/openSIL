@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2023 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 
 /**
  *  @file CxlInit.h
@@ -204,4 +204,32 @@ PCIE_DEVICE_TYPE
 SilGnbLibGetPcieDeviceType (
   PCI_ADDR       Device,
   void           *StdHeader
+  );
+
+//
+// Sil-prefixed to avoid collisions when a host links another implementation
+// of these common PCI helper names.
+//
+bool
+SilGnbLibPciIsDevicePresent (
+  uint32_t       Address
+  );
+
+uint8_t
+SilGnbLibFindPciCapability (
+  uint32_t       Address,
+  uint8_t        CapabilityId
+  );
+
+uint16_t
+SilGnbLibFindPcieExtendedCapability (
+  uint32_t       Address,
+  uint16_t       ExtendedCapabilityId
+  );
+
+uint16_t
+SilGnbLibFindNextPcieExtendedCapability (
+  uint32_t       Address,
+  uint16_t       StartCapabilityPtr,
+  uint16_t       ExtendedCapabilityId
   );

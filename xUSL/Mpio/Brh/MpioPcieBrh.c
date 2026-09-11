@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2023 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  *  @file MpioPcieBrh.c
  *  @brief Pcie training and hotplug configuration.
@@ -247,7 +247,7 @@ MpioCleanUpEarlyInitSP5Brh (
   NbioHandle = GnbHandle;
   MPIO_TRACEPOINT(SIL_TRACE_INFO, "Looking for Die Number %d\n", DieNumber);
 
-  // Temporary hack for WAFL BMC
+  // Preserve early-trained WAFL BMC links across device remapping.
   while (NbioHandle != NULL) {
     Index = 0;
     memset(Trained, 0, sizeof (Trained));
@@ -333,8 +333,6 @@ MpioCleanUpEarlyInitSP5Brh (
     }
     NbioHandle = GnbGetNextHandle(NbioHandle);
   }
-  // End of hack
-
   NbioHandle = GnbHandle;
 
   while (NbioHandle != NULL) {

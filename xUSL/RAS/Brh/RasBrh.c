@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  RasBrh.c
  * @brief openSIL RAS IP Brh specific initialization.
@@ -15,6 +15,25 @@
 #include "RasInitBrh.h"
 
 extern RAS_XFER_TABLE mRasXferBrh;
+
+/**
+ * RasBrhApi
+ *
+ * @details RAS Ip-2-Ip API for BRH.
+ *
+ * RasIp2Ip.h declares eleven entry points, but BRH only implements six of
+ * them. The remaining five (RetrieveRegs, CalcSysAddr, CalcNormAddr,
+ * SetIpMcaCtlMask and ProgramCoreMcaIpIdInstanceId) have no BRH implementation
+ * anywhere in openSIL, so they stay NULL and callers must check before use.
+ */
+RAS_IP2IP_API RasBrhApi = {
+  .GetUmcHarvestFuse       = GetUmcHarvestFuseBrh,
+  .UpdateFruTextToUmc      = UpdateFruTextToUmcBrh,
+  .UpdateMcaFruText        = UpdateMcaFruTextBrh,
+  .ProgramCoreMcaConfigUmc = ProgramCoreMcaConfigUmcBrh,
+  .CollectDimmMap          = CollectDimmMapBrh,
+  .CollectMcaErrorInfo     = CollectMcaErrorInfoBrh
+};
 
 /**
  * RasSetDataBlkBrh
@@ -63,7 +82,14 @@ InitializeApiRasBrh (void)
   SIL_STATUS  Status;
 
   // Initialize Common to Rev specific transfer table first
-  return Status = SilInitCommon2RevXferTable(SilId_RasClass, (void *)&mRasXferBrh);
+  Status = SilInitCommon2RevXferTable(SilId_RasClass, (void *)&mRasXferBrh);
+  if (Status != SilPass) {
+    RAS_TRACEPOINT(SIL_TRACE_INFO, "RAS BRH InitCommon2RevXferTable failed\n");
+    return Status;
+  }
+
+  // Initialize RAS IP-to-IP API
+  return SilInitIp2IpApi(SilId_RasClass, (void *)&RasBrhApi);
 }
 
 /**

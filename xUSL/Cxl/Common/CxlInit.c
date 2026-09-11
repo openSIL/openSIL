@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 
 /**
  *  @file CxlInit.c
@@ -217,6 +217,86 @@ GnbLibFindNextPcieExtendedCapability (
  *
  * @retval    PCIE_DEVICE_TYPE
  */
+
+/**--------------------------------------------------------------------
+ * SilGnbLibPciIsDevicePresent
+ *
+ * @brief   Report whether anything answers at a PCI address.
+ *
+ * @param[in] Address   PCI address (as described in PCI_ADDR)
+ *
+ * @returns Device is or is not present
+ * @retval  boolean value
+ */
+bool
+SilGnbLibPciIsDevicePresent (
+  uint32_t       Address
+  )
+{
+  return GnbLibPciIsDevicePresent (Address, NULL);
+}
+
+/**--------------------------------------------------------------------
+ * SilGnbLibFindPciCapability
+ *
+ * @brief   Walk a device's PCI capability list for one capability.
+ *
+ * @param[in] Address        PCI address (as described in PCI_ADDR)
+ * @param[in] CapabilityId   PCI capability ID
+ *
+ * @returns Register address of the capability pointer
+ * @retval  8-bit value, zero when the capability is absent
+ */
+uint8_t
+SilGnbLibFindPciCapability (
+  uint32_t       Address,
+  uint8_t        CapabilityId
+  )
+{
+  return GnbLibFindPciCapability (Address, CapabilityId, NULL);
+}
+
+/**--------------------------------------------------------------------
+ * SilGnbLibFindPcieExtendedCapability
+ *
+ * @brief   Walk a device's PCIe extended capability list for one capability.
+ *
+ * @param[in] Address               PCI address (as described in PCI_ADDR)
+ * @param[in] ExtendedCapabilityId  Extended PCIe capability ID
+ *
+ * @returns Register address of the extended capability pointer
+ * @retval  16-bit value, zero when the capability is absent
+ */
+uint16_t
+SilGnbLibFindPcieExtendedCapability (
+  uint32_t       Address,
+  uint16_t       ExtendedCapabilityId
+  )
+{
+  return GnbLibFindPcieExtendedCapability (Address, ExtendedCapabilityId, NULL);
+}
+
+/**--------------------------------------------------------------------
+ * SilGnbLibFindNextPcieExtendedCapability
+ *
+ * @brief   Continue an extended capability walk from a known entry.
+ *
+ * @param[in] Address               PCI address (as described in PCI_ADDR)
+ * @param[in] StartCapabilityPtr    Entry to resume from
+ * @param[in] ExtendedCapabilityId  Extended PCIe capability ID
+ *
+ * @returns Register address of the next matching extended capability pointer
+ * @retval  16-bit value, zero when there is no further match
+ */
+uint16_t
+SilGnbLibFindNextPcieExtendedCapability (
+  uint32_t       Address,
+  uint16_t       StartCapabilityPtr,
+  uint16_t       ExtendedCapabilityId
+  )
+{
+  return GnbLibFindNextPcieExtendedCapability (Address, StartCapabilityPtr, ExtendedCapabilityId, NULL);
+}
 
 PCIE_DEVICE_TYPE
 SilGnbLibGetPcieDeviceType (

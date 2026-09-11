@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file xPRF.c
  * @brief Platform Reference Firmware - exposes Platform specific features
@@ -15,8 +15,7 @@
  *
  * @brief   This dummy function is just a placeholder for xPRF.
  *
- * @details Until it is removed, it can be used to test xPRF protocol
- *          functionality in AGESA.
+ * @details Used to test host integration with the xPRF service interface.
  *
  * @return  SIL_STATUS
  */
