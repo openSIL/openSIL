@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved.
  *
  */
 /**
@@ -162,6 +162,7 @@ DfXBuildDomainInfo (
   uint32_t                           SystemCxlCount = 0;
   uint32_t                           NumberOfReportedDomains = 0;
   bool                               CcxAsNuma = false;
+  uint32_t                           CcxPerCcd;
 
 
   Status = SilGetCommon2RevXferTable(SilId_DfClass, (void **) &DfXfer);
@@ -204,6 +205,7 @@ DfXBuildDomainInfo (
   NumberOfCpus = (uint32_t) DfXfer->DfGetNumberOfProcessorsPresent ();
   NumberOfDies = (uint32_t) DfXfer->DfGetNumberOfSystemDies ();
   CcxAsNuma = DfIpBlock->AmdFabricCcxAsNumaDomain;
+  CcxPerCcd = (SilGetMemoryBase ())->ActiveSoC.NumCcxPerCcd;
 
   // Fill module global CCD data
   DfXfer->DfBuildCcdInfo((uint32_t) NumberOfCpus, (uint32_t) NumberOfDies, DomainInfo);
@@ -217,6 +219,22 @@ DfXBuildDomainInfo (
     sizeof (DomainInfo->ReportedDomainCcxMap)
     );
 
+  //
+  // Every openSIL instance may run this, and the DXE one inherits the block PEI
+  // filled in, so clear before rebuilding rather than accumulating into it.
+  //
+  memset((void *) DomainInfo->PhysicalDomainInfo,
+    0x00,
+    sizeof (DomainInfo->PhysicalDomainInfo)
+    );
+  memset((void *) DomainInfo->ReportedDomainInfo,
+    0x00,
+    sizeof (DomainInfo->ReportedDomainInfo)
+    );
+  for (i = 0; i < MAX_PHYSICAL_DOMAINS; i++) {
+    DomainInfo->PhysicalDomainInfo[i].ExtendInfo = DF_PHYS_DOMAIN_NO_EXT_INFO;
+  }
+
   switch (NpsInfo->ActualNps) {
   case DF_DRAM_NPS0:
     assert(NumberOfCpus == 2);
@@ -225,6 +243,7 @@ DfXBuildDomainInfo (
     if (CcxAsNuma == false) {
       DomainInfo->ReportedDomainCcxMap[NumberOfPhysicalDomains] = Nps0CcxMap;
     }
+    DomainInfo->PhysNps = 0;
     NumberOfPhysicalDomains++;
     break;
   case DF_DRAM_NPS1:
@@ -238,6 +257,7 @@ DfXBuildDomainInfo (
       }
       NumberOfPhysicalDomains++;
     }
+    DomainInfo->PhysNps = 1;
     break;
   case DF_DRAM_NPS2:
     for (Socket = 0; Socket < NumberOfCpus; Socket++) {
@@ -252,6 +272,7 @@ DfXBuildDomainInfo (
         NumberOfPhysicalDomains++;
       }
     }
+    DomainInfo->PhysNps = 2;
     break;
   case DF_DRAM_NPS4:
     for (Socket = 0; Socket < NumberOfCpus; Socket++) {
@@ -266,6 +287,7 @@ DfXBuildDomainInfo (
         NumberOfPhysicalDomains++;
       }
     }
+    DomainInfo->PhysNps = 4;
     break;
   default:
     DF_TRACEPOINT(SIL_TRACE_ERROR, "Error: DfXBuildDomainInfo ActualNps value: %d\n", NpsInfo->ActualNps);
@@ -321,6 +343,14 @@ DfXBuildDomainInfo (
             ReportedDomainInfo[ReportedIndex].PhysicalDomain].SharingEntityCount++;
           DomainInfo->PhysicalDomainInfo[DomainInfo->
             ReportedDomainInfo[ReportedIndex].PhysicalDomain].SharingEntityMap |= (1 << ReportedIndex);
+          //
+          // DomainXlat matches a core against this map, so each reported domain
+          // has to claim its own complex. Without it every CCX-as-NUMA lookup
+          // walks off the end of the table and the domain is reported invalid.
+          //
+          DomainInfo->ReportedDomainCcxMap[ReportedIndex] =
+            (1u << (uint32_t) Ccx) << (DomainInfo->LogToPhysCcd[Socket][Ccd] * CcxPerCcd)
+            << ((uint32_t) Socket * NORMALIZED_SOCKET_SHIFT);
           ReportedIndex++;
         }
       }
@@ -361,8 +391,17 @@ DfXBuildDomainInfo (
 
   DomainInfo->DomainInfoValid = true;
   DomainInfo->NumberOfReportedDomains = NumberOfReportedDomains;
+  DomainInfo->NumberOfPhysicalDomains = NumberOfPhysicalDomains;
+  DomainInfo->SystemCxlCount = SystemCxlCount;
+  DomainInfo->CcxAsNuma = CcxAsNuma;
 
-  DF_TRACEPOINT(SIL_TRACE_INFO, "Updated BuildDomainInfo\n");
+  DF_TRACEPOINT(SIL_TRACE_INFO,
+    "Updated BuildDomainInfo: reported %d physical %d nps %d cxl %d\n",
+    NumberOfReportedDomains,
+    NumberOfPhysicalDomains,
+    DomainInfo->PhysNps,
+    SystemCxlCount
+    );
   return SilPass;
 }
 

@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2024 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2024 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  SmuInitBrh.h
  * @brief OpenSIL SMU services specific to BRH
@@ -29,6 +29,7 @@ SIL_STATUS InitializeSmuBrh (void);
 #define SIL_SMU_RESERVED_0x37          0x37
 #define SIL_SMU_RESERVED_0x41          0x41
 #define SIL_SMU_RESERVED_0x42          0x42
+#define SIL_SMU_RESERVED_0x4C          0x4C
 #define SIL_SMU_RESERVED_0x4E          0x4E
 
 typedef struct {

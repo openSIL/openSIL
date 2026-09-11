@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  FchAoacLib.c
  * @brief FCH AOAC functions
@@ -71,7 +71,8 @@ void FchAoacPowerOnDev (uint8_t Device, uint8_t On)
       xUSLMemWrite8((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + FCH_AOAC_DEVCTRL_0 + (Device << 1)), 0x80);
     }
 
-    if (Device != FCH_AOAC_ESPI) {  //PLAT-26858
+    // eSPI does not use the generic AOAC state transition.
+    if (Device != FCH_AOAC_ESPI) {
       xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + AOAC_BASE + FCH_AOAC_DEVCTRL_0 + (Device << 1)),
         0xFF,
         BIT_32(0) + BIT_32(1)

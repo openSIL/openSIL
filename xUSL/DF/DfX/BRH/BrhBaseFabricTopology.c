@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2023 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  BrhBaseFabricTopology.c
  * @brief Brh specific implementations of BaseFabricTopology functions
@@ -104,7 +104,12 @@ SilCopyTopologyMap (
   uint32_t       DeviceIndex;
   DEVICE_MAP     *BaseDeviceMap;
   DEVICE_IDS     *BaseDeviceIds;
-  SIL_STATUS     Status;
+  /*
+   * Initialised because the only other assignment is inside the per-die loop
+   * body: a zero-iteration loop -- which happens if DfXGetNumberOfSystemDies()
+   * divided by the processor count is 0 -- used to return this uninitialised.
+   */
+  SIL_STATUS     Status = SilPass;
 
   if (FabricTopologyMap == NULL) {
     assert(FabricTopologyMap != NULL);
@@ -268,6 +273,37 @@ SilPrepareTopologyMap (
     assert(FabricTopologyMap->field0.field6 != SIL_MAX_UINT32);
   }
   return SilCopyTopologyMap(FabricTopologyMap);
+}
+
+/**
+ * BrhRefreshTopologyCache
+ *
+ * @brief   Rebuild this openSIL instance's fabric topology cache.
+ *
+ * @details gBrhDeviceMap, gBrhDeviceIds and gBaseFabricTopologyInfo are image
+ *          globals, so every instance of openSIL needs its own copy filled in.
+ *          Only InitializeDataFabricTp1Brh does that, and it runs at TP1 in
+ *          PEI, which leaves the DXE instance with a zeroed map. Any fabric
+ *          query made before TP2 init then walks a NULL IDs pointer.
+ *
+ *          The topology block itself is built once at TP1 and carries over, so
+ *          the DXE instance only has to copy it again.
+ *
+ * @return  SIL_STATUS
+ * @retval  SilNotFound   The TP1 topology block is not present
+ */
+SIL_STATUS
+BrhRefreshTopologyCache (void)
+{
+  SIL_RESERVED_STRUCT_0009 *DfTopoBlock;
+
+  DfTopoBlock = (SIL_RESERVED_STRUCT_0009 *)xUslFindStructure(SilId_DfClass, SIL_RESERVED_0020);
+  if (DfTopoBlock == NULL) {
+    DF_TRACEPOINT(SIL_TRACE_ERROR, "DF topology block not found; cache not refreshed\n");
+    return SilNotFound;
+  }
+
+  return SilCopyTopologyMap(DfTopoBlock);
 }
 
 /**

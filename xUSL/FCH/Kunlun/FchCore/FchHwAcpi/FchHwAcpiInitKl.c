@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  FchHwAcpiInitKl.c
  * @brief Kunlun FCH ACPI Module silicon init functions
@@ -291,7 +291,7 @@ FchInitPreliminaryPrePcieHwAcpiKl (
   //Clear 4s shutdown event status
   xUSLMemReadModifyWrite8((void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_S5_RESET_STATUS), 0, BIT_8(1));
 
-  // PLAT-55628
+  // Pulse MISC register bit 20 after clearing the 4-second shutdown status.
   xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + MISC_BASE + 0x50), ~BIT_32(20), BIT_32(20));
   xUSLMemReadModifyWrite32((void *)(size_t)(ACPI_MMIO_BASE + MISC_BASE + 0x50), ~BIT_32(20), 0);
 

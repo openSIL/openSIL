@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2023 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  FchIsa.c
  * @brief FCH ISA sub-controller functions
@@ -86,7 +86,7 @@ FchInitResetLpc (
     );
 
   if (FchLpc->LpcEnable ) {
-    //PLAT-33566
+    // Enable LPC I/O and memory port decoding.
     xUSLPciReadModifyWrite8(
       PCI_LIB_ADDRESS(FCH_LPC_BUS, FCH_LPC_DEV, FCH_LPC_FUNC, FCH_LPCPCICFG_IO_MEM_PORT_DECODE_ENABLE),
       BIT_8(2),

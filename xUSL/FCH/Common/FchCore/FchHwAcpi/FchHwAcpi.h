@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  FchHwAcpi.h
  * @brief FCH ACPI function prototypes
@@ -86,6 +86,41 @@ FchHwAcpiPreliminaryPrePcieInit (
 SIL_STATUS
 FchHwAcpiPreliminarySetInputBlk (
   void
+  );
+
+//
+// On-demand FCH services. These back the xPRF FCH service entry points, which
+// the host firmware calls at UEFI dependency order rather than at an openSIL
+// time point -- FCH runtime services cannot be sequenced by TP1/TP2/TP3.
+//
+
+void
+FchHwAcpiServicePowerButton (
+  FCHHWACPI_INPUT_BLK *FchHwAcpi
+  );
+
+void
+FchHwAcpiServiceAcpiOn (
+  FCHCLASS_INPUT_BLK  *FchDataPtr,
+  FCHHWACPI_INPUT_BLK *FchHwAcpi
+  );
+
+void
+FchHwAcpiServiceAcpiOff (
+  FCHCLASS_INPUT_BLK  *FchDataPtr,
+  FCHHWACPI_INPUT_BLK *FchHwAcpi
+  );
+
+void
+FchHwAcpiServiceSmiTimerStart (
+  FCHCLASS_INPUT_BLK  *FchDataPtr,
+  FCHHWACPI_INPUT_BLK *FchHwAcpi
+  );
+
+void
+FchHwAcpiServiceSmiTimerStop (
+  FCHCLASS_INPUT_BLK  *FchDataPtr,
+  FCHHWACPI_INPUT_BLK *FchHwAcpi
   );
 
 #define FCHHWACPI_MAJOR_REV 0

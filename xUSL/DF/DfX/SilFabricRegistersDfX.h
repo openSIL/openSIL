@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved.
  *
  */
 /**
@@ -475,6 +475,10 @@ typedef union {
   } Field;
   uint32_t  Value;
 } FABRIC_INDIRECT_CONFIG_ACCESS_DATA_LO_REGISTER;
+
+/* DRAM Hole Control Register */
+#define DRAMHOLECONTROL_FUNC 0x7
+#define DRAMHOLECONTROL_REG  0x104
 
 /// DRAM Hole Control Register
 typedef union {

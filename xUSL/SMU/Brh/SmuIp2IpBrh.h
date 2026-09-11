@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2023 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  SmuBrhIp2Ip.h
  * @brief OpenSIL SMU BRH Ip2Ip Api functions functions
@@ -80,3 +80,6 @@ SmuReadCacWeightsBrh (
   uint32_t MaxNumWeights,
   uint64_t *ApmWeights
   );
+
+SIL_STATUS
+SmuEnableNvmSelfRefreshBrh (void);

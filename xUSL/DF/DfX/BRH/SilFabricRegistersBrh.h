@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  SilFabricRegistersBrh.h
  * @brief Data fabric register definitions which are specific to BRH
@@ -170,6 +170,23 @@ typedef union {
   } Field;
   uint32_t  Value;
 } CS_TARGET_REMAP0_B_REGISTER;
+
+/* VGA Enable Register */
+#define VGAEN_FUNC 0x0
+#define VGAEN_REG  0xC08
+
+/// VGA Enable Register
+typedef union {
+  struct {
+    uint32_t VgaEn_VE:1;                      ///< VGA Enable. The VGA compatible MMIO range is A_0000h through B_FFFFh
+    uint32_t VgaEn_NP:1;                      ///< Steers CPU writes to the posted or non-posted write channel
+    uint32_t VgaEn_CpuDis:1;                  ///< VGA MMIO access by CPU control
+    uint32_t :1;                              ///< Reserved
+    uint32_t VgaEn_DstFabricID:8;             ///< Destination FabricID for transactions hitting this range
+    uint32_t :20;                             ///< Reserved
+  } Field;
+  uint32_t  Value;
+} VGAEN_REGISTER;
 
 /* DRAM Base Address Register */
 #define DRAMBASEADDRESS_0_FUNC 0x7

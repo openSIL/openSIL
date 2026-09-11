@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved.*/
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved.*/
 
 /**
  *  @file MpioStructs.h
@@ -414,6 +414,19 @@ typedef struct  {
   uint8_t                   Gen4FixedPreset     :4;  ///< Gen4 Fixed Preset
   uint8_t                   Gen5FixedPreset     :4;  ///< Gen5 Fixed Preset
   uint8_t                   Reserved4           :4;  ///< Reserved
+  //
+  // These three bytes are part of the host-facing DXIO_PORT_DATA layout. Keep
+  // the boundary layouts in step; the host adapter must assert that they still
+  // match before copying port descriptors.
+  //
+  uint8_t                   SetGen3ForcePreset  :1;  ///< Gen3 Force Preset Set
+  uint8_t                   SetGen4ForcePreset  :1;  ///< Gen4 Force Preset Set
+  uint8_t                   SetGen5ForcePreset  :1;  ///< Gen5 Force Preset Set
+  uint8_t                   ReservedForce1      :5;  ///< Reserved
+  uint8_t                   Gen3ForcePreset     :4;  ///< Gen3 Force Preset
+  uint8_t                   Gen4ForcePreset     :4;  ///< Gen4 Force Preset
+  uint8_t                   Gen5ForcePreset     :4;  ///< Gen5 Force Preset
+  uint8_t                   ReservedForce2      :4;  ///< Reserved
   uint16_t                  PsppPolicyDC;            ///< Pspp DC control
   uint16_t                  PsppPolicyAC;            ///< PSPP AC control
   uint8_t                   PsppDeviceType;          ///< Pspp Device Type

@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  SmuIp2Ip.h
  * This file contains the definition of the SMU Ip 2 Ip API.
@@ -111,6 +111,8 @@ typedef SIL_STATUS (*SMU_GET_OPN_CORE_PRESENCE_EX) (
   uint32_t  *SmtEnableBufferSize
   );
 
+typedef SIL_STATUS (*SMU_ENABLE_NVM_SELF_REFRESH) (void);
+
 typedef struct {
   SIL_DATA_BLOCK_ID     IpId;       ///< Block Id for this ip
   uint8_t               IpVersion;  ///< Ip version in numerical format
@@ -136,4 +138,5 @@ typedef struct {
   SMU_DISABLE_SMT               SmuDisableSmt;
   SMU_GET_OPN_CORE_PRESENCE     SmuGetOpnCorePresence;
   SMU_GET_OPN_CORE_PRESENCE_EX  SmuGetOpnCorePresenceEx;
+  SMU_ENABLE_NVM_SELF_REFRESH   SmuEnableNvmSelfRefresh;
 } SMU_IP2IP_API;

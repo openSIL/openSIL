@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  DfClass-api.h
  * @brief openSIL-Host Data Fabric (DF) IP interface
@@ -59,4 +59,19 @@ typedef struct {
   bool      AmdFabricCcxAsNumaDomain;
   uint64_t  AmdPciExpressBaseAddress;
   uint32_t  AmdLongModePageTables;
+  //
+  // NUMA and ACPI locality policy. The distances the SLIT and CDIT report are
+  // platform tuning rather than silicon state, so the Host supplies them here
+  // and openSIL applies them to the domain topology it discovered.
+  //
+  bool      AmdFabricRoundRobinNumaDomainForCcx;
+  uint8_t   AmdNumberOfPhysicalSocket;
+  uint8_t   AmdFabricSlitDistancePcdCtrl; ///< non-zero ignores the distances below and uses defaults
+  uint8_t   AmdFabricSlitLocalDistance;
+  uint8_t   AmdFabricSlitRemoteDistance;
+  uint8_t   AmdFabricSlitVirtualDistance;
+  uint8_t   AmdFabricSlitCxlLocalDistance;
+  uint8_t   AmdFabricSlitCxlRemoteDistance;
+  bool      AmdFabricSlitAutoRemoteFar;
+  bool      AmdFabric1TbRemap;
 } DFCLASS_INPUT_BLK;

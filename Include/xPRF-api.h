@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  xPRF-api.h
  * @brief This file is used to declare the API functions used by the Host for
@@ -298,12 +298,10 @@ typedef struct {
 } SIL_TYPE20_DMI_INFO;
 
 /**
- * @brief AGESA MAXIMUM VALUES
+ * @brief Host interface maximum values
  *
- * These Max values are used to define array sizes and associated loop
- * counts in the code.  They reflect the maximum values that AGESA
- * currently supports and does not necessarily reflect the hardware
- * capabilities of configuration.
+ * These values define host-facing array sizes and loop bounds. They are
+ * compatibility limits and do not necessarily represent silicon capabilities.
  */
 #define SIL_MAX_SOCKETS_SUPPORTED     2
 #define SIL_MAX_CHANNELS_PER_SOCKET   12   /// Max Channels per sockets supported
@@ -951,6 +949,56 @@ void
 xPrfFchEnableSpi (
   void
   );
+
+/**
+ * SIL_FCH_SERVICE_ID
+ *
+ * @brief Identifies an on-demand FCH service.
+ *
+ * @details These services run at host-selected dependency points, so host
+ *          firmware requests them on demand instead of openSIL performing them
+ *          at a time point.
+ */
+typedef enum {
+  FchServiceReleaseSpdBus = 0,
+  FchServicePowerButton,
+  FchServiceAcpiOn,
+  FchServiceAcpiOff,
+  FchServiceSmiTimerStart,
+  FchServiceSmiTimerStop,
+  FchServiceMax
+} SIL_FCH_SERVICE_ID;
+
+SIL_STATUS
+xPrfFchReleaseSpdBus (
+  void
+  );
+
+SIL_STATUS
+xPrfFchServicePowerButton (
+  void
+  );
+
+SIL_STATUS
+xPrfFchServiceAcpiOn (
+  void
+  );
+
+SIL_STATUS
+xPrfFchServiceAcpiOff (
+  void
+  );
+
+SIL_STATUS
+xPrfFchServiceSmiTimerStart (
+  void
+  );
+
+SIL_STATUS
+xPrfFchServiceSmiTimerStop (
+  void
+  );
+
 
 /**
  * xPrfGetCppcMinFrequency

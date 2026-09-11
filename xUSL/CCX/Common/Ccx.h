@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file Ccx.h
  * @brief OpenSIL CCX IP initialization function declaration.
@@ -37,7 +37,7 @@
           } \
         } while (0)
 
-#define SIL_XAPIC_ID_MAX             0xFF  // moved from CcxClass-api.h (not needed by Host)
+#define SIL_XAPIC_ID_MAX             0xFF  ///< Maximum xAPIC ID supported
 
 /**********************************************************************************************************************
  * variable declaration

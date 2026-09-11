@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  SmuInitBrh.c
  * @brief OpenSIL SMU services specific to BRH
@@ -825,6 +825,72 @@ SmuReadCacWeightsBrh (
 }
 
 /**
+ * SmuEnableNvmSelfRefreshBrh
+ *
+ * @brief Enable NVM self-refresh when the APOB requests warm-boot restore.
+ *
+ * @details The service is invoked on demand after TP1 because the NBIO
+ *          topology is not available when the SMU TP1 handler runs.
+ *
+ * @return SIL_STATUS
+ */
+SIL_STATUS
+SmuEnableNvmSelfRefreshBrh (void)
+{
+  SIL_STATUS                 Status;
+  APOB_IP2IP_API             *ApobIp2IpApi;
+  APOB_GEN_INFO_TYPE_STRUCT  *ApobGenInfo;
+  GNB_HANDLE                 *GnbHandle;
+  uint32_t                   SmuArg[6];
+  SMC_RESULT                 SmuResult;
+
+  Status = SilGetIp2IpApi (SilId_ApobClass, (void **)&ApobIp2IpApi);
+  if ((Status != SilPass) || (ApobIp2IpApi == NULL)) {
+    SMU_TRACEPOINT (SIL_TRACE_ERROR, "APOB API not found\n");
+    return Status;
+  }
+
+  Status = ApobIp2IpApi->ApobAmdGetApobEntryInstance (
+                            APOB_GEN,
+                            APOB_GEN_CONFIGURATION_INFO_TYPE,
+                            0,
+                            0,
+                            (APOB_TYPE_HEADER **)&ApobGenInfo
+                            );
+  if (Status != SilPass) {
+    // Missing restore metadata means no NVM self-refresh request is required.
+    return SilPass;
+  }
+
+  if (!ApobGenInfo->ApobParamInfo.ApobAblRestoreControl) {
+    return SilPass;
+  }
+
+  GnbHandle = GetGnbHandle ();
+  while (GnbHandle != NULL) {
+    SmuServiceInitArgumentsCommon (SmuArg);
+    SmuArg[0] = 1;
+    SmuResult = SmuServiceRequestBrh (
+                  GnbHandle->Address,
+                  SIL_SMU_RESERVED_0x4C,
+                  SmuArg,
+                  0
+                  );
+    if (SmuResult != SMC_Result_OK) {
+      SMU_TRACEPOINT (
+        SIL_TRACE_WARNING,
+        "Enable NVM self-refresh returned 0x%x for socket %d\n",
+        SmuResult,
+        GnbHandle->SocketId
+        );
+    }
+    GnbHandle = NbioGetNextSocket (GnbHandle);
+  }
+
+  return SilPass;
+}
+
+/**
  *  SmuLclkDpmControl
  *
  *  @brief    Send SMU NBIO Lclk DPM Level
@@ -1098,7 +1164,7 @@ InitializeSmuBrh (void)
 
       SmuServiceInitArgumentsCommon(SmuArg);
       SmuArg[0] = (uint32_t)(uintptr_t)&PPTable;
-      SmuArg[1] = (uint32_t)(((uintptr_t)&PPTable) >> 32);
+      SmuArg[1] = (uint32_t)(((uint64_t)(uintptr_t)&PPTable) >> 32);
       SmuServiceRequestBrh(GnbHandle->Address,
         SIL_SMU_RESERVED_0x5,
         SmuArg,
@@ -1118,7 +1184,7 @@ InitializeSmuBrh (void)
       memset ((void *) AgmLog, 0, sizeof(AgmLog));
       SmuServiceInitArgumentsCommon(SmuArg);
       SmuArg[0] = (uint32_t)(uintptr_t)&AgmLog;
-      SmuArg[1] = (uint32_t)(((uintptr_t)&AgmLog) >> 32);
+      SmuArg[1] = (uint32_t)(((uint64_t)(uintptr_t)&AgmLog) >> 32);
       SmuServiceRequestBrh(GnbHandle->Address,
         SIL_SMU_RESERVED_0x6,
         SmuArg,

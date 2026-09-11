@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  FchHwAcpi.c
  * @brief FCH ACPI data and functions
@@ -24,8 +24,12 @@
 #include "FchHwAcpi.h"
 #include "FchAoacLib.h"
 #include "IP/Fch80.h"
+#include <SMU/SmuIp2Ip.h>
 
 extern FCHHWACPI_INPUT_BLK mFchHwAcpiDefaults;
+
+// Port 80 contents, saved across the SMI timer window by the start/stop pair.
+static uint32_t mSavePort80;
 
 static const ACPI_REG_WRITE MmioPreliminaryPrePcieResetTable[] =
 {
@@ -801,4 +805,170 @@ FchHwAcpiPreliminarySetInputBlk (
   memcpy((void *)FchHwAcpiPreliminaryInput, &mFchHwAcpiDefaults, sizeof (FCHHWACPI_INPUT_BLK));
 
   return SilPass;
+}
+
+/**
+ * FchHwAcpiServicePowerButton
+ *
+ * @brief Respond to a power button depress by transitioning the system to S5.
+ *
+ * @param FchHwAcpi   FCH HwAcpi input block
+ */
+void
+FchHwAcpiServicePowerButton (
+  FCHHWACPI_INPUT_BLK *FchHwAcpi
+  )
+{
+  uint16_t      Value16;
+  SMU_IP2IP_API *SmuApi;
+  SIL_STATUS    Status;
+
+  // Set SLP_TYPEn to enable SLP_TYP to do S1/S3/S5 transition
+  xUSLMemReadModifyWrite8(
+    (void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_RESETCONTROL1),
+    UINT8_MAX,
+    BIT_8(5)
+    );
+
+  // Enable S state transition
+  xUSLMemReadModifyWrite8(
+    (void *)(size_t)(ACPI_MMIO_BASE + PMIO_BASE + FCH_PM_PCICONTROL + 3),
+    (uint8_t)((~(BIT_8(1u) + BIT_8(0u))) & UINT8_MAX),
+    BIT_8(0u)
+    );
+
+  // Turn off SLP_TYP SMI
+  xUSLMemReadModifyWrite32(
+    (void *)(size_t)(ACPI_MMIO_BASE + SMI_BASE + FCH_SMI_SMICONTROL4),
+    (uint32_t)((~(BIT_32(2u) + BIT_32(3u))) & UINT32_MAX),
+    0
+    );
+
+  // Clear power button status
+  xUSLIoWrite16(FchHwAcpi->AcpiPm1EvtBlkAddr, 0x100);
+
+  // Power the system off now
+  Value16 = xUSLIoRead16(FchHwAcpi->AcpiPm1CntBlkAddr);
+  Value16 &= (uint16_t)((~(SLP_TYPE_VALUE_MASK << SLP_TYPE_BIT_SHIFT)) & UINT16_MAX);
+  Value16 |= (5 << SLP_TYPE_BIT_SHIFT);
+  xUSLIoWrite16(FchHwAcpi->AcpiPm1CntBlkAddr, Value16);
+
+  xUslWbinvd();
+
+  Status = SilGetIp2IpApi(SilId_SmuClass, (void **)&SmuApi);
+  if (Status != SilPass) {
+    FCH_TRACEPOINT(SIL_TRACE_ERROR, "Failed to get SMU I2I API. Status: %d\n", Status);
+    return;
+  }
+
+  SmuApi->SmuNotifyS3Entry();
+}
+
+/**
+ * FchHwAcpiServiceAcpiOn
+ *
+ * @brief Hand the ACPI event and SCI machinery over to the OS.
+ *
+ * @param FchDataPtr  FCH class input block
+ * @param FchHwAcpi   FCH HwAcpi input block
+ */
+void
+FchHwAcpiServiceAcpiOn (
+  FCHCLASS_INPUT_BLK  *FchDataPtr,
+  FCHHWACPI_INPUT_BLK *FchHwAcpi
+  )
+{
+  uint16_t Value16;
+  uint32_t GpeStatus;
+
+  // Disable Power Button SMI
+  xUSLMemReadModifyWrite8(
+    (void *)(size_t)(ACPI_MMIO_BASE + SMI_BASE + 0xAC),
+    (uint8_t)(~(BIT_8(6u)) & UINT8_MAX),
+    0
+    );
+
+  // Disable all GPE events and clear all GPE status
+  xUSLIoWrite32(FchHwAcpi->AcpiGpe0BlkAddr + sizeof(uint32_t), 0);
+  // GPE status bits are write-one-to-clear; preserve reserved bits.
+  GpeStatus = xUSLIoRead32(FchHwAcpi->AcpiGpe0BlkAddr);
+  xUSLIoWrite32(FchHwAcpi->AcpiGpe0BlkAddr, GpeStatus);
+
+  // Set ACPI IRQ to IRQ9 for non-APIC OSes, both PIC and IOAPIC views
+  xUSLIoWrite8(FCH_IO_PCI_INTR_INDEX, 0x10);
+  xUSLIoWrite8(FCH_IO_PCI_INTR_DATA, 9);
+  xUSLIoWrite8(FCH_IO_PCI_INTR_INDEX, 0x90);
+  xUSLIoWrite8(FCH_IO_PCI_INTR_DATA, 9);
+
+  // Finally enable SCI
+  Value16 = xUSLIoRead16(FchHwAcpi->AcpiPm1CntBlkAddr);
+  Value16 |= BIT_16(0);
+  xUSLIoWrite16(FchHwAcpi->AcpiPm1CntBlkAddr, Value16);
+}
+
+/**
+ * FchHwAcpiServiceAcpiOff
+ *
+ * @brief Take SCI back from the OS.
+ *
+ * @param FchDataPtr  FCH class input block
+ * @param FchHwAcpi   FCH HwAcpi input block
+ */
+void
+FchHwAcpiServiceAcpiOff (
+  FCHCLASS_INPUT_BLK  *FchDataPtr,
+  FCHHWACPI_INPUT_BLK *FchHwAcpi
+  )
+{
+  uint16_t Value16;
+
+  Value16 = xUSLIoRead16(FchHwAcpi->AcpiPm1CntBlkAddr);
+  Value16 &= (uint16_t)~BIT_16(0);
+  xUSLIoWrite16(FchHwAcpi->AcpiPm1CntBlkAddr, Value16);
+}
+
+/**
+ * FchHwAcpiServiceSmiTimerStart
+ *
+ * @brief Start the SMI timer, preserving port 80 across the window.
+ *
+ * @param FchDataPtr  FCH class input block
+ * @param FchHwAcpi   FCH HwAcpi input block
+ */
+void
+FchHwAcpiServiceSmiTimerStart (
+  FCHCLASS_INPUT_BLK  *FchDataPtr,
+  FCHHWACPI_INPUT_BLK *FchHwAcpi
+  )
+{
+  mSavePort80 = xUSLMemRead32((void *)(size_t)(ACPI_MMIO_BASE + MISC_BASE + 0x78));
+
+  xUSLMemReadModifyWrite16(
+    (void *)(size_t)(ACPI_MMIO_BASE + SMI_BASE + 0x96),
+    0xFFFF,
+    BIT_16(15)
+    );
+}
+
+/**
+ * FchHwAcpiServiceSmiTimerStop
+ *
+ * @brief Stop the SMI timer and restore port 80.
+ *
+ * @param FchDataPtr  FCH class input block
+ * @param FchHwAcpi   FCH HwAcpi input block
+ */
+void
+FchHwAcpiServiceSmiTimerStop (
+  FCHCLASS_INPUT_BLK  *FchDataPtr,
+  FCHHWACPI_INPUT_BLK *FchHwAcpi
+  )
+{
+  xUSLMemReadModifyWrite16(
+    (void *)(size_t)(ACPI_MMIO_BASE + SMI_BASE + 0x96),
+    (uint16_t)~BIT_16(15),
+    0
+    );
+
+  xUSLIoWrite8(0x80, (uint8_t)mSavePort80);
 }
