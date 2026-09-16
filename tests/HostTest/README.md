@@ -43,6 +43,10 @@ The suites cover:
   access widths, SCI/sleep-type preservation, and GPE write-one-to-clear;
   NPS0/NPS1/NPS2/NPS4 and CCX/CXL domain counts; DF default and host-supplied
   locality policy; and unsupported RAS translations leaving outputs untouched.
+- `multi-fch`: the production secondary FCH dispatcher and Kunlun transfer table;
+  one/two sockets, absent and implemented secondary SATA callbacks, continued
+  AB/SD/USB initialization, callback arguments and errors, multiple secondary
+  dies, and missing table/data. Platform callbacks and lookup services are mocked.
 - `cxl-device-info`: the production DVSEC capability decoder, HDM register reads,
   endpoint information, absent capabilities, and invalid inputs. PCI reads and
   capability lookup are provided by fixtures; switch traversal is not covered.
