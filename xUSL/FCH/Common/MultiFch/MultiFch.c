@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  MultiFch.c
  * @brief Secondary FCH initialization functions
@@ -465,19 +465,21 @@ FchMultiFchDispatchSecondaryInits (
         return Status;
       }
 
-      // Secondary SATAs Init
-      FCH_TRACEPOINT(SIL_TRACE_INFO, "FchMultiFchInitSata...\n");
-      Status = MultiFchC2R->field5(SocketNum,
-        DieNum,
-        RbNum,
-        AcpiMmioBaseAddr,
-        IohcBusNumber,
-        HasFchModule
-        );
-      if (Status != SilPass) {
-        FCH_TRACEPOINT(SIL_TRACE_ERROR, "FchMultiFchInitSata failed (Status=%x).\n", Status);
-        assert(Status == SilPass);
-        return Status;
+      // Secondary SATA initialization is optional for the silicon revision.
+      if (MultiFchC2R->field5 != NULL) {
+        FCH_TRACEPOINT(SIL_TRACE_INFO, "FchMultiFchInitSata...\n");
+        Status = MultiFchC2R->field5(SocketNum,
+          DieNum,
+          RbNum,
+          AcpiMmioBaseAddr,
+          IohcBusNumber,
+          HasFchModule
+          );
+        if (Status != SilPass) {
+          FCH_TRACEPOINT(SIL_TRACE_ERROR, "FchMultiFchInitSata failed (Status=%x).\n", Status);
+          assert(Status == SilPass);
+          return Status;
+        }
       }
     }
   }
