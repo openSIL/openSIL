@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file xSIM.c
  * @brief Common Host API functions
@@ -621,8 +621,6 @@ xSimInitializeIps (
   SIL_STATUS LclStatus;
   SIL_STATUS DeferredResetType;
 
-  LclStatus = SilPass;
-
   // Initialize the flag that tracks the deferred reset type.
   DeferredResetType = SilPass;
 
@@ -638,24 +636,17 @@ xSimInitializeIps (
     LclStatus = (LclIpRecord->Initialize == NULL)? SilPass :
       LclIpRecord->Initialize ();
 
-    if (LclStatus != SilPass) {
-      if ((LclStatus == SilResetRequestColdDef) ||
-        (LclStatus == SilResetRequestWarmDef)) {
-        SetDeferredResetType(LclStatus, &DeferredResetType);
-        // If the status was a deferred reset request, continue to next IP
-        continue;
-      }
-      break;
+    if ((LclStatus == SilResetRequestColdDef) ||
+      (LclStatus == SilResetRequestWarmDef)) {
+      SetDeferredResetType(LclStatus, &DeferredResetType);
+    } else if (LclStatus != SilPass) {
+      // Errors and immediate resets take precedence over a deferred request.
+      return LclStatus;
     }
     LclIpRecord++;          // move to next record
   }
 
-  if (DeferredResetType != SilPass) {
-    // There was a deferred reset request.  Return the reset type in status.
-    LclStatus = DeferredResetType;
-  }
-
-  return LclStatus;
+  return DeferredResetType;
 }
 
 /**
