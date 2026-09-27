@@ -13,6 +13,13 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
 SUITES = {
+  "xsim-dispatch": {
+    "sources": [
+      "xSIM/xSIM.c",
+      "tests/HostTest/XsimDispatch.c",
+    ],
+    "wrap": [],
+  },
   "public-headers": {
     "headers": [
       "xPrfSmu.h",

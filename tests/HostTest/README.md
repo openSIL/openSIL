@@ -36,6 +36,11 @@ after the run; with it, binaries, compile commands, and logs are retained.
 
 The suites cover:
 
+- `xsim-dispatch`: all three public timepoint dispatchers, exact IP call order
+  and count, empty and registration-only entries, one-shot and repeated
+  deferred requests, cold-over-warm priority, and errors/immediate resets
+  overriding earlier deferred requests without visiting later IPs. The SoC
+  tables and IP callbacks are fixtures; no hardware reset is performed.
 - `public-headers`: each SMU/fabric/CXL public header by itself and all together,
   with only `Include/` on the include path and no generated platform header.
 - `provider-contracts`: real SIL allocation/lookup and FCH default assignment;
