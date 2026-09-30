@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2022 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  Mem.c
  * @brief This file contains the Mem IPclass init code.
@@ -399,9 +399,15 @@ TranslateChannelInfo (
   MEM_COMMON_2_REV_XFER_BLOCK       *MemXferTable;
   HOST_TO_APCB_CHANNEL_XLAT         *XlatTable;
 
+  if (TranslatedChannelId == NULL) {
+    return SilInvalidParameter;
+  }
+  MemXferTable = NULL;
   Status = SilGetCommon2RevXferTable(SilId_MemClass, (void **)(&MemXferTable));
   if (Status != SilPass) {
     MEM_TRACEPOINT(SIL_TRACE_ERROR, "Unable to Get C2R Table for MEM\n");
+  } else if (MemXferTable == NULL || MemXferTable->GetChannelXlatTable == NULL) {
+    Status = SilNotFound;
   } else {
     XlatTable = MemXferTable->GetChannelXlatTable ();
     *TranslatedChannelId = RequestedChannelId;
@@ -479,9 +485,13 @@ GetSmbiosTable (
     MEM_TRACEPOINT(SIL_TRACE_ERROR, "DMI INFO table is an invalid input\n");
     Status = SilInvalidParameter;
   } else {
+    MemXferTable = NULL;
     Status = SilGetCommon2RevXferTable(SilId_MemClass, (void **)(&MemXferTable));
     if (Status != SilPass) {
       MEM_TRACEPOINT(SIL_TRACE_ERROR, "Unable to get C2R Table for MEM\n");
+    } else if (MemXferTable == NULL || MemXferTable->PopulateSmbiosMemInfo == NULL ||
+               MemXferTable->GetChannelXlatTable == NULL || MemXferTable->ConfigureTable17DimmPresent == NULL) {
+      Status = SilNotFound;
     } else {
       Status = MemXferTable->PopulateSmbiosMemInfo(DmiInfoTable);
     }

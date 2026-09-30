@@ -58,6 +58,10 @@ The suites cover:
   and socket1 physical CCD15 at bit31. APOB and hardware discovery callbacks
   are mocked. The synthetic different-stride case checks per-socket semantics;
   it does not establish support for another processor SKU.
+- `memory-dmi`: the public memory query through real MEM/APOB code, with raw
+  SMBIOS and SPD fixtures for both sockets and both slots; channel translation,
+  empty connectors, missing services/data, malformed lengths/coordinates,
+  duplicate records, SPD decoding, and cleared output on failure.
 - `nbio-ioapic`: production IOAPIC BAR/ID programming and SMN access, including
   both physical RB register banks, segment-zero and nonzero-segment targets,
   complete PCI index/data transaction sequences, and other-segment/bus isolation.

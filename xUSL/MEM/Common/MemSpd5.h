@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2022 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  MemSpd5.h
  * @brief This file contains DDR5 SPD Structures
@@ -102,6 +102,9 @@ typedef union {
   } Field;
   uint8_t Value;
 } SPD_KEY_BYTE_S;
+
+/// Key byte value for DDR5 SDRAM
+#define SPD_KEY_BYTE_DDR5_SDRAM                 0x12
 
 /// Key Byte / Module Type
 #define SPD_KEY_BYTE2       3
@@ -670,6 +673,13 @@ typedef union {
 #define SPD_CHANNEL_BUS_WIDTH_DECODE(Val)       (8 << Val)
 #define SPD_CHANNEL_BUS_WIDTH_EXT_DECODE(Val)   (4 * Val)
 #define SPD_CHANNELS_PER_DIMM_DECODE(Val)       (Val + 1)
+
+/// Largest defined primary bus width encoding (64 bits)
+#define SPD_CHANNEL_BUS_WIDTH_MAX               3
+/// Largest defined bus width extension encoding (8 bits)
+#define SPD_CHANNEL_BUS_WIDTH_EXT_MAX           2
+/// DDR5 modules provide two subchannels per DIMM
+#define SPD_DDR5_CHANNELS_PER_DIMM              2
 
 #define SPD_MANUFACTURER_ID_RCD                   240
 #define SPD_MANUFACTURER_ID_RCD_1ST_BYTE          240

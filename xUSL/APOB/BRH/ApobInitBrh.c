@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  ApobInitBrh.c
  * @brief OpenSIL APOB functions
@@ -219,37 +219,48 @@ ApobGetDimmSpdDataBrh (
   uint8_t  *SpdBufPtr
   )
 {
-  uint8_t                          Index;
+  uint32_t                         Index;
   uint32_t                         IndexCount;
   uint32_t                         TypeSize;
   SIL_STATUS                       Status;
-  APOB_TYPE_HEADER                 *ApobTypeHeader;
   APOB_MEM_DIMM_D5_SPD_DATA_STRUCT *ApobEntry;
 
-
+  if (SpdBufPtr == NULL || BufSize == 0 || Socket >= ABL_APOB_MAX_SOCKETS_SUPPORTED ||
+      Channel >= ABL_APOB_MAX_CHANNELS_PER_DIE || Dimm >= ABL_APOB_MAX_DIMMS_PER_CHANNEL) {
+    return SilInvalidParameter;
+  }
+  ApobEntry = NULL;
   Status = AmdGetApobEntryInstance(APOB_MEM,
     APOB_MEM_DIMM_SPD_DATA_TYPE,
     ApobInstanceId,
     0,
     (APOB_TYPE_HEADER **) &ApobEntry
     );
-  ApobTypeHeader = (APOB_TYPE_HEADER *)ApobEntry;
-  if (Status == SilPass) {
-    TypeSize = ApobTypeHeader->TypeSize;
-    IndexCount = (TypeSize - offsetof(APOB_MEM_DIMM_D5_SPD_DATA_STRUCT, DimmSmbusInfo))
-      / sizeof (APOB_D5_SPD_STRUCT);
-    Status = SilNotFound;
-    for (Index = 0; Index < IndexCount; Index++) {
-      if (ApobEntry->DimmSmbusInfo[Index].SocketNumber == Socket &&
-        ApobEntry->DimmSmbusInfo[Index].ChannelNumber == Channel &&
-        ApobEntry->DimmSmbusInfo[Index].DimmNumber == Dimm &&
-        ApobEntry->DimmSmbusInfo[Index].DimmPresent) {
-        memcpy(SpdBufPtr, ApobEntry->DimmSmbusInfo[Index].Data, (BufSize > 1024) ? 1024 : BufSize);
-        Status = SilPass;
-      }
+  if (Status != SilPass) {
+    return Status;
+  }
+  if (ApobEntry == NULL) {
+    return SilNotFound;
+  }
+  TypeSize = ApobEntry->ApobTypeHeader.TypeSize;
+  if (TypeSize < offsetof(APOB_MEM_DIMM_D5_SPD_DATA_STRUCT, DimmSmbusInfo) ||
+      TypeSize > sizeof (*ApobEntry)) {
+    return SilOutOfBounds;
+  }
+  IndexCount = (TypeSize - offsetof(APOB_MEM_DIMM_D5_SPD_DATA_STRUCT, DimmSmbusInfo))
+    / sizeof (APOB_D5_SPD_STRUCT);
+  for (Index = 0; Index < IndexCount; Index++) {
+    if (ApobEntry->DimmSmbusInfo[Index].SocketNumber == Socket &&
+      ApobEntry->DimmSmbusInfo[Index].ChannelNumber == Channel &&
+      ApobEntry->DimmSmbusInfo[Index].DimmNumber == Dimm &&
+      ApobEntry->DimmSmbusInfo[Index].DimmPresent) {
+      memcpy(SpdBufPtr, ApobEntry->DimmSmbusInfo[Index].Data,
+        (BufSize > sizeof (ApobEntry->DimmSmbusInfo[Index].Data)) ?
+        sizeof (ApobEntry->DimmSmbusInfo[Index].Data) : BufSize);
+      return SilPass;
     }
   }
-  return Status;
+  return SilNotFound;
 }
 
 /**
