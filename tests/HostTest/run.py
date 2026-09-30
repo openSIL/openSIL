@@ -27,6 +27,7 @@ SUITES = {
       "xPrfFabric.h",
       "xPrfFabricAcpi.h",
       "xPrfCxl.h",
+      "xPrfCpu.h",
     ],
   },
   "provider-contracts": {
@@ -52,6 +53,13 @@ SUITES = {
       "xUSL/FCH/Common/MultiFch/MultiFch.c",
       "xUSL/FCH/Kunlun/MultiFch/MultiFchCmn2Kl.c",
       "tests/HostTest/MultiFch.c",
+    ],
+    "wrap": [],
+  },
+  "cpu-topology": {
+    "sources": [
+      "xPRF/CCX/xPrfCcx.c",
+      "tests/HostTest/CpuTopology.c",
     ],
     "wrap": [],
   },

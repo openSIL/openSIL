@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  xPrfCcx.c
  * @brief Define xPrf Functions
@@ -17,6 +17,7 @@
 #include <CCX/Common/CcxApic.h>
 #include <CCX/CcxIp2Ip.h>
 #include "xPrfCcx.h"
+#include <xPrfCpu.h>
 #include <CCX/CcxClass-api.h>
 #include <CCX/Common/Ccx.h>
 #include <CcxCmn2Rev.h>
@@ -26,6 +27,202 @@
 #include <SMU/Common/SmuCommon.h>
 #include <SMU/Common/SmuCmn2Rev.h>
 #include <Nbio/NbioIp2Ip.h>
+
+/** Append one die's enabled threads without treating physical harvesting as logical IDs. */
+static SIL_STATUS
+AppendEnabledCpuTopology (
+  const APOB_CCD_LOGICAL_TO_PHYSICAL_MAP_TYPE_STRUCT  *Map,
+  const APOB_SOC_DIE_INFO                            *Caps,
+  CCX_IP2IP_API                                     *CcxApi,
+  uint32_t                                          Socket,
+  uint32_t                                          Die,
+  uint32_t                                          Capacity,
+  uint32_t                                          *Used,
+  XPRF_CPU_TOPOLOGY                                 *Cpus
+  )
+{
+  uint32_t Ccd;
+  uint32_t Complex;
+  uint32_t Core;
+  uint32_t Thread;
+  uint32_t Previous;
+  uint32_t ApicId;
+  uint32_t First = *Used;
+  bool CcdEnd = false;
+  bool ComplexEnd;
+  bool CoreEnd;
+  const LOGICAL_CCD_INFO *CcdInfo;
+  const LOGICAL_COMPLEX_INFO *ComplexInfo;
+  const LOGICAL_CORE_INFO *CoreInfo;
+
+  for (Ccd = 0; Ccd < Caps->MaxSocCcdsPerDieValue; Ccd++) {
+    CcdInfo = &Map->CcdMap[Ccd];
+    if (CcdInfo->PhysCcdNumber == CCX_NOT_PRESENT) {
+      CcdEnd = true;
+      continue;
+    }
+    if (CcdEnd || CcdInfo->PhysCcdNumber >= Caps->MaxSocCcdsPerDieValue) {
+      return SilOutOfBounds;
+    }
+    for (Previous = 0; Previous < Ccd; Previous++) {
+      if (Map->CcdMap[Previous].PhysCcdNumber == CcdInfo->PhysCcdNumber) {
+        return SilAborted;
+      }
+    }
+    ComplexEnd = false;
+    for (Complex = 0; Complex < Caps->MaxSocCcxPerCcdValue; Complex++) {
+      ComplexInfo = &CcdInfo->ComplexMap[Complex];
+      if (ComplexInfo->PhysComplexNumber == CCX_NOT_PRESENT) {
+        ComplexEnd = true;
+        continue;
+      }
+      if (ComplexEnd || ComplexInfo->PhysComplexNumber >= Caps->MaxSocCcxPerCcdValue) {
+        return SilOutOfBounds;
+      }
+      for (Previous = 0; Previous < Complex; Previous++) {
+        if (CcdInfo->ComplexMap[Previous].PhysComplexNumber == ComplexInfo->PhysComplexNumber) {
+          return SilAborted;
+        }
+      }
+      CoreEnd = false;
+      for (Core = 0; Core < Caps->MaxSocCoresPerComplexValue; Core++) {
+        CoreInfo = &ComplexInfo->CoreInfo[Core];
+        if (CoreInfo->PhysCoreNumber == CCX_NOT_PRESENT) {
+          CoreEnd = true;
+          continue;
+        }
+        if (CoreEnd || CoreInfo->PhysCoreNumber >= Caps->MaxSocCoresPerComplexValue) {
+          return SilOutOfBounds;
+        }
+        for (Previous = 0; Previous < Core; Previous++) {
+          if (ComplexInfo->CoreInfo[Previous].PhysCoreNumber == CoreInfo->PhysCoreNumber) {
+            return SilAborted;
+          }
+        }
+        for (Thread = 0; Thread < Caps->MaxSocThreadPerCore; Thread++) {
+          if (!CoreInfo->IsThreadEnabled[Thread]) {
+            continue;
+          }
+          if (*Used >= Capacity) {
+            return SilOutOfBounds;
+          }
+          ApicId = CcxApi->CalcLocalApic (Socket, Die, Ccd, Complex, Core, Thread);
+          if (ApicId == UINT32_MAX) {
+            return SilAborted;
+          }
+          for (Previous = 0; Previous < *Used; Previous++) {
+            if (Cpus[Previous].ApicId == ApicId) {
+              return SilAborted;
+            }
+          }
+          Cpus[*Used].ApicId = ApicId;
+          Cpus[*Used].Socket = Socket;
+          Cpus[*Used].Die = Die;
+          Cpus[*Used].Ccd = Ccd;
+          Cpus[*Used].Complex = Complex;
+          Cpus[*Used].Core = Core;
+          Cpus[*Used].Thread = Thread;
+          (*Used)++;
+        }
+      }
+    }
+  }
+
+  return *Used != First ? SilPass : SilAborted;
+}
+
+/** See the public contract in xPrfCpu.h. */
+SIL_STATUS
+xPrfGetEnabledCpuTopology (
+  uint32_t           Capacity,
+  uint32_t           *Count,
+  XPRF_CPU_TOPOLOGY  *Cpus
+  )
+{
+  APOB_CCD_LOGICAL_TO_PHYSICAL_MAP_TYPE_STRUCT Map;
+  APOB_SOC_DIE_INFO Caps = {0};
+  APOB_IP2IP_API *ApobApi = NULL;
+  CCX_IP2IP_API *CcxApi = NULL;
+  DF_IP2IP_API *DfApi = NULL;
+  SIL_STATUS Status;
+  uint32_t Sockets = 0;
+  uint32_t TotalDies = 0;
+  uint32_t Dies;
+  uint32_t SeenDies = 0;
+  uint32_t Socket;
+  uint32_t Die;
+  uint32_t Used = 0;
+
+  if (Count == NULL) {
+    return SilInvalidParameter;
+  }
+  *Count = 0;
+  if (Cpus == NULL || Capacity == 0) {
+    return SilInvalidParameter;
+  }
+
+  Status = SilGetIp2IpApi (SilId_ApobClass, (void **) &ApobApi);
+  if (Status != SilPass || ApobApi == NULL) {
+    return Status != SilPass ? Status : SilNotFound;
+  }
+  Status = SilGetIp2IpApi (SilId_CcxClass, (void **) &CcxApi);
+  if (Status != SilPass || CcxApi == NULL) {
+    return Status != SilPass ? Status : SilNotFound;
+  }
+  Status = SilGetIp2IpApi (SilId_DfClass, (void **) &DfApi);
+  if (Status != SilPass || DfApi == NULL) {
+    return Status != SilPass ? Status : SilNotFound;
+  }
+  if (ApobApi->ApobGetMaxDieInfo == NULL || ApobApi->ApobGetCcdLogToPhysMap == NULL ||
+      CcxApi->CalcLocalApic == NULL || DfApi->DfGetSystemInfo == NULL || DfApi->DfGetProcessorInfo == NULL) {
+    return SilUnsupported;
+  }
+
+  ApobApi->ApobGetMaxDieInfo (&Caps);
+  if (Caps.MaxSocSocketsSupportedValue == 0 || Caps.MaxSocDiesPerSocketValue == 0 ||
+      Caps.MaxSocCcdsPerDieValue == 0 || Caps.MaxSocCcdsPerDieValue > PROJ_MAX_CCD_DIES_PER_SOCKET ||
+      Caps.MaxSocCcxPerCcdValue == 0 || Caps.MaxSocCcxPerCcdValue > PROJ_MAX_COMPLEXES_PER_CCD ||
+      Caps.MaxSocCoresPerComplexValue == 0 || Caps.MaxSocCoresPerComplexValue > PROJ_MAX_CCX_CORES_PER_COMPLEX ||
+      Caps.MaxSocThreadPerCore == 0 || Caps.MaxSocThreadPerCore > PROJ_MAX_CCX_THREADS_PER_CORE) {
+    return SilOutOfBounds;
+  }
+  Status = DfApi->DfGetSystemInfo (&Sockets, &TotalDies, NULL, NULL, NULL);
+  if (Status != SilPass) {
+    return Status;
+  }
+  if (Sockets == 0 || Sockets > Caps.MaxSocSocketsSupportedValue || Sockets > PROJ_MAX_SOCKETS_SUPPORTED ||
+      TotalDies == 0 || TotalDies > Sockets * Caps.MaxSocDiesPerSocketValue) {
+    return SilOutOfBounds;
+  }
+
+  for (Socket = 0; Socket < Sockets; Socket++) {
+    Dies = 0;
+    Status = DfApi->DfGetProcessorInfo (Socket, &Dies, NULL);
+    if (Status != SilPass) {
+      return Status;
+    }
+    if (Dies == 0 || Dies > Caps.MaxSocDiesPerSocketValue || Dies > PROJ_CCX_MAX_DIES_PER_SOCKET) {
+      return SilOutOfBounds;
+    }
+    SeenDies += Dies;
+    for (Die = 0; Die < Dies; Die++) {
+      memset (&Map, 0, sizeof (Map));
+      Status = ApobApi->ApobGetCcdLogToPhysMap (Socket, Die, &Map);
+      if (Status != SilPass) {
+        return Status;
+      }
+      Status = AppendEnabledCpuTopology (&Map, &Caps, CcxApi, Socket, Die, Capacity, &Used, Cpus);
+      if (Status != SilPass) {
+        return Status;
+      }
+    }
+  }
+  if (SeenDies != TotalDies) {
+    return SilAborted;
+  }
+  *Count = Used;
+  return SilPass;
+}
 
 
 /**
