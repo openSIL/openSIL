@@ -162,7 +162,6 @@ DfXBuildDomainInfo (
   uint32_t                           SystemCxlCount = 0;
   uint32_t                           NumberOfReportedDomains = 0;
   bool                               CcxAsNuma = false;
-  uint32_t                           CcxPerCcd;
 
 
   Status = SilGetCommon2RevXferTable(SilId_DfClass, (void **) &DfXfer);
@@ -205,7 +204,6 @@ DfXBuildDomainInfo (
   NumberOfCpus = (uint32_t) DfXfer->DfGetNumberOfProcessorsPresent ();
   NumberOfDies = (uint32_t) DfXfer->DfGetNumberOfSystemDies ();
   CcxAsNuma = DfIpBlock->AmdFabricCcxAsNumaDomain;
-  CcxPerCcd = (SilGetMemoryBase ())->ActiveSoC.NumCcxPerCcd;
 
   // Fill module global CCD data
   DfXfer->DfBuildCcdInfo((uint32_t) NumberOfCpus, (uint32_t) NumberOfDies, DomainInfo);
@@ -349,7 +347,8 @@ DfXBuildDomainInfo (
           // walks off the end of the table and the domain is reported invalid.
           //
           DomainInfo->ReportedDomainCcxMap[ReportedIndex] =
-            (1u << (uint32_t) Ccx) << (DomainInfo->LogToPhysCcd[Socket][Ccd] * CcxPerCcd)
+            (1u << (uint32_t) Ccx) << (DomainInfo->LogToPhysCcd[Socket][Ccd]
+            * DomainInfo->CcxPerCcd[Socket])
             << ((uint32_t) Socket * NORMALIZED_SOCKET_SHIFT);
           ReportedIndex++;
         }
@@ -431,12 +430,10 @@ DfXDomainXlat (
 {
   DF_DOMAIN_INFO_BLK *DomainInfo;
   uint32_t                           i;
-  uint32_t                           CcxPerCcd;
   DF_COMMON_2_REV_XFER_BLOCK *DfXfer;
   SIL_STATUS                         Status;
 
   Status = SilGetCommon2RevXferTable(SilId_DfClass, (void **) &DfXfer);
-  CcxPerCcd = (SilGetMemoryBase ())->ActiveSoC.NumCcxPerCcd;
   DomainInfo = (DF_DOMAIN_INFO_BLK *) xUslFindStructure(SilId_DfClass, DF_DOMAIN_INSTANCE);
 
   if (Status != SilPass) {
@@ -474,8 +471,8 @@ DfXDomainXlat (
   } else {
     for (i = 0; i < DomainInfo->NumberOfReportedDomains; i++) {
       if ((DomainInfo->ReportedDomainCcxMap[i] &
-        ((1 << (uint32_t) Ccx) << (DomainInfo->LogToPhysCcd[Socket][Ccd]
-        * CcxPerCcd) << ((uint32_t) Socket * NORMALIZED_SOCKET_SHIFT))) != 0) {
+        ((1u << (uint32_t) Ccx) << (DomainInfo->LogToPhysCcd[Socket][Ccd]
+        * DomainInfo->CcxPerCcd[Socket]) << ((uint32_t) Socket * NORMALIZED_SOCKET_SHIFT))) != 0) {
         break;
       }
     }
