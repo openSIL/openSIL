@@ -52,6 +52,12 @@ The suites cover:
   one/two sockets, absent and implemented secondary SATA callbacks, continued
   AB/SD/USB initialization, callback arguments and errors, multiple secondary
   dies, and missing table/data. Platform callbacks and lookup services are mocked.
+- `nbio-ioapic`: production IOAPIC BAR/ID programming and SMN access, including
+  both physical RB register banks, segment-zero and nonzero-segment targets,
+  complete PCI index/data transaction sequences, and other-segment/bus isolation.
+- `nbio-non-pci-bar`: production generic/PSP non-PCI BAR helpers and SMN access;
+  allocation targets, enable/lock combinations, preassigned BARs, lookup and
+  allocation failures, and preservation of BARs on other segments and buses.
 - `cxl-device-info`: the production DVSEC capability decoder, HDM register reads,
   endpoint information, absent capabilities, and invalid inputs. PCI reads and
   capability lookup are provided by fixtures; switch traversal is not covered.
@@ -62,6 +68,12 @@ flushes. Three services with inline MMIO reads are intercepted using linker
 are tested, while their hardware implementation is outside this suite. The
 assembly I/O mocks retain the provider's `NASM_ABI` calling convention. Unused
 production functions are removed with linker section garbage collection.
+
+The NBIO suites mock the PCI read/write boundary and maintain separate SMN
+register state for each segment and bus. The non-PCI BAR suite also supplies a
+resource allocator. Their register traces validate provider dispatch and BAR
+programming; they do not discover topology, execute hardware accesses, or
+establish that a board boots with a particular PCI segment allocation.
 
 The DF fixtures supply already-built topology records; they do not validate
 topology discovery or full silicon initialization. The arena fixture inserts an

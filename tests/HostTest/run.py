@@ -55,6 +55,22 @@ SUITES = {
     ],
     "wrap": [],
   },
+  "nbio-ioapic": {
+    "sources": [
+      "xUSL/Nbio/Brh/NbioIoApic.c",
+      "xUSL/CommonLib/SmnAccess.c",
+      "tests/HostTest/NbioIoApic.c",
+    ],
+    "wrap": [],
+  },
+  "nbio-non-pci-bar": {
+    "sources": [
+      "xUSL/Nbio/Common/Nbio.c",
+      "xUSL/CommonLib/SmnAccess.c",
+      "tests/HostTest/NbioNonPciBar.c",
+    ],
+    "wrap": [],
+  },
   "cxl-device-info": {
     "sources": [
       "xUSL/Cxl/Common/CxlDeviceInfo.c",

@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2023 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  NbioIoApic.c
  * @brief OpenSIL NBIO IoApic initialization
@@ -36,12 +36,12 @@ NbioIoApicMmioAddressBrh (
   BarLow = (uint32_t) IoapicMmioBase;
   BarHigh = (uint32_t) (IoapicMmioBase >> 32);
   if (GnbHandle->RBIndex < 4) {
-    xUSLSmnWrite(0,
+    xUSLSmnWrite(GnbHandle->Address.Address.Segment,
       GnbHandle->Address.Address.Bus,
       NBIO_SPACE(GnbHandle, SMN_IOHUB0NBIO0_IOAPIC_BASE_ADDR_HI_ADDRESS),
       BarHigh
       );
-    xUSLSmnWrite(0,
+    xUSLSmnWrite(GnbHandle->Address.Address.Segment,
       GnbHandle->Address.Address.Bus,
       NBIO_SPACE(GnbHandle, SMN_IOHUB0NBIO0_IOAPIC_BASE_ADDR_LO_ADDRESS),
       BarLow
@@ -54,12 +54,12 @@ NbioIoApicMmioAddressBrh (
       0x1
       );
   } else {
-    xUSLSmnWrite(0,
+    xUSLSmnWrite(GnbHandle->Address.Address.Segment,
       GnbHandle->Address.Address.Bus,
       NBIO_SPACE(GnbHandle, SIL_RSVD_ADDR_1D4102F4),
       BarHigh
       );
-    xUSLSmnWrite(0,
+    xUSLSmnWrite(GnbHandle->Address.Address.Segment,
       GnbHandle->Address.Address.Bus,
       NBIO_SPACE(GnbHandle, SIL_RSVD_ADDR_1D4102F0),
       BarLow
@@ -99,7 +99,7 @@ NbioIoApicPreDefIdBrh (
   ApicIdBase += (GnbHandle->SocketId * 8) + GnbHandle->RBIndex;
   Value32 = ((uint32_t) ApicIdBase) << 24;
   if (GnbHandle->RBIndex < 4) {
-    xUSLSmnWrite(0,
+    xUSLSmnWrite(GnbHandle->Address.Address.Segment,
       GnbHandle->Address.Address.Bus,
       NBIO_SPACE(GnbHandle, SMN_IOHUB0NBIO0_IOAPIC_ID_REGISTER_ADDRESS),
       Value32
@@ -110,7 +110,7 @@ NbioIoApicPreDefIdBrh (
       Value32
       );
   } else {
-    xUSLSmnWrite(0,
+    xUSLSmnWrite(GnbHandle->Address.Address.Segment,
       GnbHandle->Address.Address.Bus,
       NBIO_SPACE(GnbHandle, SIL_RESERVED_0599),
       Value32

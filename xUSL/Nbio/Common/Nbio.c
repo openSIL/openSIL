@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2022 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  Nbio.c
  * @brief OpenSIL NBIO initialization
@@ -504,8 +504,8 @@ NonPciBarInit (
   // Set enable bit separate from other bits
   if (Enable) {
     BarLow = BarLow | BIT_32(0); /// Set enable bit
-    xUSLSmnWrite(0, GnbHandle->Address.Address.Bus, MmioBarLow, BarLow);
-    xUSLSmnWrite(0, GnbHandle->Address.Address.Bus, MmioBarHigh, BarHigh);
+    xUSLSmnWrite(GnbHandle->Address.Address.Segment, GnbHandle->Address.Address.Bus, MmioBarLow, BarLow);
+    xUSLSmnWrite(GnbHandle->Address.Address.Segment, GnbHandle->Address.Address.Bus, MmioBarHigh, BarHigh);
   }
 
   // Set lock bit separate from other bits
@@ -620,8 +620,8 @@ NonPciPspBarInit (
   // Set enable bit separate from other bits
   if (Enable) {
     BarLow = BarLow | BIT_32(0); /// Set enable bit
-    xUSLSmnWrite(0, GnbHandle->Address.Address.Bus, MmioBarLow, BarLow);
-    xUSLSmnWrite(0, GnbHandle->Address.Address.Bus, MmioBarHigh, BarHigh);
+    xUSLSmnWrite(GnbHandle->Address.Address.Segment, GnbHandle->Address.Address.Bus, MmioBarLow, BarLow);
+    xUSLSmnWrite(GnbHandle->Address.Address.Segment, GnbHandle->Address.Address.Bus, MmioBarHigh, BarHigh);
   }
 
   // Set lock bit separate from other bits
