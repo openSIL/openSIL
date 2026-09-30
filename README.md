@@ -81,9 +81,10 @@ The AMD blog "[Empowering The Industry with Open System Firmware - AMD openSIL](
 
 ## Turin integration limits
 
-The expanded Turin port is a proof of concept. Validation covers a
-single-socket Purico system using coreboot and the AGESA-v9 EDKII integration.
-Two-socket configurations and CXL hardware need separate validation.
+The expanded Turin port is a proof of concept. Validation covers the
+single-socket Purico and two-socket Titanite systems using coreboot and the
+AGESA-v9 EDKII integration. CXL hardware and other two-socket configurations
+need separate validation.
 
 Fabric, locality, CXL and SMU consumers should include the public `xPrf*.h`
 headers in `Include`. These headers do not require internal SoC dimensions.
