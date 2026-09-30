@@ -41,7 +41,7 @@ The suites cover:
   deferred requests, cold-over-warm priority, and errors/immediate resets
   overriding earlier deferred requests without visiting later IPs. The SoC
   tables and IP callbacks are fixtures; no hardware reset is performed.
-- `public-headers`: each SMU/fabric/CXL public header by itself and all together,
+- `public-headers`: each SMU/fabric/CXL/CPU public header by itself and all together,
   with only `Include/` on the include path and no generated platform header.
 - `provider-contracts`: real SIL allocation/lookup and FCH default assignment;
   FCH service lookup failures and dispatch; configured PM1/GPE addresses,
@@ -52,6 +52,12 @@ The suites cover:
   one/two sockets, absent and implemented secondary SATA callbacks, continued
   AB/SD/USB initialization, callback arguments and errors, multiple secondary
   dies, and missing table/data. Platform callbacks and lookup services are mocked.
+- `cpu-topology`: the enabled-thread query with independent per-socket APOB maps;
+  one/two sockets including 384/768 threads, different socket populations,
+  physical harvesting, thread enable flags, missing maps/services, malformed
+  coordinates, duplicate APIC IDs, and output-capacity/error-count contracts.
+  DF/APOB/CCX calls are mocked; this suite does not test AP startup or the hardware
+  APIC encoding calculated by CCX.
 - `fabric-domain`: real NUMA domain construction and logical-CCD translation;
   NPS0/NPS1/NPS2/NPS4, the Titanite CCD2 affinity with stale global strides 0/8,
   sparse physical CCD maps, CCX-as-NUMA masks, different per-socket CCX strides,
