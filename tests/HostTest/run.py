@@ -62,6 +62,16 @@ SUITES = {
     ],
     "wrap": [],
   },
+  "memory-dmi": {
+    "sources": [
+      "xPRF/Mem/xPrfMem.c",
+      "xUSL/MEM/Common/Mem.c",
+      "xUSL/MEM/Brh/MemInitBrh.c",
+      "xUSL/APOB/BRH/ApobInitBrh.c",
+      "tests/HostTest/MemoryDmi.c",
+    ],
+    "wrap": [],
+  },
   "nbio-ioapic": {
     "sources": [
       "xUSL/Nbio/Brh/NbioIoApic.c",

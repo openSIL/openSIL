@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2024 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2024 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  MemInitBrh.c
  * @brief OpenSIL MEM I2I and C2R API Function initialization.
@@ -527,11 +527,11 @@ ConfigureTable17DimmPresentBrh (
  *                                DIMM info
  * @param    TranslatedChannel  - Translated Channel Number
  *
- * @retval   boolean
+ * @retval   SIL_STATUS
  *
  */
 static
-bool
+SIL_STATUS
 GetPhysicalDimmInfoD5 (
   SIL_TYPE17_DMI_INFO               *T17,
   APOB_MEM_DMI_PHYSICAL_DIMM_BRH    *PhysicalDimm,
@@ -542,7 +542,7 @@ GetPhysicalDimmInfoD5 (
   uint8_t                       Socket;
   uint8_t                       Channel;
   uint8_t                       Dimm;
-  uint8_t                       DimmSpd[SPD_BUFFER_SIZE];
+  uint8_t                       DimmSpd[SPD_BUFFER_SIZE] = {0};
   SIL_STATUS                    SilStatus;
   uint8_t                       IoWidth;
   uint16_t                      BusWidth;
@@ -562,17 +562,25 @@ GetPhysicalDimmInfoD5 (
   uint8_t                       ChannelsPerDimm;
   uint8_t                       DiePerPkg;
   APOB_IP2IP_API                *ApobIp2IpApi;
-  APOB_SOC_DIE_INFO             SocMaxDieInfo;
+  APOB_SOC_DIE_INFO             SocMaxDieInfo = {0};
   SIL_STATUS                    Status;
 
+  ApobIp2IpApi = NULL;
   Status = SilGetIp2IpApi(SilId_ApobClass, (void **) &ApobIp2IpApi);
   if (Status != SilPass) {
     MEM_TRACEPOINT(SIL_TRACE_INFO, "Error : not found APOB IP2IP API\n");
-    assert(false);
-    return 0;
+    return Status;
+  }
+  if (ApobIp2IpApi == NULL || ApobIp2IpApi->ApobGetMaxDieInfo == NULL ||
+      ApobIp2IpApi->ApobGetDimmSpdData == NULL) {
+    return SilNotFound;
   }
 
   ApobIp2IpApi->ApobGetMaxDieInfo(&SocMaxDieInfo);
+  if (SocMaxDieInfo.MaxSocDiesPerSocketValue == 0 ||
+      SocMaxDieInfo.MaxSocDiesPerSocketValue > PROJ_MAX_MEM_DIES_PER_SOCKET) {
+    return SilOutOfBounds;
+  }
 
   Socket = PhysicalDimm->Socket;
   Channel = PhysicalDimm->Channel;
@@ -623,6 +631,9 @@ GetPhysicalDimmInfoD5 (
         SilStatus = SilPass;
         break;
       }
+      if (ApobStatus != SilNotFound) {
+        return ApobStatus;
+      }
     }
     if (SilStatus != SilPass) {
       MEM_TRACEPOINT(SIL_TRACE_INFO,
@@ -633,30 +644,39 @@ GetPhysicalDimmInfoD5 (
         Dimm
         )
       ;
-      assert(false);
+      return SilNotFound;
     }
 
-    assert(SilPass == SilStatus);
     BaseConfig0 = (SPD_BASE_CONFIG_0_S *) &(DimmSpd[SpdBlock_BaseConfig_0 * SPD_BLOCK_LEN]);
     ModuleParms = (SPD_ANNEX_COMMON_S *) &(DimmSpd[SpdBlock_ModuleParms_0 * SPD_BLOCK_LEN]);
     MfgInfo = (SPD_MANUFACTURING_INFO_S *) &(DimmSpd[SpdBlock_MfgInfo0 * SPD_BLOCK_LEN]);
     MemorySize = 0;
     Asymmetric = (ModuleParms->ModuleOrg.Field.RankMix == RankMixAsymmetrical) ? true : false;
     NumRanks = SPD_PACKAGE_RANKS_DECODE(ModuleParms->ModuleOrg.Field.RanksPerChannel);
-    for (Rank = 0; Rank < ((NumRanks < 2) ? NumRanks : 2); Rank++ ) {// Minimum of (NumRanks and 2)
+    if (BaseConfig0->KeyByte1.Field.ModuleType != SPD_KEY_BYTE_DDR5_SDRAM || BaseConfig0->TckAvgMin.Value == 0) {
+      return SilUnsupported;
+    }
+    for (Rank = 0; Rank < NumRanks; Rank++) {
       if (Asymmetric && (Rank & 0x01)) {
         IoWidth = SPD_DECODE_IO_WIDTH(BaseConfig0->SecondIoWidth.Field.IoWidth);
         DiePerPkg = MemSpdDecodeDiesPerPackage(BaseConfig0->SecondDensity.Field.DiePerPkg);
+        SpdCapacity = MemSpdDecodeDensity(BaseConfig0->SecondDensity.Field.Density);
       } else {
         IoWidth = SPD_DECODE_IO_WIDTH(BaseConfig0->FirstIoWidth.Field.IoWidth);
         DiePerPkg = MemSpdDecodeDiesPerPackage(BaseConfig0->FirstDensity.Field.DiePerPkg);
+        SpdCapacity = MemSpdDecodeDensity(BaseConfig0->FirstDensity.Field.Density);
       }
       BusWidth = SPD_CHANNEL_BUS_WIDTH_DECODE(ModuleParms->ChBusWidth.Field.Width);
-      T17->DataWidth = BusWidth * 2;  // RDIMM data width = 2 x data width per sub-channel
-      T17->TotalWidth = T17->DataWidth +
-        (SPD_CHANNEL_BUS_WIDTH_EXT_DECODE(ModuleParms->ChBusWidth.Field.WidthExt) * 2);
-      SpdCapacity = MemSpdDecodeDensity(BaseConfig0->FirstDensity.Field.Density);
       ChannelsPerDimm = SPD_CHANNELS_PER_DIMM_DECODE(ModuleParms->ChBusWidth.Field.NumChannels);
+      if (IoWidth == 0 || DiePerPkg == 0 || SpdCapacity == 0 || BusWidth < IoWidth ||
+          ChannelsPerDimm != SPD_DDR5_CHANNELS_PER_DIMM ||
+          ModuleParms->ChBusWidth.Field.Width > SPD_CHANNEL_BUS_WIDTH_MAX ||
+          ModuleParms->ChBusWidth.Field.WidthExt > SPD_CHANNEL_BUS_WIDTH_EXT_MAX) {
+        return SilUnsupported;
+      }
+      T17->DataWidth = BusWidth * ChannelsPerDimm;
+      T17->TotalWidth = T17->DataWidth +
+        (SPD_CHANNEL_BUS_WIDTH_EXT_DECODE(ModuleParms->ChBusWidth.Field.WidthExt) * ChannelsPerDimm);
       MemorySize += ChannelsPerDimm * BusWidth / IoWidth * DiePerPkg * SpdCapacity / 8; // MemorySize in GB
     }
 
@@ -713,6 +733,9 @@ GetPhysicalDimmInfoD5 (
         break;
       }
     }
+    if (FreqTableIndex == sizeof (gMemFreqToTckTable) / sizeof (gMemFreqToTckTable[0])) {
+      return SilUnsupported;
+    }
 
     T17->ManufacturerIdCode = MfgInfo->ModuleMfgId.Value;
     IntToString((char *)T17->SerialNumber,
@@ -765,11 +788,7 @@ GetPhysicalDimmInfoD5 (
 
   SilInitSmbios32Type17(PhysicalDimm->DimmPresent, DimmSpd, T17);
 
-  if (PhysicalDimm->DimmPresent) {
-    return true;
-  } else {
-    return false;
-  }
+  return SilPass;
 }
 
 /**
@@ -801,20 +820,49 @@ PopulateSmbiosMemInfoBrh (
   APOB_MEM_DMI_HEADER              *ApobMemDmiHeader;
   APOB_MEM_DMI_PHYSICAL_DIMM_BRH   *PhysicalDimm;
   APOB_MEM_DMI_LOGICAL_DIMM_BRH    *LogicalDimm;
+  APOB_MEM_DMI_LOGICAL_DIMM_BRH     LogicalDimmData;
+  const uint8_t                   *LogicalBytes;
   APOB_TYPE_HEADER                 *ApobSmbiosInfo;
   APOB_IP2IP_API                   *ApobIp2IpApi;
+  bool                             Seen[SIL_MAX_SOCKETS_SUPPORTED][SIL_MAX_CHANNELS_PER_SOCKET]
+                                       [SIL_MAX_DIMMS_PER_CHANNEL] = {{{false}}};
+  uint32_t                         RequiredSize;
 
   MEM_TRACEPOINT(SIL_TRACE_INFO, "\tDMI enabled\n");
 
-  if (SilGetIp2IpApi(SilId_ApobClass, (void **) &ApobIp2IpApi) != SilPass) {
+  if (DmiInfoTable == NULL) {
+    return SilInvalidParameter;
+  }
+  ApobIp2IpApi = NULL;
+  Status = SilGetIp2IpApi(SilId_ApobClass, (void **) &ApobIp2IpApi);
+  if (Status != SilPass) {
+    return Status;
+  }
+  if (ApobIp2IpApi == NULL || ApobIp2IpApi->ApobAmdGetApobEntryInstance == NULL) {
     return SilNotFound;
   }
 
+  ApobSmbiosInfo = NULL;
   Status = ApobIp2IpApi->ApobAmdGetApobEntryInstance(APOB_SMBIOS, APOB_MEM_SMBIOS_TYPE, 0, 0, &ApobSmbiosInfo);
-  assert(ApobSmbiosInfo != NULL);
+  if (Status != SilPass) {
+    return Status;
+  }
+  if (ApobSmbiosInfo == NULL) {
+    return SilNotFound;
+  }
+  if (ApobSmbiosInfo->TypeSize < sizeof (APOB_MEM_DMI_HEADER)) {
+    return SilOutOfBounds;
+  }
   ApobMemDmiHeader = (APOB_MEM_DMI_HEADER *)ApobSmbiosInfo;
   MaxPhysicalDimms = ApobMemDmiHeader->MaxPhysicalDimms;
   MaxLogicalDimms = ApobMemDmiHeader->MaxLogicalDimms;
+  RequiredSize = sizeof (*ApobMemDmiHeader) +
+    MaxPhysicalDimms * sizeof (*PhysicalDimm) + MaxLogicalDimms * sizeof (*LogicalDimm);
+  if (MaxPhysicalDimms == 0 ||
+      MaxPhysicalDimms > SIL_MAX_SOCKETS_SUPPORTED * SIL_MAX_CHANNELS_PER_SOCKET * SIL_MAX_DIMMS_PER_CHANNEL ||
+      RequiredSize > ApobSmbiosInfo->TypeSize) {
+    return SilOutOfBounds;
+  }
   TotalMemSize = 0;
   PhysicalDimm = (APOB_MEM_DMI_PHYSICAL_DIMM_BRH *)&ApobMemDmiHeader[1];
 
@@ -829,9 +877,24 @@ PopulateSmbiosMemInfoBrh (
   // TYPE 17 entries are organized by physical DIMMs
   for (DimmIndex = 0; DimmIndex < MaxPhysicalDimms; DimmIndex++, PhysicalDimm++) {
     Socket = PhysicalDimm->Socket;
-    TranslateChannelInfo(PhysicalDimm->Channel, &TranslatedChannel);
+    if (Socket >= SIL_MAX_SOCKETS_SUPPORTED || PhysicalDimm->Channel >= SIL_MAX_CHANNELS_PER_SOCKET) {
+      return SilOutOfBounds;
+    }
+    Status = TranslateChannelInfo(PhysicalDimm->Channel, &TranslatedChannel);
+    if (Status != SilPass) {
+      return Status;
+    }
     Dimm = PhysicalDimm->Dimm;
-    if (GetPhysicalDimmInfoD5(&DmiInfoTable->T17[Socket][TranslatedChannel][Dimm], PhysicalDimm, TranslatedChannel)) {
+    if (TranslatedChannel >= SIL_MAX_CHANNELS_PER_SOCKET || Dimm >= SIL_MAX_DIMMS_PER_CHANNEL ||
+        Seen[Socket][TranslatedChannel][Dimm]) {
+      return SilOutOfBounds;
+    }
+    Seen[Socket][TranslatedChannel][Dimm] = true;
+    Status = GetPhysicalDimmInfoD5(&DmiInfoTable->T17[Socket][TranslatedChannel][Dimm], PhysicalDimm, TranslatedChannel);
+    if (Status != SilPass) {
+      return Status;
+    }
+    if (PhysicalDimm->DimmPresent) {
       NumActiveDimms++;
     }
     TotalMemSize += (DmiInfoTable->T17[Socket][TranslatedChannel][Dimm].MemorySize != 0x7FFF) ?
@@ -839,17 +902,30 @@ PopulateSmbiosMemInfoBrh (
       DmiInfoTable->T17[Socket][TranslatedChannel][Dimm].ExtSize;
   }
 
-  // Pointer to DMI info of Logical DIMMs
-  LogicalDimm = (APOB_MEM_DMI_LOGICAL_DIMM_BRH *)PhysicalDimm;
+  // The serialized APOB header only guarantees DWORD alignment for these records.
+  LogicalBytes = (const uint8_t *)PhysicalDimm;
+  LogicalDimm = &LogicalDimmData;
 
   // TYPE 20 entries are organized by logical DIMMs
-  for (DimmIndex = 0; DimmIndex < MaxLogicalDimms; DimmIndex++, LogicalDimm++) {
-    Socket = LogicalDimm->Socket;
-    TranslateChannelInfo(LogicalDimm->Channel, &Channel);
-    if (Channel != 0xFF) {
-      Dimm = LogicalDimm->Dimm;
-      GetLogicalDimmInfoBrh(&DmiInfoTable->T20[Socket][Channel][Dimm][0], LogicalDimm);
+  for (DimmIndex = 0; DimmIndex < MaxLogicalDimms; DimmIndex++, LogicalBytes += sizeof (*LogicalDimm)) {
+    memcpy (LogicalDimm, LogicalBytes, sizeof (*LogicalDimm));
+    if (!LogicalDimm->DimmPresent) {
+      continue;
     }
+    Socket = LogicalDimm->Socket;
+    if (Socket >= SIL_MAX_SOCKETS_SUPPORTED || LogicalDimm->Channel >= SIL_MAX_CHANNELS_PER_SOCKET) {
+      return SilOutOfBounds;
+    }
+    Status = TranslateChannelInfo(LogicalDimm->Channel, &Channel);
+    if (Status != SilPass) {
+      return Status;
+    }
+    Dimm = LogicalDimm->Dimm;
+    if (Channel >= SIL_MAX_CHANNELS_PER_SOCKET || Dimm >= SIL_MAX_DIMMS_PER_CHANNEL ||
+        !Seen[Socket][Channel][Dimm]) {
+      return SilOutOfBounds;
+    }
+    GetLogicalDimmInfoBrh(&DmiInfoTable->T20[Socket][Channel][Dimm][0], LogicalDimm);
   }
 
   // TYPE 19
@@ -859,6 +935,9 @@ PopulateSmbiosMemInfoBrh (
 
   // If Ending Address >= 0xFFFFFFFF, update Starting Address (offset 04h) & Ending Address (offset 08h) to 0xFFFFFFFF,
   // and use the Extended Starting Address (offset 0Fh) & Extended Ending Address (offset 17h) instead.
+  if (NumActiveDimms == 0 || TotalMemSize == 0) {
+    return SilNotFound;
+  }
   Value64 = ((uint64_t)TotalMemSize << 10) - 1;
   if (Value64 >= ((uint64_t) 0xFFFFFFFF)) {
     DmiInfoTable->T19[0].StartingAddr = 0xFFFFFFFFUL;

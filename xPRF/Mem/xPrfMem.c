@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2022 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2022 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  xPrfMem.c
  * @brief Platform Reference Firmware - exposes Platform specific features for
@@ -10,6 +10,7 @@
 #include <xPRF-api.h>
 #include <MEM/MemIp2Ip.h>
 #include <APOB/ApobIp2Ip.h>
+#include <string.h>
 #include <APOB/Common/ApobCmn.h>
 
 // 1 Gigabyte
@@ -187,15 +188,21 @@ xPrfGetSmbiosMemInfo (
   SIL_STATUS                  Status;
   MEM_IP2IP_API               *MemIp2Ip;
 
+  if (DmiInfoTable == NULL) {
+    return SilInvalidParameter;
+  }
+  memset (DmiInfoTable, 0, sizeof (*DmiInfoTable));
+  MemIp2Ip = NULL;
   Status = SilGetIp2IpApi(SilId_MemClass, (void **)(&MemIp2Ip));
   if (Status != SilPass) {
     XPRF_TRACEPOINT(SIL_TRACE_ERROR, " MEM I2I API is not found.\n");
-    assert(Status == SilPass);
-  } else if (DmiInfoTable == NULL) {
-    XPRF_TRACEPOINT(SIL_TRACE_ERROR, "xPrfGetSmbiosMemInfo: Failed invalid input\n");
-    Status = SilInvalidParameter;
+  } else if (MemIp2Ip == NULL || MemIp2Ip->GetSmbiosMemInfo == NULL) {
+    Status = SilNotFound;
   } else {
     Status = MemIp2Ip->GetSmbiosMemInfo(DmiInfoTable);
+  }
+  if (Status != SilPass) {
+    memset (DmiInfoTable, 0, sizeof (*DmiInfoTable));
   }
 
   return Status;

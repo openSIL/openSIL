@@ -734,7 +734,10 @@ xPrfGetLocalSmiStatus (
  * @details    This routine gets DMI Type 16, Type 17,
  *             Type 19 and Type 20 related information.
  *
- * @param      DmiInfoTable - DMI records
+ * @param      DmiInfoTable - DMI records. The whole output is cleared on failure.
+ *             T17 indices are socket, translated board channel, and DIMM slot.
+ *             Empty physical connectors have initialized records with size zero;
+ *             nonexistent connectors remain zero. Call after timepoint 1.
  *
  * @retval     SIL_STATUS
  */
