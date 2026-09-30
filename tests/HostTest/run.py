@@ -55,6 +55,13 @@ SUITES = {
     ],
     "wrap": [],
   },
+  "fabric-domain": {
+    "sources": [
+      "xUSL/DF/DfX/DfXAcpiDomainInfo.c",
+      "tests/HostTest/FabricDomain.c",
+    ],
+    "wrap": [],
+  },
   "nbio-ioapic": {
     "sources": [
       "xUSL/Nbio/Brh/NbioIoApic.c",

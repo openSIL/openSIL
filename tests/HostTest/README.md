@@ -52,6 +52,12 @@ The suites cover:
   one/two sockets, absent and implemented secondary SATA callbacks, continued
   AB/SD/USB initialization, callback arguments and errors, multiple secondary
   dies, and missing table/data. Platform callbacks and lookup services are mocked.
+- `fabric-domain`: real NUMA domain construction and logical-CCD translation;
+  NPS0/NPS1/NPS2/NPS4, the Titanite CCD2 affinity with stale global strides 0/8,
+  sparse physical CCD maps, CCX-as-NUMA masks, different per-socket CCX strides,
+  and socket1 physical CCD15 at bit31. APOB and hardware discovery callbacks
+  are mocked. The synthetic different-stride case checks per-socket semantics;
+  it does not establish support for another processor SKU.
 - `nbio-ioapic`: production IOAPIC BAR/ID programming and SMN access, including
   both physical RB register banks, segment-zero and nonzero-segment targets,
   complete PCI index/data transaction sequences, and other-segment/bus isolation.
@@ -75,8 +81,10 @@ resource allocator. Their register traces validate provider dispatch and BAR
 programming; they do not discover topology, execute hardware accesses, or
 establish that a board boots with a particular PCI segment allocation.
 
-The DF fixtures supply already-built topology records; they do not validate
-topology discovery or full silicon initialization. The arena fixture inserts an
+The `provider-contracts` DF fixtures supply already-built domain records. The
+`fabric-domain` suite builds those records from mocked discovery and NPS data;
+neither validates hardware topology discovery or full silicon initialization.
+The arena fixture inserts an
 unused info block when necessary to align the native DF structure. The current
 allocator guarantees DWORD alignment, so these service tests do not establish
 that the complete firmware allocation sequence satisfies stronger alignment.
