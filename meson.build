@@ -111,7 +111,9 @@ if CC_IS_GCC or CC_IS_CLANG
 
   # set obj format for nasm outputs
   objfmt = '-f elf' + OBJSZ
-  linkargs = ['-no-pie', '-Wl,--gc-sections']
+  # NASM objects have no .note.GNU-stack section; mark the stack non-executable
+  # so the linker does not warn, which werror makes fatal.
+  linkargs = ['-no-pie', '-Wl,--gc-sections', '-Wl,-z,noexecstack']
 
 else   # presume MSVC
   message('compiler found to be : MVSC')
