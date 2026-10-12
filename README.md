@@ -24,6 +24,8 @@ The AMD blog "[Empowering The Industry with Open System Firmware - AMD openSIL](
 
 1. Phase IV  - AMD openSIL POR with UEFI Host FW trending 2026.
 
+That product phase is not a community contribution milestone. For how to contribute to this evaluation POC, and for the near-term public contribution timeline, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Getting Started
 
 1. Clone Repository:
