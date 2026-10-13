@@ -22,6 +22,7 @@ Other important locations:
 - `Include`: public interfaces, including the `xPrf*.h` provider headers for fabric, locality, CXL, and SMU consumers.
 - `configs`: Kconfig output for the Purico reference platform, the default configuration.
 - `tests/HostTest`: native host tests for xSIM dispatch and selected providers.
+- `util/unitTests/linktest.c`: the link test that becomes `pseudo_host` when unit tests are enabled.
 - `util`: Kconfig, Meson, formatting, documentation, and file-check scripts.
 
 Preserve the xSIM, xPRF, and xUSL boundaries. Keep host-firmware dependencies outside the openSIL libraries and use existing interfaces between components.
@@ -58,7 +59,9 @@ meson compile -C build_L64
 
 On Windows, use `util/meson/x86-amd64-msvc` or `util/meson/x86-i386-msvc` from a Visual Studio developer prompt; `util/SetSilEnv.cmd` sets up the environment.
 
-Leave the `unit_test` option off: it builds `pseudo_host` from `util/unitTests/linktest.c`, which this branch does not contain. The native host tests in `tests/HostTest` compile real openSIL sources against mocked hardware access and run them with ASan and UBSan on an x86-64 Linux host; `tests/HostTest/README.md` has the command and the list of suites. Passing them does not replace firmware builds or hardware boot tests.
+To also build the link test, add `-Dunit_test=true` (with the Makefile, `CFG_OPT=-Dunit_test=true`). A successful build of `pseudo_host` is the check: it links the full library into a host program. Do not run it on a development machine, because it calls `InitializeAMDSiTp1()`, which accesses silicon registers.
+
+The native host tests in `tests/HostTest` compile real openSIL sources against mocked hardware access and run them with ASan and UBSan on an x86-64 Linux host; `tests/HostTest/README.md` has the command and the list of suites. Passing them does not replace firmware builds or hardware boot tests.
 
 Before committing:
 
