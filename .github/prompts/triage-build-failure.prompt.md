@@ -19,7 +19,7 @@ Find the root cause of a failed openSIL build or host test run, local or CI. Thi
    | Category | Typical signs | Usual cause |
    | --- | --- | --- |
    | Configure | `meson setup` fails; cross file or `nasm` not found; the platform config does not load | Wrong cross-file path, Meson older than 1.1.0, NASM older than 2.15.05, or a bad `PlatKcfg` or `PlatKcfgDir` |
-   | Missing link test | `util/unitTests/linktest.c` not found | `-Dunit_test=true`; this branch does not contain that file, so leave the option off |
+   | Executable stack | `missing .note.GNU-stack section implies executable stack` while linking `pseudo_host` | `-Wl,-z,noexecstack` removed from the GCC/clang link arguments; under `werror` the warning is fatal |
    | Compile | Error in a `.c` or `.h` file, or a warning promoted by `werror` | Missing prototype (`-Wmissing-prototypes`), missing `(void)` (`-Wstrict-prototypes`), a C17 issue, or a type-width difference between 32-bit and 64-bit |
    | Toolchain-specific | Fails with MSVC but not GCC, or the reverse | A compiler extension, a variable-length array, or a format specifier |
    | Link | Undefined reference or unresolved external | A source file missing from `meson.build`, Kconfig gating that excludes a file still referenced, or an IP table naming a function that is not built |
