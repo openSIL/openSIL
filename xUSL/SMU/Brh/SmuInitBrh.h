@@ -12,7 +12,7 @@ SIL_STATUS InitializeSmuBrh (void);
 
 #define SIL_RESERVED_1761             0xD
 #define SIL_RESERVED_1762           0xF
-#define SIL_RESERVED_1760                 0x50
+#define SIL_RESERVED_1760                 0x54
 
 #define SIL_RESERVED_ADDR_0x3810A84    0x3810A84
 #define SIL_RESERVED_ADDR_0x3810A88    0x3810A88
@@ -31,6 +31,7 @@ SIL_STATUS InitializeSmuBrh (void);
 #define SIL_SMU_RESERVED_0x42          0x42
 #define SIL_SMU_RESERVED_0x4C          0x4C
 #define SIL_SMU_RESERVED_0x4E          0x4E
+#define SIL_SMU_RESERVED_0x54          0x54
 
 typedef struct {
   //DEFAULT INFRASTRUCTURE LIMITS
@@ -113,8 +114,10 @@ typedef struct {
   uint8_t  xGMILinkWidthSpare[3];
 
   uint8_t  CclkMode;
+  uint8_t  AdjustGB;
+  uint8_t  OneCppcMax;
 
-  uint8_t  spare4[31];
+  uint8_t  spare4[29];
 } PPTable_t;
 
 void

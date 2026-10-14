@@ -55,7 +55,13 @@ InitializeSmuApiBrh (void)
 SIL_STATUS
 InitializeSmuTp1Brh (void)
 {
-  return SilPass;
+  SIL_STATUS Status;
+  SMU_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
+
+  Status = InitializeSmuBrh ();
+
+  SMU_TRACEPOINT(SIL_TRACE_EXIT, "\n");
+  return Status;
 }
 
 /**
@@ -74,13 +80,7 @@ InitializeSmuTp1Brh (void)
 SIL_STATUS
 InitializeSmuTp2Brh (void)
 {
-  SIL_STATUS Status;
-  SMU_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
-
-  Status = InitializeSmuBrh ();
-
-  SMU_TRACEPOINT(SIL_TRACE_EXIT, "\n");
-  return Status;
+  return SilPass;
 }
 
 /**

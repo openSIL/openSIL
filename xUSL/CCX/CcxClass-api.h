@@ -207,7 +207,6 @@ typedef struct {
   uint8_t  AmdSnpMemCover;                 ///< SNP Memory status
   uint32_t AmdSnpMemSize;                  ///< SNP Memory size
   UCODEPATCH_BIOSENTRYINFO UcodePatchEntryInfo;
-  uint8_t  WcSpecConfig;              ///< (ZEN5) W Configuration
   bool     IommuSupport;
   uint8_t  AmdPstatePolicy;
   uint8_t  AmdSplitRmpTable;               ///< This control selects if the RMP Table is allocated at

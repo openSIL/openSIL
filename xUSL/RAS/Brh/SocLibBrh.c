@@ -201,6 +201,10 @@ ProcessorNumberToPhysicalThread (
   // BRH - 1 CCX/CCX, 8 Cores/CCX
   MaxCcxPerCcd = MAX_CCX_PER_CCD_BRH;
   MaxCoresPerCcx = MAX_CORES_PER_CCX_BRH;
+  if (ISSOCBRHD) {
+    // Up to 16 cores per CCX in BRHD
+    MaxCoresPerCcx = MAX_CORES_PER_CCX_BRH * 2;
+  }
 
   *PhysicalThread = (uint32_t)(
     ((((DieId * MaxCcxPerCcd) + CcxId) * MaxCoresPerCcx) + CoreId) * MAX_THREADS_PER_CORE + ThreadID);

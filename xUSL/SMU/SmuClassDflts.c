@@ -12,6 +12,7 @@
 const SMUCLASS_INPUT_BLK mSmuClassDflts = {
   .CfgAgmLogDramSize = 4, // TODO: Add CONFIG value
   .CtrlUnusedTileClkGating = false,
+  .BalanceAlphaTempFilter = false,
   .AmdSmuDsmClkCtrl = false,
   .SmuFeatureControl = 0x7adb4fff,
   .SmuFeatureControlExt = 0x00000001,
@@ -59,7 +60,9 @@ const SMUCLASS_INPUT_BLK mSmuClassDflts = {
   .AmdMemPostPackageRepairConfigInitiator = 0x00,
   .DfPstateRangeSupportEn = 0,
   .DfPstateRangeMax = 0,
-  .DfPstateRangeMin = 0,
+  .DfPstateRangeMin = 2,
   .ThrottlerMode = 0xF,
-  .CfgPerRailFreqControl = 0
+  .CfgPerRailFreqControl = 1,
+  .CfgAdjustGB = 0,
+  .CfgOneCppcMax = 0
 };

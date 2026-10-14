@@ -7,6 +7,7 @@
  */
 
 #include <xSIM.h>
+#include <SilSocLogicalId.h>
 #include <Nbio/NbioIp2Ip.h>
 #include <CommonLib/SmnAccess.h>
 #include <Nbio/Brh/include/SdpmuxReg.h>
@@ -765,7 +766,7 @@ NbioBaseConfigurationBrh (
         ProgramNbioSmnTable(GnbHandle, NbifSATAHideBridgeTbl, NBIO_SPACE(GnbHandle, 0), Property);
       }
 
-      if (((IsCpuStepping (AMD_REV_F1A_BRH_BX)) && IsCpuFamily (AMD_FAMILY_BRH))) {
+      if (IS_SOC_BRH_Ax || IS_SOC_BRH_Bx || IS_SOC_BRHD_Ax) {
         xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
           GnbHandle->Address.Address.Bus,
           NBIO_SPACE(GnbHandle, SIL_RESERVED_1704),

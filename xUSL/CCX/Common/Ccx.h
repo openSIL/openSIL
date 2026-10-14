@@ -154,6 +154,7 @@ typedef struct {
   const REGISTER_TABLE_AT_GIVEN_TP *CcxRegTableListAtGivenTP;
   bool                       SvmEnable;
   bool                       SvmLock;
+  bool                       TransparentErrorLoggingEnable;
 } AMD_CCX_AP_LAUNCH_GLOBAL_DATA;
 
 
@@ -169,6 +170,9 @@ SIL_STATUS InitializeCcx (
   const REGISTER_TABLE_AT_GIVEN_TP  *CcxRegTableListAtGivenTP
   );
 void CcxSetMca (void);
+void CcxSetTransparentErrorLoggingMca (
+  bool TransparentErrorLoggingEnable
+  );
 void CcxInitializeC6 (CCXCLASS_INPUT_BLK *CcxInputBlock);
 void ApAsmCode (void);
 NASM_ABI void RegSettingBeforeLaunchingNextThread (

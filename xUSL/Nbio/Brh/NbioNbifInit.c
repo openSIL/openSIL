@@ -11,6 +11,7 @@
  *----------------------------------------------------------------------------------------
  */
 
+#include <SilSocLogicalId.h>
 #include <Nbio/NbioIp2Ip.h>
 #include <Nbio/Brh/include/NbifMmReg.h>
 #include <Nbio/Brh/include/NbifEpFnCfgReg.h>
@@ -1217,7 +1218,7 @@ NbifCommonOptions (
   // IOD C0 has been changed to allow LCLK DS when TF MPDMA SDP port is connected.
   // Clear bit 8 of the corresponding NBIF SYSHUBMM::GDC_HW_DEBUG
   //
-  if ((IsCpuStepping (AMD_REV_F1A_BRH_CX) && IsCpuFamily (AMD_FAMILY_BRH))) {
+  if (IS_SOC_BRH_Cx || IS_SOC_BRHD_Bx) {
     xUSLSmnReadModifyWrite(GnbHandle->Address.Address.Segment,
       GnbHandle->Address.Address.Bus,
       NBIO_SPACE(GnbHandle, SIL_RSVD_ADDR_1403B98),

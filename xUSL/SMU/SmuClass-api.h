@@ -41,6 +41,7 @@
 typedef struct {
   uint16_t  CfgAgmLogDramSize;
   bool      CtrlUnusedTileClkGating;
+  bool      BalanceAlphaTempFilter;
   bool      AmdSmuDsmClkCtrl;
   uint32_t  SmuFeatureControl;
   uint32_t  SmuFeatureControlExt;
@@ -91,4 +92,6 @@ typedef struct {
   uint8_t   DfPstateRangeMin;
   uint8_t   ThrottlerMode;
   uint8_t   CfgPerRailFreqControl;
+  uint8_t   CfgAdjustGB;
+  uint8_t   CfgOneCppcMax;
 } SMUCLASS_INPUT_BLK;
