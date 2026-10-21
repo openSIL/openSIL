@@ -28,7 +28,7 @@ libc headers and cross-compiler flags so the tests use native libc and sanitizer
 The compilation database must refer to this checkout.
 
 The runner enables ASan and UBSan by default. Leak detection defaults to off
-because the fixtures own no heap allocations and LSan cannot run under ptrace.
+because LSan cannot run under ptrace. Fixtures release their heap allocations.
 `ASAN_OPTIONS` and `UBSAN_OPTIONS` can override their defaults. Use
 `--no-sanitizers` only when the host lacks the sanitizer runtimes. `--suite`
 selects one suite. Without `--output-dir`, a temporary directory is removed
@@ -36,6 +36,13 @@ after the run; with it, binaries, compile commands, and logs are retained.
 
 The suites cover:
 
+- `apob-parser`: real APOB entry traversal and instance lookup, including
+  exact-capacity collections, nonadvancing and truncated entries, invalid or
+  unaligned offsets, duplicate instances, malformed trailing records and
+  error propagation. Synthetic buffers supply the cached APOB address.
+- `apcb-update-bounds`: real APCB token lookup with exact allocations, truncated
+  prefixes/items, excessive item counts, unchanged output on rejection or an
+  absent token, and last-match behavior for valid duplicate tokens.
 - `mpio-engine-mapping`: real ASK-to-engine lookup with mocked NBIO traversal;
   unallocated and bifurcation-failed entries must not match or traverse engines,
   while allocated port zero and training-failed links retain their identities.
