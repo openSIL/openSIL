@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: MIT */
 /*
- * Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+ * Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved.
  *
  */
 /**
@@ -90,14 +90,12 @@ FindWrapper (
  *
  * MpioFindEngineForAsk
  *
- * @brief Routine to fixup Pcie Platform Configuration for package specific values
+ * @brief Find the PCIe engine assigned to an allocated firmware ASK entry.
  *
- * @param[in]       Wrapper         Pointer to wrapper config descriptor
- * @param[in, out]  Buffer          Not used
- * @param[in]       GnbHandle       Pointer to GNB_HANDLE
+ * @param[in]       GnbHandle       First NBIO handle to search
+ * @param[in]       AskEntry        Firmware link allocation/training result
  *
- * @returns Pcie engine pointer.
- * @retval Valid handle.
+ * @return Matching engine, or NULL when no engine was assigned or found.
  **/
 PCIe_ENGINE_CONFIG *
 MpioFindEngineForAsk (
@@ -108,6 +106,25 @@ MpioFindEngineForAsk (
   ENGINE_LOCATION_CALLBACK  EngineStruct;
   GNB_HANDLE                *Handle;
   NBIO_IP2IP_API            *NbioIp2Ip;
+
+  if (GnbHandle == NULL || AskEntry == NULL) {
+    return NULL;
+  }
+
+  /* These states have no assigned MAC port. Their default port field can
+   * alias a real port zero, overwriting another engine's lane configuration
+   * and later issuing register/DELI requests for a link that was not created.
+   * Training failures are different: the allocated engine remains valid. */
+  if (AskEntry->status.state == LINK_NOT_ALLOCATED ||
+    AskEntry->status.state == LINK_BIFURCATION_FAILURE) {
+    MPIO_TRACEPOINT(SIL_TRACE_ERROR,
+      "No MPIO engine for socket %u lane %u state %u\n",
+      GnbHandle->SocketId,
+      AskEntry->desc.startLaneIndex,
+      AskEntry->status.state
+      );
+    return NULL;
+  }
 
   Handle = GnbHandle;
   EngineStruct.AskEntry = AskEntry;
