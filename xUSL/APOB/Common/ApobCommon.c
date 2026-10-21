@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Copyright (C) 2021 - 2025 Advanced Micro Devices, Inc. All rights reserved. */
+/* Copyright (C) 2021 - 2026 Advanced Micro Devices, Inc. All rights reserved. */
 /**
  * @file  ApobCommon.c
  * @brief OpenSIL APOB functions
@@ -55,7 +55,7 @@ ApobInit (
     }
 
     // Check APOB Size
-    if ((ApobHeaderPtr->Size == 0) ||
+    if ((ApobHeaderPtr->Size < sizeof (APOB_BASE_HEADER)) ||
       (ApobHeaderPtr->Size == 0xFFFFFFFFul)) {
       APOB_TRACEPOINT(SIL_TRACE_INFO, "APOB Size Check fail\n");
       return SilOutOfResources;
@@ -135,9 +135,14 @@ AmdGetApobEntry (
   uint8_t           *ApobEntryBin;
   APOB_TYPE_HEADER  *ApobEntry;
   uint32_t          LclNumofEntry;
+  uint32_t          Remaining;
   APOB_BASE_HEADER  *ApobHeaderPtr;
   APOBLIB_INFO      ApobInfoPtr;
   SIL_STATUS        Status;
+
+  if (NumofEntry == NULL || ApobEntries == NULL) {
+    return SilInvalidParameter;
+  }
 
   *NumofEntry = 0;
   *ApobEntries = NULL;
@@ -174,6 +179,13 @@ AmdGetApobEntry (
   APOB_TRACEPOINT(SIL_TRACE_INFO, "AmdGetApobEntry %x %x\n", GroupID, DataTypeID);
   APOB_TRACEPOINT(SIL_TRACE_INFO, "APOB Addr %x\n", ApobHeaderPtr);
 
+  if (ApobHeaderPtr->Size < sizeof (APOB_BASE_HEADER) ||
+    (uintptr_t) ApobHeaderPtr > ((uintptr_t) -1) - ApobHeaderPtr->Size ||
+    ApobHeaderPtr->OffsetOfFirstEntry < sizeof (APOB_BASE_HEADER) ||
+    ApobHeaderPtr->OffsetOfFirstEntry > ApobHeaderPtr->Size) {
+    return SilUnsupported;
+  }
+
   if (ApobHeaderPtr->Version >= 5) {
     ApobEntryBin = (uint8_t *) ApobHeaderPtr;
     ApobEntryBin += ApobHeaderPtr->OffsetOfFirstEntry;
@@ -182,20 +194,31 @@ AmdGetApobEntry (
     return SilUnsupported;
   }
 
-  ApobEntry = (APOB_TYPE_HEADER *) ApobEntryBin;
   LclNumofEntry = 0;
 
   while (ApobEntryBin < ((uint8_t *) ApobHeaderPtr + ApobHeaderPtr->Size)) {
+    Remaining = ApobHeaderPtr->Size - (uint32_t) (ApobEntryBin - (uint8_t *) ApobHeaderPtr);
+    if (Remaining < sizeof (APOB_TYPE_HEADER) ||
+      (uintptr_t) ApobEntryBin % _Alignof(APOB_TYPE_HEADER) != 0) {
+      return SilUnsupported;
+    }
+    ApobEntry = (APOB_TYPE_HEADER *) ApobEntryBin;
+    if (ApobEntry->TypeSize < sizeof (APOB_TYPE_HEADER) ||
+      ApobEntry->TypeSize > Remaining) {
+      return SilUnsupported;
+    }
     if ((ApobEntry->GroupID == GroupID) &&
       (ApobEntry->DataTypeID == DataTypeID)) {
       //Found a matched entry
+      if (LclNumofEntry >= APOB_ENTRY_INSTANCE_MAX) {
+        return SilOutOfResources;
+      }
       LclNumofEntry++;
       *ApobEntries = ApobEntry;
       ApobEntries++;
       APOB_TRACEPOINT(SIL_TRACE_INFO, "Type found @0x%x\n", ApobEntry);
     }
     ApobEntryBin += (ApobEntry->TypeSize);
-    ApobEntry = (APOB_TYPE_HEADER *) ApobEntryBin;
   }
 
   *NumofEntry = LclNumofEntry;
@@ -242,7 +265,11 @@ AmdGetApobEntryInstance (
   APOB_TYPE_HEADER  *LclApobEntries[APOB_ENTRY_INSTANCE_MAX];
   uint32_t          LclNumofEntry;
   APOB_TYPE_HEADER  *LclApobEntry;
+  SIL_STATUS        Status;
 
+  if (ApobEntry == NULL) {
+    return SilInvalidParameter;
+  }
   *ApobEntry = NULL;
   LclApobEntry = NULL;
   APOB_TRACEPOINT(SIL_TRACE_ENTRY, "\n");
@@ -254,7 +281,10 @@ AmdGetApobEntryInstance (
     );
 
   LclNumofEntry = 0;
-  AmdGetApobEntry(GroupID, DataTypeID, &LclNumofEntry, ApobBaseAddress, &LclApobEntries[0]);
+  Status = AmdGetApobEntry(GroupID, DataTypeID, &LclNumofEntry, ApobBaseAddress, &LclApobEntries[0]);
+  if (Status != SilPass) {
+    return Status;
+  }
   if (LclNumofEntry == 0) {
     APOB_TRACEPOINT(SIL_TRACE_INFO, "No entry found\n");
     return SilNotFound;
@@ -291,7 +321,8 @@ AmdGetApobEntryInstance (
  *
  * @return SIL_STATUS
  * @retval SilPass     If the token is found
- *         SilNotFound Otherwise
+ *         SilNotFound If the token is absent
+ *         SilInvalidParameter If a pointer, payload size or item count is invalid
  */
 SIL_STATUS
 ApobGetApcbUpdate (
@@ -302,6 +333,22 @@ ApobGetApcbUpdate (
 {
   SIL_STATUS                Status;
   uint32_t                  ApcbIndex;
+
+  if ((ApobEntry == NULL) || (Value == NULL)) {
+    return SilInvalidParameter;
+  }
+
+  // Validate the payload prefix before reading NumItems, then both bounds on
+  // the array before searching. A malformed entry must not change Value.
+  if (ApobEntry->ApobTypeHeader.TypeSize < offsetof(APOB_APCB_UPDATES_STRUCT, Item)) {
+    return SilInvalidParameter;
+  }
+  if ((ApobEntry->NumItems > MAX_APCB_UPDATES) ||
+    (ApobEntry->NumItems >
+    (ApobEntry->ApobTypeHeader.TypeSize - offsetof(APOB_APCB_UPDATES_STRUCT, Item)) /
+    sizeof (ApobEntry->Item[0]))) {
+    return SilInvalidParameter;
+  }
 
   Status = SilNotFound;
   for (ApcbIndex = 0; ApcbIndex < ApobEntry->NumItems; ApcbIndex++) {

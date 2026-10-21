@@ -13,6 +13,20 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
 SUITES = {
+  "apob-parser": {
+    "sources": [
+      "xUSL/APOB/Common/ApobCommon.c",
+      "tests/HostTest/ApobParser.c",
+    ],
+    "wrap": [],
+  },
+  "apcb-update-bounds": {
+    "sources": [
+      "xUSL/APOB/Common/ApobCommon.c",
+      "tests/HostTest/ApcbUpdateBounds.c",
+    ],
+    "wrap": [],
+  },
   "mpio-engine-mapping": {
     "sources": [
       "xUSL/Mpio/Common/MpioSupportFunctions.c",
@@ -173,7 +187,7 @@ def run_suites(args, output):
   if not args.no_sanitizers:
     command_base.append("-fsanitize=address,undefined")
   environment = os.environ.copy()
-  # No fixture owns heap allocations. LSan may be unavailable under ptrace.
+  # LSan may be unavailable under ptrace; fixtures release heap allocations.
   environment.setdefault("ASAN_OPTIONS", "detect_leaks=0")
   environment.setdefault("UBSAN_OPTIONS", "halt_on_error=1")
   failed = False
