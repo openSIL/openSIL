@@ -36,6 +36,10 @@ after the run; with it, binaries, compile commands, and logs are retained.
 
 The suites cover:
 
+- `mpio-engine-mapping`: real ASK-to-engine lookup with mocked NBIO traversal;
+  unallocated and bifurcation-failed entries must not match or traverse engines,
+  while allocated port zero and training-failed links retain their identities.
+  Also covers null inputs, unknown ports and lanes outside the wrapper.
 - `xsim-dispatch`: all three public timepoint dispatchers, exact IP call order
   and count, empty and registration-only entries, one-shot and repeated
   deferred requests, cold-over-warm priority, and errors/immediate resets

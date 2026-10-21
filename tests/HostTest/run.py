@@ -13,6 +13,13 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
 SUITES = {
+  "mpio-engine-mapping": {
+    "sources": [
+      "xUSL/Mpio/Common/MpioSupportFunctions.c",
+      "tests/HostTest/MpioEngineMapping.c",
+    ],
+    "wrap": [],
+  },
   "xsim-dispatch": {
     "sources": [
       "xSIM/xSIM.c",
