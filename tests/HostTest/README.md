@@ -43,6 +43,12 @@ The suites cover:
 - `apcb-update-bounds`: real APCB token lookup with exact allocations, truncated
   prefixes/items, excessive item counts, unchanged output on rejection or an
   absent token, and last-match behavior for valid duplicate tokens.
+- mpio-ubm: packed UBM/OCP expansion with the mailbox mocked; validates
+  one-shot opt-in, aligned persistent DMA storage, addressability, connector
+  counts, lane ranges/overlap, empty connectors, capacity, per-socket pointer
+  updates, retained port policy and rejection of malformed mailbox responses.
+  It does not test mailbox transport or actual backplane discovery.
+
 - `mpio-engine-mapping`: real ASK-to-engine lookup with mocked NBIO traversal;
   unallocated and bifurcation-failed entries must not match or traverse engines,
   while allocated port zero and training-failed links retain their identities.

@@ -27,6 +27,13 @@ SUITES = {
     ],
     "wrap": [],
   },
+  "mpio-ubm": {
+    "sources": [
+      "xUSL/Mpio/Common/MpioUbmTopology.c",
+      "tests/HostTest/MpioUbm.c",
+    ],
+    "wrap": [],
+  },
   "mpio-engine-mapping": {
     "sources": [
       "xUSL/Mpio/Common/MpioSupportFunctions.c",

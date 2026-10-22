@@ -48,10 +48,10 @@ typedef struct {
   uint16_t    AmdAllowCompliance;               ///< Compliance settings
   uint8_t     AmdHotPlugHandlingMode;           ///< Configure hot plug mode
   uint8_t     SrisEnableMode;                   ///< Mode setting for Separate Reference Clock with Independent Spread
-  uint8_t     SrisSkipInterval;                 ///< Interval control for Separate Reference Clock with Independent Spread
-  uint8_t     SrisSkpIntervalSel;               ///< Interval selector for Separate Reference Clock with Independent Spread
-  uint8_t     SrisCfgType;                      ///< Configuration type for Separate Reference Clock with Independent Spread
-  uint8_t     SrisAutoDetectMode;               ///< Auto detect mode for Separate Reference Clock with Independent Spread
+  uint8_t     SrisSkipInterval;                 ///< SRIS skip interval control
+  uint8_t     SrisSkpIntervalSel;               ///< SRIS skip interval selector
+  uint8_t     SrisCfgType;                      ///< SRIS configuration type
+  uint8_t     SrisAutoDetectMode;               ///< SRIS auto-detection mode
   uint8_t     SrisAutodetectFactor;             ///< Auto detect factor Separate Reference Clock with Independent Spread
   uint8_t     SrisLowerSkpOsGenSup;             ///< Skip OS gen Separate Reference Clock with Independent Spread
   uint8_t     SrisLowerSkpOsRcvSup;             ///< Skip Os Rcv Separate Reference Clock with Independent Spread
@@ -153,8 +153,10 @@ typedef struct {
   bool        PcieIdeCapSup;
   bool        SafeRecoveryBER;
   bool        PeriodicCal;
-  PCIe_DPC_STATUS_DATA    DpcStatusData;    ///< DPC status
-  PCIe_PLATFORM_TOPOLOGY  PcieTopologyData; ///< PCIe Platform topology
+  PCIe_DPC_STATUS_DATA    DpcStatusData;                     ///< DPC status
+  bool DiscoverUbm;                                          ///< One-shot expansion of packed host UBM/OCP descriptors.
+  uint8_t UbmHfcDmaBuffer[sizeof (MPIO_HFC_PORT) * 32 + 15]; ///< Persistent aligned DMA storage.
+  PCIe_PLATFORM_TOPOLOGY  PcieTopologyData;                  ///< PCIe Platform topology
 } MPIOCLASS_INPUT_BLK;
 
 extern const MPIOCLASS_INPUT_BLK mMpioClassDflts;
