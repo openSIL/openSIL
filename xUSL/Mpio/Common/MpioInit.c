@@ -99,12 +99,30 @@ NbioInitializeDxio (
   if (SilData->AmdCXlEarlyLinkTraining) {
     CxlIp2Ip->RemoveCxlLinksFromTopology(&PcieTopologyData, Pcie);
   }
-  MpioCfgBeforeDxioInit(Pcie, PcieTopologyData);
-
   if (SilGetIp2IpApi(SilId_NbioClass, (void **)(&NbioIp2Ip)) != SilPass) {
     MPIO_TRACEPOINT(SIL_TRACE_ERROR, " NBIO API is not found.\n");
     return SilNotFound;
   }
+  /* SMU/NBIO are initialized. Expand host connectors before parsing the DXIO topology.
+   * Hosts with expanded topology leave DiscoverUbm disabled. */
+  if (SilData->DiscoverUbm) {
+    GNB_HANDLE *Handle = NbioIp2Ip->NbioGetHandle(Pcie);
+    if (Handle == NULL || Handle->SocketId != 0) {
+      return SilNotFound;
+    }
+    /* Global UBM enumeration uses the primary socket's management mailbox
+     * at segment 0/bus 0. Topology handle order does not identify that
+     * mailbox; another MPIO instance cannot service global enumeration.
+     */
+    PCI_ADDR UbmAddress = { .AddressValue = 0 };
+    MPIO_TRACEPOINT(SIL_TRACE_INFO, "UBM discovery via primary segment 0 bus 0\n");
+    Status = MpioDiscoverUbm(SilData, UbmAddress);
+    if (Status != SilPass) {
+      MPIO_TRACEPOINT(SIL_TRACE_ERROR, "Invalid host UBM topology: %u\n", Status);
+      return Status;
+    }
+  }
+  MpioCfgBeforeDxioInit(Pcie, PcieTopologyData);
   PcieEarlyTrainFixups(SilData, NbioIp2Ip->NbioGetHandle(Pcie), PcieTopologyData);
 
   /*

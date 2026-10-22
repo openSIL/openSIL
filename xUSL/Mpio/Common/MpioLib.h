@@ -61,3 +61,10 @@ MpioSmnPrivateRegRMW (
   uint32_t           OrValue,
   uint32_t           Flags
   );
+
+/** Expand opt-in host UBM/OCP descriptors before DXIO topology parsing. */
+SIL_STATUS
+MpioDiscoverUbm (
+  MPIOCLASS_INPUT_BLK *SilData,
+  PCI_ADDR Address
+  );

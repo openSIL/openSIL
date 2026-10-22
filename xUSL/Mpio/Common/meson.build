@@ -8,4 +8,5 @@ xusl += files([ 'MpioAncDataV1.c', 'MpioCfgPoints.c', 'MpioClassDflts.c',
                 'MpioInit.c', 'MpioInitFlow.c', 'MpioMappingResults.c',
                 'MpioParser.c', 'MpioPcie.c', 'MpioPortVisibility.c',
                 'MpioSupportFunctions.c', 'MpioTopology.c',
-                'MpioTrainingResults.c' ])
+                'MpioTrainingResults.c',
+                'MpioUbmTopology.c' ])
